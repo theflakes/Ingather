@@ -11,3 +11,5 @@ Usage: Ingather.exe -i 1.1.1.1 -p 4444 -o output.txt
 -p --port  : destination port
 -o --out   : write to file
 ```
+
+Reduce Lazarus EXE file size: http://lazplanet.blogspot.com/2013/03/how-to-reduce-exe-file-size-of-your.html
