@@ -1,4 +1,4 @@
-unit NetSend;
+unit NetIO;
 
 {$mode objfpc}{$H+}
 
@@ -6,9 +6,10 @@ interface
 uses
   Classes, SysUtils, blcksock, synsock, regexpr;
 type
-  TNetSend = class
+  TNetIO = class
     public
       procedure SendIt(ip: AnsiString; port: AnsiString; Output: AnsiString);
+      procedure GetIt(Source: String; Dest: String);
     private
       Function StringToStream(const AString: string): TStream;
       Function isIP(ip: AnsiString): Boolean;
@@ -18,12 +19,12 @@ type
 
 implementation
 // Convert string to stream for network comms
-Function TNetSend.StringToStream(const AString: string): TStream;
+Function TNetIO.StringToStream(const AString: string): TStream;
 begin
   Result := TStringStream.Create(AString);
 end;
 
-Function TNetSend.isIP(ip: AnsiString): Boolean;
+Function TNetIO.isIP(ip: AnsiString): Boolean;
 var
   IPregex: TRegExpr;
 begin
@@ -36,7 +37,7 @@ begin
   IPregex.Free
 end;
 
-Function TNetSend.isPort(port: AnsiString): Boolean;
+Function TNetIO.isPort(port: AnsiString): Boolean;
 begin
   if (strToint(port) >= 0) and (strToint(port) <= 65535) then
     Result := true
@@ -44,7 +45,7 @@ begin
     Result := false;
 end;
 
-procedure TNetSend.SendIt(ip: AnsiString; port: AnsiString; output : AnsiString);
+procedure TNetIO.SendIt(ip: AnsiString; port: AnsiString; output : AnsiString);
 var
   Client    : TTCPBlockSocket;
   StrStream : TStream;
@@ -77,5 +78,15 @@ begin
   end;
 end;
 
-end.
+// external Windows function for HTTP download
+function URLDownloadToFile(pCaller: pointer; URL: PChar; FileName: PChar; Reserved: DWORD; lpfnCB : pointer): HResult; stdcall; external 'urlmon.dll' name 'URLDownloadToFileA';
 
+procedure TNetIO.GetIt(Source: String; Dest: String);
+begin
+ if URLDownloadToFile(nil, PChar(Source), PChar(Dest), 0, nil)=0 then
+   writeln('Download ok!')
+ else
+   writeln('Error downloading '+Source);
+end;
+
+end.

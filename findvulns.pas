@@ -18,7 +18,7 @@ type
       function StreamToString(Stream: TStream): AnsiString;
     private
       const SVC_NAME_REGEX           = '(?-s)SERVICE_NAME: .+';
-      const SVC_NAME_REMOVE          ='SERVICE_NAME: ';
+      const SVC_NAME_REMOVE          = 'SERVICE_NAME: ';
       const SVC_PATH_REGEX           = '(?-s)BINARY_PATH_NAME   : .+';
       const SVC_PATH_REMOVE          = 'BINARY_PATH_NAME   : ';
       const SVC_QUERY_CONF           = 'sc qc ';
@@ -89,4 +89,3 @@ begin
 end;
 
 end.
-

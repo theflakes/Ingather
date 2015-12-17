@@ -111,9 +111,9 @@
         <UnitName Value="RunAs"/>
       </Unit3>
       <Unit4>
-        <Filename Value="netsend.pas"/>
+        <Filename Value="netio.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="NetSend"/>
+        <UnitName Value="NetIO"/>
       </Unit4>
       <Unit5>
         <Filename Value="runcmd.pas"/>

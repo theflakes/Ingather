@@ -20,7 +20,7 @@ type
 
 
 implementation
-// external Windows function
+// external Windows function for checking group membership
 function CheckTokenMembership(TokenHandle: THandle; SidToCheck: PSID; var IsMember: BOOL): BOOL; stdcall; external advapi32;
 
 // This function tells us if we're running with administrative permissions.

