@@ -58,7 +58,7 @@ begin
     Exit;
   end;
 
-  // download file and exit
+  // download file
   if HasOption('d','download') and HasOption('s','save') then begin
     nwrk := TNetIO.Create;
     download := Self.GetOptionValue('d','download');
