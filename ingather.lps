@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Release"/>
+    <Units Count="6">
+      <Unit0>
+        <Filename Value="ingather.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Ingather"/>
+        <TopLine Value="57"/>
+        <CursorPos X="86" Y="122"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="C:\FP-srcs\Synapse\source\lib\blcksock.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="992"/>
+        <CursorPos X="15" Y="1005"/>
+        <UsageCount Value="76"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="findvulns.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FindVulns"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="38" Y="20"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="runas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="RunAs"/>
+        <EditorIndex Value="4"/>
+        <CursorPos X="24" Y="31"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="netsend.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="NetSend"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="13" Y="50"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="runcmd.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="RunCMD"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="19" Y="22"/>
+        <UsageCount Value="72"/>
+        <Loaded Value="True"/>
+      </Unit5>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="37" Column="25" TopLine="27"/>
+      </Position1>
+      <Position2>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="86" Column="39" TopLine="55"/>
+      </Position2>
+      <Position3>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="41" Column="27" TopLine="5"/>
+      </Position3>
+      <Position4>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="17" Column="52" TopLine="5"/>
+      </Position4>
+      <Position5>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="30" Column="31" TopLine="3"/>
+      </Position5>
+      <Position6>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="28" Column="12" TopLine="3"/>
+      </Position6>
+      <Position7>
+        <Filename Value="netsend.pas"/>
+        <Caret Line="60" Column="43" TopLine="37"/>
+      </Position7>
+      <Position8>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="78" Column="83" TopLine="38"/>
+      </Position8>
+      <Position9>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="95" Column="30" TopLine="69"/>
+      </Position9>
+      <Position10>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="93" Column="10" TopLine="72"/>
+      </Position10>
+      <Position11>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="94" Column="28" TopLine="72"/>
+      </Position11>
+      <Position12>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="21" Column="27"/>
+      </Position12>
+      <Position13>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="45" Column="22" TopLine="8"/>
+      </Position13>
+      <Position14>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="52" Column="46" TopLine="17"/>
+      </Position14>
+      <Position15>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="57" Column="18" TopLine="20"/>
+      </Position15>
+      <Position16>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="46" Column="9" TopLine="23"/>
+      </Position16>
+      <Position17>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="47" Column="12" TopLine="23"/>
+      </Position17>
+      <Position18>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="51" Column="50" TopLine="23"/>
+      </Position18>
+      <Position19>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="57" Column="58" TopLine="23"/>
+      </Position19>
+      <Position20>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="58" Column="25" TopLine="23"/>
+      </Position20>
+      <Position21>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="62" Column="25" TopLine="29"/>
+      </Position21>
+      <Position22>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="61" Column="29" TopLine="29"/>
+      </Position22>
+      <Position23>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="63" Column="25" TopLine="28"/>
+      </Position23>
+      <Position24>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="61" Column="97" TopLine="29"/>
+      </Position24>
+      <Position25>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="62" Column="62" TopLine="29"/>
+      </Position25>
+      <Position26>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="55" Column="49" TopLine="28"/>
+      </Position26>
+      <Position27>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="52" Column="35" TopLine="30"/>
+      </Position27>
+      <Position28>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="53" Column="54" TopLine="27"/>
+      </Position28>
+      <Position29>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="40" Column="5" TopLine="16"/>
+      </Position29>
+      <Position30>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="26" Column="16" TopLine="15"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
