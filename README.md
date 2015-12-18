@@ -8,7 +8,7 @@ Presently it only lists services and their path to the console which it parses f
 Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt
        Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text
 
-Download file:
+Download file over HTTP:
        -d --download    : download file
        -s --save        : location to save downloaded file to
        -z               : use the Windows HTTP download function
