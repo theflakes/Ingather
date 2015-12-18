@@ -33,8 +33,8 @@ function TFindVulns.StreamToString(Stream: TStream): AnsiString;
 var
     len: Integer;
 begin
-    Stream.Position := 0;
-    len := Stream.Size - Stream.Position;
+    Stream.Position:= 0;
+    len:= Stream.Size - Stream.Position;
     SetLength(Result, len);
     if len > 0 then Stream.ReadBuffer(Result[1], len);
 end;
@@ -63,21 +63,21 @@ var
   cmdOut         : AnsiString;
   tmpStr         : AnsiString;
 begin
-  outerRegex := TRegExpr.Create;
-  outerRegex.Expression := SVC_NAME_REGEX;
+  outerRegex:= TRegExpr.Create;
+  outerRegex.Expression:= SVC_NAME_REGEX;
   if outerRegex.Exec(output) then
     repeat
       begin
-        tmpStr := '';
-        tmpStr := StringReplace(outerRegex.Match[0], SVC_NAME_REMOVE, '', []);
+        tmpStr:= '';
+        tmpStr:= StringReplace(outerRegex.Match[0], SVC_NAME_REMOVE, '', []);
         writeln(tmpStr);
-        RunThis := concat(SVC_QUERY_CONF, '"', tmpStr, '"');
-        OutputStream := cmd.Run(RunThis);
-        cmdOut := StreamToString(OutputStream);
-        innerRegex := TRegExpr.Create;
-        innerRegex.Expression := SVC_PATH_REGEX;
+        RunThis:= concat(SVC_QUERY_CONF, '"', tmpStr, '"');
+        OutputStream:= cmd.Run(RunThis);
+        cmdOut:= StreamToString(OutputStream);
+        innerRegex:= TRegExpr.Create;
+        innerRegex.Expression:= SVC_PATH_REGEX;
         if innerRegex.Exec(cmdOut) then begin
-          tmpStr := StringReplace(innerRegex.Match[0], SVC_PATH_REMOVE, '', []);
+          tmpStr:= StringReplace(innerRegex.Match[0], SVC_PATH_REMOVE, '', []);
           writeln(tmpStr);
         end;
         innerRegex.Free;
