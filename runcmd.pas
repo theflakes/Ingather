@@ -52,5 +52,7 @@ begin
   Result := OutputStream;
 end;
 
+
+
 end.
 

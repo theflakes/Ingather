@@ -30,7 +30,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\"/>
+            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -64,7 +64,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\"/>
+            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -90,7 +90,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -120,6 +120,10 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunCMD"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -130,7 +134,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\"/>
+      <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
