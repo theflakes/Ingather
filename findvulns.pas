@@ -10,7 +10,7 @@ unit FindVulns;
 interface
 
 uses
-  Classes, SysUtils, regexpr, RunCMD, Crt, FileUtil;
+  Classes, SysUtils, regexpr, RunCMD, FileUtil;
 type
   TFindVulns = class
     public
@@ -91,9 +91,9 @@ begin
   regexQuotes.Expression:= SVC_EXTRACT_PATH;
   if regexQuotes.Exec(path) then begin
     path:= regexQuotes.Match[0];
-    TextColor(White);
-    writeln('|--> '+path);
-    TextColor(Yellow);
+    //TextColor(White);
+    writeln('|-> '+path);
+    //TextColor(Yellow);
     path:= RemoveQuotes(path, '"');
   end;
   if FileIsWritable(path) then
@@ -125,7 +125,7 @@ begin
       begin
         tmpStr:= '';
         service:= StringReplace(outerRegex.Match[0], SVC_NAME_REMOVE, '', []);
-        TextColor(LightBlue);
+        //TextColor(LightBlue);
         writeln('');
         writeln(service);
         writeln('-----------------------------------------');
@@ -136,8 +136,8 @@ begin
         innerRegex.Expression:= SVC_PATH_REGEX;
         if innerRegex.Exec(cmdOut) then begin
           tmpStr:= StringReplace(innerRegex.Match[0], SVC_PATH_REMOVE, '', []);
-          if ServiceCheckPathPerms(tmpStr) then writeln('|----> Service executable is writable!!!');
-          if ServiceCheckPath(tmpStr) then writeln('|----> Unquoted service path!!! ');
+          if ServiceCheckPathPerms(tmpStr) then writeln(' \_ Service executable is writable!!!');
+          if ServiceCheckPath(tmpStr) then writeln(' \_ Unquoted service path!!! ');
         end;
         innerRegex.Free;
         OutputStream.Free;

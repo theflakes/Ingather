@@ -27,8 +27,8 @@
         <UnitName Value="FindVulns"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="77"/>
-        <CursorPos X="20" Y="103"/>
+        <TopLine Value="105"/>
+        <CursorPos X="56" Y="140"/>
         <UsageCount Value="132"/>
         <Loaded Value="True"/>
       </Unit2>
