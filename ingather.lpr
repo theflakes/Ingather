@@ -137,7 +137,7 @@ begin
   writeln('Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt');
   writeln('       Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text');
   writeln;
-  writeln('Download file:');
+  writeln('Download file over HTTP:');
   writeln('       -d --download    : download file');
   writeln('       -s --save        : location to save downloaded file to');
   writeln('       -z               : use the Windows HTTP download function');
