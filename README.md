@@ -2,8 +2,6 @@
 
 Windows vulnerability command line enumeration tool.  Written in Free Pascal/Lazarus: http://www.lazarus-ide.org/index.php?page=downloads.
 
-Presently it only lists services and their path to the console which it parses from the output of Windows' built-in commands.  If directed, it will write all of the information it gathers from the Windows' command output it captures to a file and/or to an IP on the specified port.
-
 ```
 Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt
        Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text
