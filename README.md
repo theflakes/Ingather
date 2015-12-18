@@ -11,6 +11,8 @@ Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt
 Download file:
        -d --download    : download file
        -s --save        : location to save downloaded file to
+       -z               : use the Windows HTTP download function
+                          otherwise use custom HTTP download function
 Enumerate vulnerabilities:
        -e --enum        : enumerate host vulnerabilities
 Output options:
