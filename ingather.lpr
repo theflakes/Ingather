@@ -80,7 +80,7 @@ begin
       vulns:= TFindVulns.Create;
       for x:= 1 to NUM_CMDS do begin
         OutputStream:= execute.Run(CMD[x]);
-        output:= concat(output, vulns.StreamToString(OutputStream));
+        output:= concat(output, execute.StreamToString(OutputStream));
       end;
       vulns.getVulnServices(Output);
       vulns.Free;
@@ -88,7 +88,7 @@ begin
       if HasOption('i','ip') and HasOption('p','port') then begin
         command:= Self.GetOptionValue('c','command');
         OutputStream:= execute.Run(command);
-        output:= vulns.StreamToString(OutputStream);
+        output:= execute.StreamToString(OutputStream);
       end else begin
         writeln('Must use -c with -i and -p!');
         Terminate;

@@ -9,11 +9,33 @@ uses
   type TRunCMD = class
     public
       function Run(cmd: string): TStream;
+      function GetOutput(cmdStrA: string; cmdStrB: AnsiString): string;
+      function StreamToString(Stream: TStream): AnsiString;
     private
       const BUF_SIZE = 2048; // Buffer size for reading the output in chunks
   end;
 
 implementation
+function TRunCMD.StreamToString(Stream: TStream): AnsiString;
+var
+    len: Integer;
+begin
+    Stream.Position:= 0;
+    len:= Stream.Size - Stream.Position;
+    SetLength(Result, len);
+    if len > 0 then Stream.ReadBuffer(Result[1], len);
+end;
+
+function TRunCMD.GetOutput(cmdStrA: string; cmdStrB: AnsiString): string;
+var
+  RunThis        : string;
+  OutputStream   : TStream;
+begin
+  RunThis:= concat(cmdStrA, '"', cmdStrB, '"');
+  OutputStream:= Run(RunThis);
+  result:= StreamToString(OutputStream);
+  OutputStream.Free;
+end;
 
 function TRunCMD.Run(cmd: string): TStream;
 var

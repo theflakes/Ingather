@@ -30,7 +30,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\"/>
+            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\;C:\lazarus\lcl\"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -64,7 +64,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\"/>
+            <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\;C:\lazarus\lcl\"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -90,7 +90,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="7">
+    <Units Count="8">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -124,6 +124,11 @@
         <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="winserviceperms.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinServicePerms"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -134,7 +139,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\"/>
+      <OtherUnitFiles Value="C:\FP-srcs\Synapse\source\lib\;C:\lazarus\components\lazutils\;C:\lazarus\lcl\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
