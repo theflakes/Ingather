@@ -11,6 +11,11 @@ interface
 
 uses
   Classes, SysUtils;
+type
+  TWinUsers = class
+    public
+    private
+  end;
 
 type
   Tgroup = record

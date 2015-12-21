@@ -8,7 +8,7 @@ program Ingather;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils, CustApp, RunAs, NetIO, FindVulns, RunCMD
+  Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD, WinReg, registry
   { you can add units after this };
 
 type
@@ -45,6 +45,8 @@ var
   download     : String;
   save         : String;
   command      : String;
+  readReg      : TWinReg;
+  UAC          : LongInt;
 begin
   // quick check parameters
   ErrorMsg:= CheckOptions('cdehiposxz','command download enum help ip out port save');
@@ -105,6 +107,11 @@ begin
         Terminate;
         Exit;
       end;
+
+    readReg:= TWinReg.Create;
+    UAC:= readReg.ReadKey(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', 'EnableLUA');
+    if UAC = 1 then
+      writeln('UAC is enabled!!!');
 
     // Send output to another computer?
     if HasOption('i','ip') and HasOption('p','port') then begin
