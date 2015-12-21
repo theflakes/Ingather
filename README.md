@@ -4,7 +4,7 @@ Windows vulnerability command line enumeration tool.  Written in Free Pascal/Laz
 
 ```
 Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt
-       Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text
+       Ingather.exe --d http://www.abcded.com/abc.txt -s c:\temp\abc.text
        Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444
 
 Download file over HTTP:
@@ -21,6 +21,9 @@ Output options:
        -i --ip          : destination IP address
        -p --port        : destination port
        -o --out         : write enumeration command outputs to file
+       -x               : just run basic enumeration commands
+                          with no vulnerability analysis
+                          requires (-i and -p) and/or -o
 ```
 
 Reduce Lazarus EXE file size: http://lazplanet.blogspot.com/2013/03/how-to-reduce-exe-file-size-of-your.html

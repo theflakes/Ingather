@@ -90,7 +90,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -125,10 +125,15 @@
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="winserviceperms.pas"/>
+        <Filename Value="winservices.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinServicePerms"/>
+        <UnitName Value="WinServices"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="winusers.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinUsers"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

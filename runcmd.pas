@@ -9,7 +9,8 @@ uses
   type TRunCMD = class
     public
       function Run(cmd: string): TStream;
-      function GetOutput(cmdStrA: string; cmdStrB: AnsiString): string;
+      function GetOutput(cmdStrA: string; cmdStrB: AnsiString; quotes: boolean): string;
+      function GetOutput(cmdStrA: string; cmdStrB: AnsiString; cmdStrC: AnsiString): string;
       function StreamToString(Stream: TStream): AnsiString;
     private
       const BUF_SIZE = 2048; // Buffer size for reading the output in chunks
@@ -26,12 +27,26 @@ begin
     if len > 0 then Stream.ReadBuffer(Result[1], len);
 end;
 
-function TRunCMD.GetOutput(cmdStrA: string; cmdStrB: AnsiString): string;
+function TRunCMD.GetOutput(cmdStrA: string; cmdStrB: AnsiString; quotes: boolean): string;
 var
   RunThis        : string;
   OutputStream   : TStream;
 begin
-  RunThis:= concat(cmdStrA, '"', cmdStrB, '"');
+  if quotes then
+    RunThis:= concat(cmdStrA, '"', cmdStrB, '"')
+  else
+    RunThis:= concat(cmdStrA, cmdStrB);
+  OutputStream:= Run(RunThis);
+  result:= StreamToString(OutputStream);
+  OutputStream.Free;
+end;
+
+function TRunCMD.GetOutput(cmdStrA: string; cmdStrB: AnsiString; cmdStrC: AnsiString): string;
+var
+  RunThis        : string;
+  OutputStream   : TStream;
+begin
+  RunThis:= concat(cmdStrA, cmdStrB, cmdStrC);
   OutputStream:= Run(RunThis);
   result:= StreamToString(OutputStream);
   OutputStream.Free;
@@ -73,8 +88,6 @@ begin
   AProcess.Free;
   Result := OutputStream;
 end;
-
-
 
 end.
 

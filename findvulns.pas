@@ -1,5 +1,6 @@
 unit FindVulns;
 {
+ wmic service get Name,PathName,Started,StartMode,StartName,Status
  sc sdshow wudfsvc
 }
 {$mode objfpc}{$H+}
@@ -7,22 +8,16 @@ unit FindVulns;
 interface
 
 uses
-  Classes, SysUtils, regexpr, RunCMD, FileUtil, WinServicePerms;
+  Classes, SysUtils, regexpr, FileUtil, WinServices;
 type
   TFindVulns = class
     public
-      procedure getVulnServices(Output : AnsiString);
+      procedure getVulnServices;
     private
-      const SVC_NAME_REGEX           = '(?-s)SERVICE_NAME: .+';
-      const SVC_NAME_REMOVE          = 'SERVICE_NAME: ';
-      const SVC_PATH_REGEX           = '(?-s)BINARY_PATH_NAME   : .+';
-      const SVC_PATH_REMOVE          = 'BINARY_PATH_NAME   : ';
-      const SVC_QRY_CONF             = 'sc qc ';
       const SVC_CHK_QUOTES           = '(?-s)^"';
       const SVC_CHK_PATH_SPACE       = '(?-s)^\S+.exe';
       const SVC_EXTRACT_PATH         = '(?-s)^.+.exe"*';
-      const SVC_QRY_PERMS            = 'sc sdshow ';
-      const SVC_PERM_REGEX           = '(?-sg)\(\S+\)';
+      function ServiceExtractPath(path: string): string;
       function ServiceCheckPath(path: String) : Boolean;
       function ServiceCheckPathPerms(path: String): Boolean;
       function RemoveQuotes(const S: string; const QuoteChar: Char): string;
@@ -43,8 +38,19 @@ begin
   Result := StringReplace(Result, QuoteChar+QuoteChar, QuoteChar, [rfReplaceAll]);
 end;
 
+// extract the executable path from the service startup directive
+function TFindVulns.ServiceExtractPath(path: string): string;
+var
+  regex: TRegExpr;
+begin
+  regex:= TRegExpr.Create;
+  regex.Expression:= SVC_EXTRACT_PATH;
+  if regex.Exec(path) then
+    result:= regex.Match[0];
+end;
+
 // find services with paths containing spaces and is not quoted
-function TFindVulns.ServiceCheckPath(path: String): Boolean;
+function TFindVulns.ServiceCheckPath(path: string): Boolean;
 var
   regexNoQuotes : TRegExpr;
   regexNoSpace : TRegExpr;
@@ -66,65 +72,43 @@ begin
 end;
 
 // evaluate service path permissions
-function TFindVulns.ServiceCheckPathPerms(path: String): Boolean;
-var
-  regexQuotes  : TRegExpr;
+function TFindVulns.ServiceCheckPathPerms(path: string): Boolean;
 begin
-  regexQuotes:= TRegExpr.Create;
-  regexQuotes.Expression:= SVC_EXTRACT_PATH;
-  if regexQuotes.Exec(path) then begin
-    path:= regexQuotes.Match[0];
-    writeln('|-> '+path);
-    path:= RemoveQuotes(path, '"');
-  end;
+  path:= RemoveQuotes(path, '"');
   if FileIsWritable(path) then
     result:= true
   else
     result:= false;
-  regexQuotes.Free;
 end;
 
-procedure TFindVulns.getVulnServices(output : AnsiString);
+procedure TFindVulns.getVulnServices;
 var
-  outerRegex     : TRegExpr;
-  innerRegex     : TRegExpr;
-  cmdOut         : AnsiString;
-  tmpStr         : AnsiString;
-  service        : AnsiString;
-  cmd            : TRunCMD;
+  WinSVCs: TWinServices;
+  i: integer;
+  path: string;
 begin
-  cmd:= TRunCMD.Create;
-  outerRegex:= TRegExpr.Create;
-  outerRegex.Expression:= SVC_NAME_REGEX;
-  if outerRegex.Exec(output) then
-    repeat
-      begin
-        tmpStr:= '';
-        service:= StringReplace(outerRegex.Match[0], SVC_NAME_REMOVE, '', []);
-        writeln('');
-        writeln(service);
-        writeln('-----------------------------------------');
-        cmdOut:= cmd.GetOutput(SVC_QRY_CONF, service);
-        innerRegex:= TRegExpr.Create;
-        innerRegex.Expression:= SVC_PATH_REGEX;
-        if innerRegex.Exec(cmdOut) then begin
-          tmpStr:= StringReplace(innerRegex.Match[0], SVC_PATH_REMOVE, '', []);
-          if ServiceCheckPathPerms(tmpStr) then writeln(' \_ Service executable is writable!!!');
-          if ServiceCheckPath(tmpStr) then writeln(' \_ Unquoted service path!!! ');
-        end;
-        cmdOut:= cmd.GetOutput(SVC_QRY_PERMS, service);
-        innerRegex.Expression:= SVC_PERM_REGEX;
-        while innerRegex.Exec(cmdOut) do
-          begin
-          writeln(innerRegex.Match[0]);
-          cmdOut:= StringReplace(cmdOut, innerRegex.Match[0], '', []);
-          end;
-        innerRegex.Free;
+  WinSVCs:= TWinServices.Create;
+  WinSVCs.GetServicesInfo;
+  // lets check for service path vulnerabilities
+  for i:= Low(WinSVCs.Services) to High(WinSVCs.Services) do begin
+    path:= ServiceExtractPath(WinSVCs.Services[i].Path.PathName);
+    WinSVCs.Services[i].Path.Writeable:= ServiceCheckPathPerms(path);
+    WinSVCs.Services[i].Path.Unquoted:= ServiceCheckPath(path);
+  end;
+  for i:= Low(WinSVCs.Services) to High(WinSVCs.Services) do begin
+    if WinSVCs.Services[i].Path.PathName <> '' then
+      if WinSVCs.Services[i].Path.Writeable or WinSVCs.Services[i].Path.Unquoted then begin
+        writeln(WinSVCs.Services[i].Name);
+        writeln('--------------------------------------------');
+        writeln('|-> '+WinSVCs.Services[i].Path.PathName);
+        if WinSVCs.Services[i].Path.Writeable then
+          writeln(' \_> Service path is writable by you!!!');
+        if WinSVCs.Services[i].Path.Unquoted then
+          writeln(' \_> Service path has spaces and is unquoted!!!');
+        writeln;
       end;
-    until
-      not outerRegex.ExecNext;
-  outerRegex.Free;
-  cmd.Free;
+  end;
+  WinSVCs.Free;
 end;
 
 end.
