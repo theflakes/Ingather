@@ -29,7 +29,7 @@ type
 procedure TIngather.DoRun;
 const
   NUM_CMDS = 13;
-  CMD      : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','net users','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','sc queryex','schtasks /query /fo LIST /v','tasklist /SVC','driverquery /v');
+  CMD      : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','net users','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','wmic service get Name,PathName,Started,StartMode,StartName,Status','schtasks /query /fo LIST /v','tasklist /SVC','driverquery /v');
 var
   ErrorMsg     : String;
   ip           : AnsiString;

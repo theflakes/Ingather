@@ -10,8 +10,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="65"/>
-        <CursorPos X="124" Y="88"/>
+        <TopLine Value="13"/>
+        <CursorPos X="16" Y="31"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -69,7 +69,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="163"/>
+        <UsageCount Value="164"/>
       </Unit6>
       <Unit7>
         <Filename Value="winserviceperms.pas"/>
@@ -84,7 +84,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit8>
       <Unit9>
         <Filename Value="winserviceusers.pas"/>
@@ -98,8 +98,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinServices"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="30"/>
-        <CursorPos X="40" Y="77"/>
+        <TopLine Value="198"/>
+        <CursorPos X="113" Y="227"/>
         <UsageCount Value="98"/>
         <Loaded Value="True"/>
       </Unit10>
