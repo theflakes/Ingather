@@ -1,4 +1,9 @@
 program Ingather;
+{
+ AUTHOR:  Brian Kellogg
+
+ GPL v.2 licensed
+}
 
 {$mode objfpc}{$H+}
 
@@ -23,8 +28,8 @@ type
 
 procedure TIngather.DoRun;
 const
-  NUM_CMDS = 5;
-  CMD      : array[1..NUM_CMDS] of string = ('ipconfig /all','ver','sc queryex','whoami /all','arp -a');
+  NUM_CMDS = 13;
+  CMD      : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','net users','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','sc queryex','schtasks /query /fo LIST /v','tasklist /SVC','driverquery /v');
 var
   ErrorMsg     : String;
   ip           : AnsiString;
@@ -77,8 +82,11 @@ begin
       // just run basic enumeration commands
       if HasOption('x') then begin
         if (HasOption('i','ip') and HasOption('p','port')) or HasOption('o','out') then begin
-          for x:= 1 to NUM_CMDS do
+          for x:= 1 to NUM_CMDS do begin
+            output:= concat(output, CMD[x]+sLineBreak+sLineBreak);
             output:= concat(output, execute.getOutput(CMD[x], '', false));
+            output:= concat(output, sLineBreak+sLineBreak+sLineBreak+sLineBreak+sLineBreak+sLineBreak+sLineBreak+sLineBreak)
+          end;
         end else
           writeln('Must use -x with (-i and -p) and/or -o!');
       // run system enumeration analysis

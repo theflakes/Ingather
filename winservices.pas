@@ -1,11 +1,10 @@
 unit WinServices;
 {
-  sc sdshow service --- get service permissions
-  wmic service get Name --- (PathName,Started,StartMode,StartName,Status)
-  wmic service get PathName
-  ^--- get one column at a time and read into record
+ AUTHOR:  Brian Kellogg
 
-  service permission information: https://support.microsoft.com/en-us/kb/914392
+ GPL v.2 licensed
+
+ service permission information: https://support.microsoft.com/en-us/kb/914392
 }
 
 {$mode objfpc}{$H+}
@@ -13,7 +12,7 @@ unit WinServices;
 interface
 
 uses
-  Classes, SysUtils, regexpr, RunCMD, FileUtil;
+  Classes, SysUtils, regexpr, RunCMD;
 type
   Tdacl = record
     allow: boolean;

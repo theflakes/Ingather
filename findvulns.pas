@@ -1,7 +1,8 @@
 unit FindVulns;
 {
- wmic service get Name,PathName,Started,StartMode,StartName,Status
- sc sdshow wudfsvc
+ AUTHOR:  Brian Kellogg
+
+ GPL v.2 licensed
 }
 {$mode objfpc}{$H+}
 

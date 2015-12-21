@@ -1,4 +1,9 @@
 unit RunCMD;
+{
+ AUTHOR:  Brian Kellogg
+
+ GPL v.2 licensed
+}
 
 {$mode objfpc}{$H+}
 

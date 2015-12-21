@@ -1,8 +1,8 @@
 unit RunAs;
 {
+ AUTHOR:  Brian Kellogg
 
- Functions and procedures to query rights and elevate rights for process execution.
-
+ GPL v.2 licensed
 }
 
 {$mode objfpc}{$H+}
