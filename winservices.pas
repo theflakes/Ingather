@@ -5,6 +5,13 @@ unit WinServices;
  GPL v.2 licensed
 
  service permission information: https://support.microsoft.com/en-us/kb/914392
+
+ Best practices:
+  Limit service DACLs to only those users who need a particular access type. Be especially cautious with the following rights.
+  If these rights are granted to a user or to a group that has low rights, the rights can be used to elevate to LocalSystem on the computer:
+  ChangeConf (DC)
+  WDac (WD)
+  WOwn (WO)
 }
 
 {$mode objfpc}{$H+}
@@ -13,11 +20,18 @@ interface
 
 uses
   Classes, SysUtils, regexpr, RunCMD;
+
 type
+  TdaclVulns = record
+    config: boolean;
+    escalate: boolean;
+  end;
+
   Tdacl = record
     allow: boolean;
     entry: string;
     perms: array of string;
+    vulns: TdaclVulns;
   end;
 
   TPathName = record
@@ -103,7 +117,7 @@ begin
     'CY': result:= 'Crypto Operators';
     'OW': result:= 'Owner Rights SID';
     'RM': result:= 'RMS Service';
-    else result:= 'User/Group not found!';
+    else result:= userAbbr;
   end;
 end;
 
@@ -128,7 +142,7 @@ begin
     'RC': result:= 'RCtl';
     'WD': result:= 'WDac';
     'WO': result:= 'WOwn';
-    else result:= 'Permission not found!';
+    else result:= permAbbr;
   end;
 end;
 
