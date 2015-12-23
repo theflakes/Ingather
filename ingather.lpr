@@ -10,7 +10,6 @@ program Ingather;
 uses
   Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD
   { you can add units after this };
-
 type
 
   { TIngather }
@@ -92,8 +91,8 @@ begin
       // run system enumeration analysis
       end else begin
         vulns:= TFindVulns.Create;
-        vulns.getVulnServices;
-        vulns.getRegVulns;
+        vulns.GetVulnServices;
+        vulns.GetRegVulns;
         vulns.Free;
       end;
     end else

@@ -11,7 +11,8 @@ interface
 
 uses
   Classes, SysUtils, Process;
-  type TRunCMD = class
+type
+  TRunCMD = class
     public
       function Run(cmd: string): TStream;
       function GetOutput(cmdStrA: string; cmdStrB: AnsiString; quotes: boolean): string;

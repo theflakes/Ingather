@@ -18,8 +18,8 @@ type
       function DownloadHTTP(URL, TargetFile: string): String;
     private
       function StringToStream(const AString: string): TStream;
-      function isIP(ip: AnsiString): Boolean;
-      function isPort(port: AnsiString): Boolean;
+      function IsIP(ip: AnsiString): Boolean;
+      function IsPort(port: AnsiString): Boolean;
       function FoundLocationStr(headers: TStringlist; out FoundPos: integer): integer;
   end;
 
@@ -31,7 +31,7 @@ begin
   Result:= TStringStream.Create(AString);
 end;
 
-Function TNetIO.isIP(ip: AnsiString): Boolean;
+Function TNetIO.IsIP(ip: AnsiString): Boolean;
 var
   IPregex: TRegExpr;
 begin
@@ -44,7 +44,7 @@ begin
   IPregex.Free
 end;
 
-Function TNetIO.isPort(port: AnsiString): Boolean;
+Function TNetIO.IsPort(port: AnsiString): Boolean;
 begin
   if (strToint(port) >= 0) and (strToint(port) <= 65535) then
     Result:= true

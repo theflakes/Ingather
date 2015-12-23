@@ -20,7 +20,6 @@ interface
 
 uses
   Classes, SysUtils, regexpr, RunCMD;
-
 type
   TdaclVulns = record
     config: boolean;

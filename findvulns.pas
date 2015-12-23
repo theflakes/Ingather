@@ -3,6 +3,21 @@ unit FindVulns;
  AUTHOR:  Brian Kellogg
 
  GPL v.2 licensed
+
+ Priv escalation howto:
+      http://fuzzysecurity.com/tutorials/16.html
+
+ ClearText PWs:
+      http://blogs.technet.com/b/srd/archive/2014/06/05/an-overview-of-kb2871997.aspx
+      http://blogs.technet.com/b/kfalde/archive/2014/11/01/kb2871997-and-wdigest-part-1.aspx
+
+ service permission information: https://support.microsoft.com/en-us/kb/914392
+ Service best practices:
+      Limit service DACLs to only those users who need a particular access type. Be especially cautious with the following rights.
+      If these rights are granted to a user or to a group that has low rights, the rights can be used to elevate to LocalSystem on the computer:
+      ChangeConf (DC)
+      WDac (WD)
+      WOwn (WO)
 }
 {$mode objfpc}{$H+}
 
@@ -13,8 +28,8 @@ uses
 type
   TFindVulns = class
     public
-      procedure getVulnServices;
-      procedure getRegVulns;
+      procedure GetVulnServices;
+      procedure GetRegVulns;
       function StringInArray(LookFor: string; LookIn: array of string): boolean;
     private
       const SVC_CHK_QUOTES              = '(?-s)^"';
@@ -103,7 +118,7 @@ begin
   result := false;
 end;
 
-procedure TFindVulns.getVulnServices;
+procedure TFindVulns.GetVulnServices;
 var
   WinSVCs: TWinServices;
   i: integer;
@@ -157,7 +172,7 @@ begin
   WinSVCs.Free;
 end;
 
-procedure TFindVulns.getRegVulns;
+procedure TFindVulns.GetRegVulns;
 var
   RegVulns: TWinReg;
 begin
