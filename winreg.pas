@@ -20,8 +20,8 @@ type
       function GetWDigestCleartextPWStatus: AnsiString;
       function GetMSIAlwaysInstallElevatedStatus: AnsiString;
     private
-      const DFLT_CLEARTEXT_PW           = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)'; // Win versions with default cleartext passwords
-      const NON_DFLT_CLEARTEXT_PW       = '(?-s)^Windows.+(8.1|2012 R2)'; // Win versions that will be matched in the above regex that do not store cleartext passwords
+      const DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)'; // Win versions with default cleartext passwords
+      const NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';            // Win versions that will be matched in the above regex that do not store cleartext passwords
       function ReadKeyLIint(HKEY: LongWord; regPath: string; key: string): LongInt;
       function ReadKeyAnsi(HKEY: LongWord; regPath: string; key: string): AnsiString;
       function ReadKeyBool(HKEY: LongWord; regPath: string; key: string): boolean;

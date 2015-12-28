@@ -24,12 +24,13 @@ unit FindVulns;
 interface
 
 uses
-  Classes, SysUtils, regexpr, FileUtil, WinServices, WinReg;
+  Classes, SysUtils, regexpr, FileUtil, WinServices, WinReg, WinDevice;
 type
   TFindVulns = class
     public
       procedure GetVulnServices;
       procedure GetRegVulns;
+      procedure CheckEnvPathPerms;
       function StringInArray(LookFor: string; LookIn: array of string): boolean;
     private
       const SVC_CHK_QUOTES              = '(?-s)^"';
@@ -43,7 +44,8 @@ type
       const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = ('ChangeConf', 'WDac', 'WOwn');
       function ServiceExtractPath(path: string): string;
       function ServiceCheckPath(path: String) : Boolean;
-      function ServiceCheckPathPerms(path: String): Boolean;
+      function CheckFileIsWriteable(path: String): Boolean;
+      function CheckDirectoryIsWriteable(path: String): Boolean;
       function RemoveQuotes(const S: string; const QuoteChar: Char): string;
   end;
 
@@ -96,10 +98,20 @@ begin
 end;
 
 // evaluate service path permissions
-function TFindVulns.ServiceCheckPathPerms(path: string): Boolean;
+function TFindVulns.CheckFileIsWriteable(path: string): Boolean;
 begin
   path:= RemoveQuotes(path, '"');
   if FileIsWritable(path) then
+    result:= true
+  else
+    result:= false;
+end;
+
+// evaluate service path permissions
+function TFindVulns.CheckDirectoryIsWriteable(path: string): Boolean;
+begin
+  path:= RemoveQuotes(path, '"');
+  if DirectoryIsWritable(path) then
     result:= true
   else
     result:= false;
@@ -135,7 +147,7 @@ begin
     writeln('--------------------------------------------');
     writeln('|-> Account run as :: '+WinSVCs.Services[i].StartName);
     path:= ServiceExtractPath(WinSVCs.Services[i].Path.PathName);
-    WinSVCs.Services[i].Path.Writeable:= ServiceCheckPathPerms(path);
+    WinSVCs.Services[i].Path.Writeable:= CheckFileIsWriteable(path);
     WinSVCs.Services[i].Path.Unquoted:= ServiceCheckPath(path);
     // check for service permission vulns, loop through each service's DACL
     for x:= Low(WinSVCs.Services[i].dacl) to High(WinSVCs.Services[i].dacl) do begin
@@ -183,6 +195,22 @@ begin
   writeln(RegVulns.GetWDigestCleartextPWStatus);
   writeln(RegVulns.GetMSIAlwaysInstallElevatedStatus);
   RegVulns.Free;
+end;
+
+procedure TFindVulns.CheckEnvPathPerms;
+var
+  getPath    : TWinDevice;
+  path       : AnsiString;
+  pathList   : TStringList;
+begin
+  getPath:= TWinDevice.Create;
+  pathList:= TStringList.Create;
+  getPath.GetPathList(pathList);
+  for path in pathList do
+    if CheckDirectoryIsWriteable(path) then
+      writeln('ENV path entry '+path+' is writable by you!!!');
+  pathList.Free;
+  getPath.Free;
 end;
 
 end.

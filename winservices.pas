@@ -19,7 +19,7 @@ unit WinServices;
 interface
 
 uses
-  Classes, SysUtils, regexpr, RunCMD;
+  Classes, SysUtils, regexpr, RunCMD, Misc;
 type
   TdaclVulns = record
     config: boolean;
@@ -57,7 +57,6 @@ type
       function Users(userAbbr: string): string;
       function Perms(permAbbr: string): string;
       procedure GetServicePerms;
-      procedure Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
       procedure SplitPermAbbreviaions(Str: string; ListOfStrings: TStrings);
       const SVC_QRY_CONF             = 'wmic service ';
       const SVC_QRY_PERMS            = 'sc sdshow ';
@@ -145,15 +144,6 @@ begin
   end;
 end;
 
-// split string by delimiter
-procedure TWinServices.Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
-begin
-   ListOfStrings.Clear;
-   ListOfStrings.Delimiter       := Delimiter;
-   ListOfStrings.StrictDelimiter := True;
-   ListOfStrings.DelimitedText   := Str;
-end;
-
 // split service permissions into their two letter abbreviations
 procedure TWinServices.SplitPermAbbreviaions(Str: string; ListOfStrings: TStrings);
 begin
@@ -176,11 +166,13 @@ var
   list           : TStringList;
   permList       : TStringList;
   perm           : string;
+  strSplit       : TMisc;
 begin
   cmd:= TRunCMD.Create;
   regex:= TRegExpr.Create;
   list:= TStringList.Create;
   permList:= TStringList.Create;
+  strSplit:= TMisc.Create;
   regex.Expression:= SVC_PERM_REGEX;
   for i:= Low(Services) to High(Services) do begin
     daclIndex:= 0;
@@ -191,7 +183,7 @@ begin
         permIndex:= 0;
         tmpStr:= StringReplace(regex.Match[0], '(', '', []);
         tmpStr:= StringReplace(tmpStr, ')', '', []);
-        Split(';', tmpStr, list);
+        strSplit.Split(';', tmpStr, list);
         SetLength(Services[i].dacl, daclIndex + 1);  // set new length for dynamic array
         // is this an allow or deny dacl?
         if list.Strings[0] = 'A' then
@@ -211,6 +203,7 @@ begin
         daclIndex:= daclIndex + 1;
       end until not regex.ExecNext;
   end;
+  strSplit.Free;
   regex.Free;
   permList.Free;
   list.Free;

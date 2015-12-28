@@ -90,7 +90,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="11">
+    <Units Count="12">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -144,6 +144,10 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinDevice"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="misc.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

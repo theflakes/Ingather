@@ -8,7 +8,8 @@ program Ingather;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD
+  Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD,
+  WinDevice
   { you can add units after this };
 type
 
@@ -27,8 +28,8 @@ type
 
 procedure TIngather.DoRun;
 const
-  NUM_CMDS        = 17;
-  CMD             : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','net users','net localgroup administrators','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','wmic service get Name,PathName,Started,StartMode,StartName,Status','schtasks /query /fo LIST /v','tasklist /SVC', 'wmic qfe get HotFixID', 'driverquery /v', 'reg query HKLM /f password /t REG_SZ /s', 'reg query HKCU /f password /t REG_SZ /s');
+  NUM_CMDS        = 19;
+  CMD             : array[1..NUM_CMDS] of string = ('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"','whoami /all','echo %PATH%','net users','net localgroup administrators','ipconfig /all','route print','netstat -ano','netsh firewall show state','netsh firewall show config','arp -a','wmic service get Name,PathName,Started,StartMode,StartName,Status','schtasks /query /fo LIST /v','tasklist /SVC', 'wmic qfe get HotFixID', 'driverquery /v', 'reg query HKLM /f password /t REG_SZ /s', 'reg query HKCU /f password /t REG_SZ /s', 'cd \ & dir /s *pass* == *cred* == *vnc* == *.config* == *account*');
 var
   ErrorMsg        : String;
   ip              : AnsiString;
@@ -93,6 +94,7 @@ begin
         vulns:= TFindVulns.Create;
         vulns.GetVulnServices;
         vulns.GetRegVulns;
+        vulns.CheckEnvPathPerms;
         vulns.Free;
       end;
     end else
