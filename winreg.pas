@@ -19,17 +19,20 @@ type
       function GetRDPStatus: AnsiString;
       function GetWDigestCleartextPWStatus: AnsiString;
       function GetMSIAlwaysInstallElevatedStatus: AnsiString;
+      procedure GetAutoLogon;
+      procedure GetSNMP;
     private
       const DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)'; // Win versions with default cleartext passwords
       const NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';            // Win versions that will be matched in the above regex that do not store cleartext passwords
       function ReadKeyLIint(HKEY: LongWord; regPath: string; key: string): LongInt;
       function ReadKeyAnsi(HKEY: LongWord; regPath: string; key: string): AnsiString;
       function ReadKeyBool(HKEY: LongWord; regPath: string; key: string): boolean;
-      function ReadKeyDoub(HKEY: LongWord; regPath: string; key: string): double;
+      function ReadKeyDouble(HKEY: LongWord; regPath: string; key: string): double;
       function ReadKeyDTime(HKEY: LongWord; regPath: string; key: string): TDateTime;
       function ReadKeyDate(HKEY: LongWord; regPath: string; key: string): TDate;
       function ReadKeyTime(HKEY: LongWord; regPath: string; key: string): TTime;
       function ReadKeyBin(HKEY: LongWord; regPath: string; key: string; bufSize: integer): LongInt;
+      procedure EnumSubKeys(HKEY: LongWord; key: string; SubKeyNames: TStrings);
   end;
 
 implementation
@@ -39,6 +42,23 @@ var
 begin
   winVer:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
   result:= winVer;
+end;
+
+procedure TWinReg.GetAutoLogon;
+var
+  value: AnsiString;
+begin
+  value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'AutoAdminLogon');
+  if value = '1' then begin
+    writeln('Autologon enabled ---');
+    value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultUserName');
+    writeln(' \_Username: '+value);
+    value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultPassword');
+    writeln(' \_Password: '+value);
+    value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultDomainName');
+    writeln(' \_Domain: '+value);
+  end else
+    writeln('Autologon not enabled.');
 end;
 
 function TWinReg.GetUACStatus: AnsiString;
@@ -97,6 +117,45 @@ begin
     result:= 'Not vulnerable to ''always elevated MSI install'' vulnerability.';
 end;
 
+procedure TWinReg.GetSNMP;
+var
+  communities  : TStringList;
+  name         : string;
+  value        : double;
+begin
+  communities:= TStringList.Create;
+  EnumSubKeys(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', communities); // read all sub keys
+  writeln('SNMP Communities:');
+  if communities.Count = 0 then
+    writeln(' \_> No SNMP communities set.')
+  else
+    for name in communities do begin
+      write(' \_> '+name);
+      value:= ReadKeyDouble(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', name); // get subkey's value
+      case FloatToStr(value) of // SNMP community access
+        '4': writeln(' :: read');
+        '8': writeln(' :: read/write');
+        '1': writeln(' :: no access');
+        '-1': writeln(' :: no registry value defined');
+        else writeln(' :: undefined');
+      end;
+    end;
+end;
+
+// read all sub keys in a registry key
+procedure TWinReg.EnumSubKeys(HKEY: LongWord; key: string; SubKeyNames: TStrings);
+var
+  Registry      : TRegistry;
+begin
+  SubKeyNames.Clear;
+  Registry := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY);
+  Registry.RootKey:= HKEY;
+  if Registry.OpenKeyReadOnly(key) then
+    Registry.GetKeyNames(SubKeyNames);
+  Registry.Free;
+end;
+
+
 function TWinReg.ReadKeyLIint(HKEY: LongWord; regPath: string; key: string): LongInt;
 var
   Registry: TRegistry;
@@ -136,7 +195,7 @@ begin
   Registry.Free;
 end;
 
-function TWinReg.ReadKeyDoub(HKEY: LongWord; regPath: string; key: string): double;
+function TWinReg.ReadKeyDouble(HKEY: LongWord; regPath: string; key: string): double;
 var
   Registry: TRegistry;
 begin

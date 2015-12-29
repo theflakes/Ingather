@@ -194,6 +194,8 @@ begin
   writeln(RegVulns.GetRDPStatus);
   writeln(RegVulns.GetWDigestCleartextPWStatus);
   writeln(RegVulns.GetMSIAlwaysInstallElevatedStatus);
+  RegVulns.GetAutoLogon;
+  RegVulns.GetSNMP;
   RegVulns.Free;
 end;
 
@@ -206,9 +208,10 @@ begin
   getPath:= TWinDevice.Create;
   pathList:= TStringList.Create;
   getPath.GetPathList(pathList);
+  writeln('Directories in ENV PATH variable that are writeable by you.');
   for path in pathList do
     if CheckDirectoryIsWriteable(path) then
-      writeln('ENV path entry '+path+' is writable by you!!!');
+      writeln(' \_> '+path);
   pathList.Free;
   getPath.Free;
 end;
