@@ -97,7 +97,6 @@ begin
   regexNoSpace.Free;
 end;
 
-// evaluate service path permissions
 function TFindVulns.CheckFileIsWriteable(path: string): Boolean;
 begin
   path:= RemoveQuotes(path, '"');
@@ -107,7 +106,6 @@ begin
     result:= false;
 end;
 
-// evaluate service path permissions
 function TFindVulns.CheckDirectoryIsWriteable(path: string): Boolean;
 begin
   path:= RemoveQuotes(path, '"');
@@ -196,6 +194,7 @@ begin
   writeln(RegVulns.GetMSIAlwaysInstallElevatedStatus);
   RegVulns.GetAutoLogon;
   RegVulns.GetSNMP;
+  RegVulns.GetVNCPasswords;
   RegVulns.Free;
 end;
 

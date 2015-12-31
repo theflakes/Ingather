@@ -129,16 +129,14 @@ begin
   http:= THTTPSend.Create;
   try
     try
-      // Try to get the file
-      HTTPGetResult:= http.HTTPMethod('GET', URL);
+      HTTPGetResult:= http.HTTPMethod('GET', URL); // Try to get the file
       while (HTTPGetResult = False) and (RetryAttempt < MaxRetries) do
       begin
         Sleep(500 * RetryAttempt);
         HTTPGetResult:= http.HTTPMethod('GET', URL);
         RetryAttempt:= RetryAttempt + 1;
       end;
-      // If we have an answer from the server, check if the file was sent to us
-      case http.Resultcode of
+      case http.Resultcode of // If we have an answer from the server, check if the file was sent to us
         100..299:
           begin
             http.Document.SaveToFile(TargetFile);
@@ -160,8 +158,7 @@ begin
         else result:= 'File download failed!!!';
       end;
     except
-      // We don't care for the reason for this error; the download failed.
-      result:= 'File download failed!!!';
+      result:= 'File download failed!!!'; // We don't care for the reason for this error; the download failed.
     end;
   finally
     http.Free;

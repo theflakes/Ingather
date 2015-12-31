@@ -21,6 +21,7 @@ type
       function GetMSIAlwaysInstallElevatedStatus: AnsiString;
       procedure GetAutoLogon;
       procedure GetSNMP;
+      procedure GetVNCPasswords;
     private
       const DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)'; // Win versions with default cleartext passwords
       const NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';            // Win versions that will be matched in the above regex that do not store cleartext passwords
@@ -42,6 +43,27 @@ var
 begin
   winVer:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
   result:= winVer;
+end;
+
+// search registry for VNC passwords
+procedure TWinReg.GetVNCPasswords;
+var
+  value: AnsiString;
+begin
+  value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\RealVNC\vncserver', 'Password');
+  if value = 'NF' then
+    writeln('RealVNC :: no password found.')
+  else
+    writeln('RealVNC :: '+value);
+  value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'Password');
+  if value = 'NF' then begin
+    value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly');
+    if value = 'NF' then
+      writeln('TightVNC :: no password found.')
+    else
+      writeln('TightVNC :: '+value);
+  end else
+    writeln('TightVNC :: '+value);
 end;
 
 procedure TWinReg.GetAutoLogon;
@@ -132,7 +154,7 @@ begin
     for name in communities do begin
       write(' \_> '+name);
       value:= ReadKeyDouble(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', name); // get subkey's value
-      case FloatToStr(value) of // SNMP community access
+      case FloatToStr(value) of // SNMP community allowed access
         '4': writeln(' :: read');
         '8': writeln(' :: read/write');
         '1': writeln(' :: no access');
@@ -154,7 +176,6 @@ begin
     Registry.GetKeyNames(SubKeyNames);
   Registry.Free;
 end;
-
 
 function TWinReg.ReadKeyLIint(HKEY: LongWord; regPath: string; key: string): LongInt;
 var
