@@ -9,7 +9,7 @@ program Ingather;
 
 uses
   Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD,
-  WinDevice
+  WinFileSystem
   { you can add units after this };
 type
 
@@ -95,6 +95,7 @@ begin
         vulns.GetVulnServices;
         vulns.GetRegVulns;
         vulns.CheckEnvPathPerms;
+        vulns.GetFSVulns;
         vulns.Free;
       end;
     end else

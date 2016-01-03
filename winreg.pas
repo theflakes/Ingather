@@ -50,22 +50,25 @@ procedure TWinReg.GetVNCPasswords;
 var
   value: AnsiString;
 begin
+  writeln('VNC Registry Passwords:');
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\RealVNC\vncserver', 'Password');
   if value = 'NF' then
-    writeln('RealVNC :: no password found.')
+    writeln(' \_> RealVNC :: no password found.')
   else
-    writeln('RealVNC :: '+value);
+    writeln(' \_> RealVNC :: '+value);
   value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'Password');
-  if value = 'NF' then begin
-    value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly');
-    if value = 'NF' then
-      writeln('TightVNC :: no password found.')
-    else
-      writeln('TightVNC :: '+value);
-  end else
-    writeln('TightVNC :: '+value);
+  if value = 'NF' then
+    writeln(' \_> TightVNC :: no password found.')
+  else
+    writeln(' \_> TightVNC :: '+value);
+  value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly');
+  if value = 'NF' then
+    writeln(' \_> TightVNC :: no view-only password found.')
+  else
+    writeln(' \_> TightVNC view-only :: '+value);
 end;
 
+// is auto logon enabled, if so, get the information
 procedure TWinReg.GetAutoLogon;
 var
   value: AnsiString;

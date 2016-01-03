@@ -24,13 +24,14 @@ unit FindVulns;
 interface
 
 uses
-  Classes, SysUtils, regexpr, FileUtil, WinServices, WinReg, WinDevice;
+  Classes, SysUtils, regexpr, FileUtil, WinServices, WinReg, WinFileSystem;
 type
   TFindVulns = class
     public
       procedure GetVulnServices;
       procedure GetRegVulns;
       procedure CheckEnvPathPerms;
+      procedure GetFSVulns;
       function StringInArray(LookFor: string; LookIn: array of string): boolean;
     private
       const SVC_CHK_QUOTES              = '(?-s)^"';
@@ -42,6 +43,7 @@ type
       const SVC_NOT_VULN_ACCOUNTS: array[1..SVC_NOT_VULN_ACCOUNTS_NUM] of string = ('Local System', 'Domain Administrators', 'Enterprise Domain Controllers', 'Domain Controllers', 'Built-in (Local ) Administrators', 'Local Administrator Account', 'Creator Owner', 'Creator Group', 'Power Users', 'Replicator', 'Restricted Code', 'Write Restricted Code', 'Schema Administrators', 'Certificate Services Administrators', 'Enterprise Administrators', 'Group Policy Administrators');
       const SVC_VULN_ACCOUNTS: array[1..SVC_VULN_ACCOUNTS_NUM] of string = ('Domain Guests', 'Domain Users', 'Domain Computers', 'Built-in (Local ) Guests', 'Built-in (Local ) Users', 'Local Guest Account', 'Printer Operators', 'Authenticated Users', 'Everyone (World)', 'Interactive Logon User', 'Anonymous Logon', 'Remote Desktop Users (for Terminal Services)', 'Anonymous Internet Users');
       const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = ('ChangeConf', 'WDac', 'WOwn');
+      procedure IniNFCheck(checkThis: string; output: string);
       function ServiceExtractPath(path: string): string;
       function ServiceCheckPath(path: String) : Boolean;
       function CheckFileIsWriteable(path: String): Boolean;
@@ -200,11 +202,11 @@ end;
 
 procedure TFindVulns.CheckEnvPathPerms;
 var
-  getPath    : TWinDevice;
+  getPath    : TWinFileSystem;
   path       : AnsiString;
   pathList   : TStringList;
 begin
-  getPath:= TWinDevice.Create;
+  getPath:= TWinFileSystem.Create;
   pathList:= TStringList.Create;
   getPath.GetPathList(pathList);
   writeln('Directories in ENV PATH variable that are writeable by you.');
@@ -213,6 +215,33 @@ begin
       writeln(' \_> '+path);
   pathList.Free;
   getPath.Free;
+end;
+
+// check if INI file value is found and print appropriate output
+procedure TFindVulns.IniNFCheck(checkThis: string; output: string);
+begin
+  case checkThis of
+    'NF': writeln(' \_> INI file exists but value not found');
+    else writeln(' \_> '+output+' :: '+checkThis);
+  end;
+end;
+
+// look for vulns in the filesystem and files
+procedure TFindVulns.GetFSVulns;
+var
+  FSVulns    : TWinFileSystem;
+  UltraVncPW : String;
+begin
+  FSVulns:= TWinFileSystem.Create;
+  writeln('UltraVNC passwords found in INI file:');
+  if FileExists('C:\Program Files\UltraVNC\ultravnc.ini') then begin
+    UltraVncPW:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd', 'NF');
+    IniNFCheck(UltraVncPW, 'Password');
+    UltraVncPW:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd2', 'NF');
+    IniNFCheck(UltraVncPW, 'Password');
+    FSVulns.Free;
+  end else
+    writeln(' \_> UltraVNC INI file not found.');
 end;
 
 end.

@@ -140,9 +140,9 @@
         <UnitName Value="WinReg"/>
       </Unit9>
       <Unit10>
-        <Filename Value="windevice.pas"/>
+        <Filename Value="winfilesystem.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinDevice"/>
+        <UnitName Value="WinFileSystem"/>
       </Unit10>
       <Unit11>
         <Filename Value="misc.pas"/>
