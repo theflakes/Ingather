@@ -43,7 +43,7 @@ type
       const SVC_NOT_VULN_ACCOUNTS: array[1..SVC_NOT_VULN_ACCOUNTS_NUM] of string = ('Local System', 'Domain Administrators', 'Enterprise Domain Controllers', 'Domain Controllers', 'Built-in (Local ) Administrators', 'Local Administrator Account', 'Creator Owner', 'Creator Group', 'Power Users', 'Replicator', 'Restricted Code', 'Write Restricted Code', 'Schema Administrators', 'Certificate Services Administrators', 'Enterprise Administrators', 'Group Policy Administrators');
       const SVC_VULN_ACCOUNTS: array[1..SVC_VULN_ACCOUNTS_NUM] of string = ('Domain Guests', 'Domain Users', 'Domain Computers', 'Built-in (Local ) Guests', 'Built-in (Local ) Users', 'Local Guest Account', 'Printer Operators', 'Authenticated Users', 'Everyone (World)', 'Interactive Logon User', 'Anonymous Logon', 'Remote Desktop Users (for Terminal Services)', 'Anonymous Internet Users');
       const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = ('ChangeConf', 'WDac', 'WOwn');
-      procedure IniNFCheck(checkThis: string; output: string);
+      procedure NFCheck(checkThis: string; output: string);
       function ServiceExtractPath(path: string): string;
       function ServiceCheckPath(path: String) : Boolean;
       function CheckFileIsWriteable(path: String): Boolean;
@@ -218,7 +218,7 @@ begin
 end;
 
 // check if INI file value is found and print appropriate output
-procedure TFindVulns.IniNFCheck(checkThis: string; output: string);
+procedure TFindVulns.NFCheck(checkThis: string; output: string);
 begin
   case checkThis of
     'NF': writeln(' \_> INI file exists but value not found');
@@ -227,21 +227,30 @@ begin
 end;
 
 // look for vulns in the filesystem and files
+// this procedure needs to be smarter
 procedure TFindVulns.GetFSVulns;
 var
   FSVulns    : TWinFileSystem;
-  UltraVncPW : String;
+  PWcheck    : String;
 begin
   FSVulns:= TWinFileSystem.Create;
   writeln('UltraVNC passwords found in INI file:');
   if FileExists('C:\Program Files\UltraVNC\ultravnc.ini') then begin
-    UltraVncPW:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd', 'NF');
-    IniNFCheck(UltraVncPW, 'Password');
-    UltraVncPW:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd2', 'NF');
-    IniNFCheck(UltraVncPW, 'Password');
+    PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd', 'NF');
+    NFCheck(PWcheck, 'Password');
+    PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd2', 'NF');
+    NFCheck(PWcheck, 'Password');
     FSVulns.Free;
   end else
     writeln(' \_> UltraVNC INI file not found.');
+  writeln('Looking for admin password in sysprep files:');
+  if FileExists('C:\sysprep.ini') then begin
+    PWcheck:= FSVulns.ReadINI('C:\sysprep.ini', 'GuiUnattended', 'AdminPassword', 'NF');
+    NFCheck(PWcheck, 'Password');
+  end else
+    writeln(' \_> C:\sysprep.ini file not found.');
+  FSVulns.ReadXML('C:\sysprep\sysprep.xml', 'LocalAccounts');
+  FSVulns.Free;
 end;
 
 end.

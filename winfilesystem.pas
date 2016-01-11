@@ -10,12 +10,13 @@ unit WinFileSystem;
 interface
 
 uses
-  Classes, SysUtils, Dos, Misc, INIFiles;
+  Classes, SysUtils, Dos, Misc, INIFiles, DOM, XMLRead, FileUtil;
 type
   TWinFileSystem = class
      public
        procedure GetPathList(pathList: TStrings);
        function ReadINI(iniFile: string; section:string; value: string; default: string): AnsiString;
+       procedure ReadXML(xmlFile: string; node: string);
      private
        function GetPath: AnsiString;
   end;
@@ -44,6 +45,23 @@ begin
   INI:= TINIFile.Create(iniFile);
   result:= INI.ReadString(section, value, default);
   Ini.Free;
+end;
+
+procedure TWinFileSystem.ReadXML(xmlFile: string; node: string);
+var
+  PassNode: TDOMNode;
+  Doc: TXMLDocument;
+begin
+  if FileExists(xmlFile) then begin
+    ReadXMLFile(Doc, xmlFile);
+    PassNode := Doc.DocumentElement.FindNode(node);
+    if PassNode.TextContent = '' then
+      writeln(PassNode.TextContent)
+    else
+      writeln(' \_> '+xmlFile+' file exists but '+node+' not found');
+    Doc.Free;
+  end else
+    writeln(' \_> '+xmlFile+' file not found.');
 end;
 
 end.
