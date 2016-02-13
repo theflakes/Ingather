@@ -92,10 +92,11 @@ begin
       // run system enumeration analysis
       end else begin
         vulns:= TFindVulns.Create;
-        vulns.GetVulnServices;
-        vulns.GetRegVulns;
-        vulns.CheckEnvPathPerms;
-        vulns.GetFSVulns;
+        output:= concat(output, vulns.GetVulnServices + sLineBreak + sLineBreak);
+        output:= concat(output, vulns.GetRegVulns + sLineBreak + sLineBreak);
+        output:= concat(output, vulns.CheckEnvPathPerms + sLineBreak + sLineBreak);
+        output:= concat(output, vulns.GetFSVulns + sLineBreak + sLineBreak);
+        writeln(output);
         vulns.Free;
       end;
     end else
@@ -129,9 +130,9 @@ begin
     // Is user an admin
     escalate:= TRunAs.Create;
     if escalate.IsUserAdmin then
-      writeln('You are an admin!!!')
+      writeln('You are an admin!!!' + sLineBreak)
     else
-      writeln('You are not an admin.');
+      writeln('You are not an admin.' + sLineBreak);
     {if escalate.RunAsAdmin(0, 'whoami', '/all') then
       writeln('You are not an admin!!!')
     else

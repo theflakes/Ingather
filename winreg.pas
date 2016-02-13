@@ -19,9 +19,9 @@ type
       function GetRDPStatus: AnsiString;
       function GetWDigestCleartextPWStatus: AnsiString;
       function GetMSIAlwaysInstallElevatedStatus: AnsiString;
-      procedure GetAutoLogon;
-      procedure GetSNMP;
-      procedure GetVNCPasswords;
+      function GetAutoLogon: AnsiString;
+      function GetSNMP: AnsiString;
+      function GetVNCPasswords: Ansistring;
     private
       const DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)'; // Win versions with default cleartext passwords
       const NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';            // Win versions that will be matched in the above regex that do not store cleartext passwords
@@ -46,44 +46,48 @@ begin
 end;
 
 // search registry for VNC passwords
-procedure TWinReg.GetVNCPasswords;
+function TWinReg.GetVNCPasswords: AnsiString;
 var
   value: AnsiString;
+  output: AnsiString;
 begin
-  writeln('VNC Registry Passwords:');
+  output:= concat(output, 'VNC Registry Passwords:' + sLineBreak);
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\RealVNC\vncserver', 'Password');
   if value = 'NF' then
-    writeln(' \_> RealVNC :: no password found.')
+    output:= concat(output, ' \_> RealVNC :: no password found.' + sLineBreak)
   else
-    writeln(' \_> RealVNC :: '+value);
+    output:= concat(output, ' \_> RealVNC :: '+value);
   value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'Password');
   if value = 'NF' then
-    writeln(' \_> TightVNC :: no password found.')
+    output:= concat(output, ' \_> TightVNC :: no password found.' + sLineBreak)
   else
-    writeln(' \_> TightVNC :: '+value);
-  value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly');
+    output:= concat(output, ' \_> TightVNC :: '+value);
+  value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly' + sLineBreak);
   if value = 'NF' then
-    writeln(' \_> TightVNC :: no view-only password found.')
+    output:= concat(output, ' \_> TightVNC :: no view-only password found.' + sLineBreak)
   else
-    writeln(' \_> TightVNC view-only :: '+value);
+    output:= concat(output, ' \_> TightVNC view-only :: '+value + sLineBreak);
+  result:= output;
 end;
 
 // is auto logon enabled, if so, get the information
-procedure TWinReg.GetAutoLogon;
+function TWinReg.GetAutoLogon: AnsiString;
 var
   value: AnsiString;
+  output: AnsiString;
 begin
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'AutoAdminLogon');
   if value = '1' then begin
-    writeln('Autologon enabled ---');
+    output:= concat(output, 'Autologon enabled ---' + sLineBreak);
     value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultUserName');
-    writeln(' \_Username: '+value);
+    output:= concat(output, ' \_Username: '+value + sLineBreak);
     value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultPassword');
-    writeln(' \_Password: '+value);
+    output:= concat(output, ' \_Password: '+value + sLineBreak);
     value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultDomainName');
-    writeln(' \_Domain: '+value);
+    output:= concat(output, ' \_Domain: '+value + sLineBreak);
   end else
-    writeln('Autologon not enabled.');
+    output:= concat(output, 'Autologon not enabled.' + sLineBreak);
+  result:= output;
 end;
 
 function TWinReg.GetUACStatus: AnsiString;
@@ -142,29 +146,31 @@ begin
     result:= 'Not vulnerable to ''always elevated MSI install'' vulnerability.';
 end;
 
-procedure TWinReg.GetSNMP;
+function TWinReg.GetSNMP: AnsiString;
 var
   communities  : TStringList;
   name         : string;
   value        : double;
+  output       : AnsiString;
 begin
   communities:= TStringList.Create;
   EnumSubKeys(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', communities); // read all sub keys
-  writeln('SNMP Communities:');
+  output:= concat(output, 'SNMP Communities:' + sLineBreak);
   if communities.Count = 0 then
-    writeln(' \_> No SNMP communities set.')
+    output:= concat(output, ' \_> No SNMP communities set.' + sLineBreak)
   else
     for name in communities do begin
-      write(' \_> '+name);
+      output:= concat(output, ' \_> '+name + sLineBreak);
       value:= ReadKeyDouble(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', name); // get subkey's value
       case FloatToStr(value) of // SNMP community allowed access
-        '4': writeln(' :: read');
-        '8': writeln(' :: read/write');
-        '1': writeln(' :: no access');
-        '-1': writeln(' :: no registry value defined');
-        else writeln(' :: undefined');
+        '4': output:= concat(output, ' :: read' + sLineBreak);
+        '8': output:= concat(output, ' :: read/write' + sLineBreak);
+        '1': output:= concat(output, ' :: no access' + sLineBreak);
+        '-1': output:= concat(output, ' :: no registry value defined' + sLineBreak);
+        else output:= concat(output, ' :: undefined' + sLineBreak);
       end;
     end;
+  result:= output;
 end;
 
 // read all sub keys in a registry key
