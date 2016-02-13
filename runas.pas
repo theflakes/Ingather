@@ -3,6 +3,9 @@ unit RunAs;
  AUTHOR:  Brian Kellogg
 
  GPL v.2 licensed
+
+ code from:
+ http://stackoverflow.com/questions/16835673/handling-uac-administrative-token
 }
 
 {$mode objfpc}{$H+}

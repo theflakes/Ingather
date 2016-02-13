@@ -3,6 +3,9 @@ unit RunCMD;
  AUTHOR:  Brian Kellogg
 
  GPL v.2 licensed
+
+ code from:
+ http://wiki.freepascal.org/Executing_External_Programs
 }
 
 {$mode objfpc}{$H+}

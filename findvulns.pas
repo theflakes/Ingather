@@ -46,26 +46,9 @@ type
       procedure NFCheck(checkThis: string; output: string);
       function ServiceExtractPath(path: string): string;
       function ServiceCheckPath(path: String) : Boolean;
-      function CheckFileIsWriteable(path: String): Boolean;
-      function CheckDirectoryIsWriteable(path: String): Boolean;
-      function RemoveQuotes(const S: string; const QuoteChar: Char): string;
   end;
 
 implementation
-function TFindVulns.RemoveQuotes(const S: string; const QuoteChar: Char): string;
-var
-  Len: Integer;
-begin
-  Result := S;
-  Len := Length(Result);
-  if (Len < 2) then Exit;                    //Quoted text must have at least 2 chars
-  if (Result[1] <> QuoteChar) then Exit;     //Text is not quoted
-  if (Result[Len] <> QuoteChar) then Exit;   //Text is not quoted
-  System.Delete(Result, Len, 1);
-  System.Delete(Result, 1, 1);
-  Result := StringReplace(Result, QuoteChar+QuoteChar, QuoteChar, [rfReplaceAll]);
-end;
-
 // extract the executable path from the service startup directive
 function TFindVulns.ServiceExtractPath(path: string): string;
 var
@@ -99,24 +82,6 @@ begin
   regexNoSpace.Free;
 end;
 
-function TFindVulns.CheckFileIsWriteable(path: string): Boolean;
-begin
-  path:= RemoveQuotes(path, '"');
-  if FileIsWritable(path) then
-    result:= true
-  else
-    result:= false;
-end;
-
-function TFindVulns.CheckDirectoryIsWriteable(path: string): Boolean;
-begin
-  path:= RemoveQuotes(path, '"');
-  if DirectoryIsWritable(path) then
-    result:= true
-  else
-    result:= false;
-end;
-
 function TFindVulns.StringInArray(LookFor: string; LookIn: array of string): boolean;
 var
   compare: string;
@@ -133,6 +98,7 @@ end;
 procedure TFindVulns.GetVulnServices;
 var
   WinSVCs: TWinServices;
+  WinFS: TWinFileSystem;
   i: integer;
   x: integer;
   y: integer;
@@ -140,6 +106,7 @@ var
   path: string;
 begin
   WinSVCs:= TWinServices.Create;
+  WinFS:= TWinFileSystem.Create;
   WinSVCs.GetServicesInfo;
   // lets check for service vulnerabilities
   for i:= Low(WinSVCs.Services) to High(WinSVCs.Services) do begin
@@ -147,7 +114,7 @@ begin
     writeln('--------------------------------------------');
     writeln('|-> Account run as :: '+WinSVCs.Services[i].StartName);
     path:= ServiceExtractPath(WinSVCs.Services[i].Path.PathName);
-    WinSVCs.Services[i].Path.Writeable:= CheckFileIsWriteable(path);
+    WinSVCs.Services[i].Path.Writeable:= WinFS.CheckFileIsWriteable(path);
     WinSVCs.Services[i].Path.Unquoted:= ServiceCheckPath(path);
     // check for service permission vulns, loop through each service's DACL
     for x:= Low(WinSVCs.Services[i].dacl) to High(WinSVCs.Services[i].dacl) do begin
@@ -181,6 +148,7 @@ begin
       end;
     writeln
   end;
+  WinFS.Free;
   WinSVCs.Free;
 end;
 
@@ -202,19 +170,19 @@ end;
 
 procedure TFindVulns.CheckEnvPathPerms;
 var
-  getPath    : TWinFileSystem;
-  path       : AnsiString;
-  pathList   : TStringList;
+  WinFS    : TWinFileSystem;
+  path     : AnsiString;
+  pathList : TStringList;
 begin
-  getPath:= TWinFileSystem.Create;
+  WinFS:= TWinFileSystem.Create;
   pathList:= TStringList.Create;
-  getPath.GetPathList(pathList);
+  WinFS.GetPathList(pathList);
   writeln('Directories in ENV PATH variable that are writeable by you.');
   for path in pathList do
-    if CheckDirectoryIsWriteable(path) then
+    if WinFS.CheckDirectoryIsWriteable(path) then
       writeln(' \_> '+path);
   pathList.Free;
-  getPath.Free;
+  WinFS.Free;
 end;
 
 // check if INI file value is found and print appropriate output
