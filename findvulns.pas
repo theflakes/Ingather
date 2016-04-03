@@ -18,6 +18,8 @@ unit FindVulns;
       ChangeConf (DC)
       WDac (WD)
       WOwn (WO)
+      GenericWrite (GW)
+      GenericALL (GA)
 }
 {$mode objfpc}{$H+}
 
@@ -39,10 +41,10 @@ type
       const SVC_EXTRACT_PATH            = '(?-s)^.+.exe"*';
       const SVC_VULN_ACCOUNTS_NUM       = 13;
       const SVC_NOT_VULN_ACCOUNTS_NUM   = 16;
-      const SVC_VULN_PERMS_NUM          = 3;
+      const SVC_VULN_PERMS_NUM          = 5;
       const SVC_NOT_VULN_ACCOUNTS: array[1..SVC_NOT_VULN_ACCOUNTS_NUM] of string = ('Local System', 'Domain Administrators', 'Enterprise Domain Controllers', 'Domain Controllers', 'Built-in (Local ) Administrators', 'Local Administrator Account', 'Creator Owner', 'Creator Group', 'Power Users', 'Replicator', 'Restricted Code', 'Write Restricted Code', 'Schema Administrators', 'Certificate Services Administrators', 'Enterprise Administrators', 'Group Policy Administrators');
       const SVC_VULN_ACCOUNTS: array[1..SVC_VULN_ACCOUNTS_NUM] of string = ('Domain Guests', 'Domain Users', 'Domain Computers', 'Built-in (Local ) Guests', 'Built-in (Local ) Users', 'Local Guest Account', 'Printer Operators', 'Authenticated Users', 'Everyone (World)', 'Interactive Logon User', 'Anonymous Logon', 'Remote Desktop Users (for Terminal Services)', 'Anonymous Internet Users');
-      const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = ('ChangeConf', 'WDac', 'WOwn');
+      const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = ('ChangeConf', 'WDac', 'WOwn', 'GenericWrite', 'GenericAll');
       function NFCheck(checkThis: string; str: string): AnsiString;
       function ServiceExtractPath(path: string): string;
       function ServiceCheckPath(path: String) : Boolean;

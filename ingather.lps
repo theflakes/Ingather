@@ -9,9 +9,8 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="17"/>
-        <CursorPos X="23" Y="31"/>
+        <CursorPos X="79" Y="24"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -27,9 +26,10 @@
         <Filename Value="findvulns.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FindVulns"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="126"/>
-        <CursorPos X="62" Y="39"/>
+        <TopLine Value="24"/>
+        <CursorPos X="44" Y="44"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -73,8 +73,8 @@
         <Filename Value="winservices.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinServices"/>
-        <EditorIndex Value="5"/>
-        <CursorPos X="126" Y="84"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="22" Y="16"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -91,7 +91,7 @@
         <Filename Value="winreg.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="57"/>
         <CursorPos X="35" Y="23"/>
         <UsageCount Value="330"/>
@@ -101,7 +101,7 @@
         <Filename Value="winfilesystem.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinFileSystem"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <CursorPos X="129" Y="6"/>
         <UsageCount Value="230"/>
         <Loaded Value="True"/>
@@ -109,13 +109,13 @@
       <Unit11>
         <Filename Value="misc.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <CursorPos X="36"/>
         <UsageCount Value="252"/>
         <Loaded Value="True"/>
       </Unit11>
     </Units>
-    <JumpHistory Count="28" HistoryIndex="27">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="winfilesystem.pas"/>
         <Caret Line="58" Column="29" TopLine="23"/>
@@ -228,6 +228,10 @@
         <Filename Value="findvulns.pas"/>
         <Caret Line="170" Column="54" TopLine="165"/>
       </Position28>
+      <Position29>
+        <Filename Value="findvulns.pas"/>
+        <Caret Line="21" TopLine="9"/>
+      </Position29>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

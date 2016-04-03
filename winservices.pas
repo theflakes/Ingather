@@ -12,6 +12,8 @@ unit WinServices;
   ChangeConf (DC)
   WDac (WD)
   WOwn (WO)
+  GenericWrite (GW)
+  GenericALL (GA)
 }
 
 {$mode objfpc}{$H+}
