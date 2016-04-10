@@ -74,7 +74,7 @@ begin
   // Set up the process; as an example a recursive directory search is used
   // because that will usually result in a lot of data.
   AProcess:= TProcess.Create(nil);
-  // In Windows the dir command cannot be used directly because it's a build-in
+  // In Windows the dir command cannot be used directly because it's a built-in
   // shell command. Therefore cmd.exe and the extra parameters are needed.
   AProcess.Executable:= 'c:\windows\system32\cmd.exe';
   AProcess.Parameters.Add('/c');

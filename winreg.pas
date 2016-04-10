@@ -208,7 +208,7 @@ begin
   if Registry.OpenKeyReadOnly(regPath) and Registry.ValueExists(key) then
     result:= Registry.ReadString(key)
   else
-    result:= 'NF';
+    result:= 'Not Found';
   Registry.Free;
 end;
 
