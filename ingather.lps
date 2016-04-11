@@ -9,6 +9,7 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
+        <TopLine Value="73"/>
         <CursorPos X="52" Y="37"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -27,8 +28,8 @@
         <UnitName Value="FindVulns"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="153"/>
-        <CursorPos X="64" Y="172"/>
+        <TopLine Value="157"/>
+        <CursorPos X="72" Y="173"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -93,8 +94,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="85"/>
-        <CursorPos X="41" Y="96"/>
+        <TopLine Value="81"/>
+        <CursorPos X="17" Y="98"/>
         <UsageCount Value="330"/>
         <Loaded Value="True"/>
       </Unit9>
@@ -104,7 +105,7 @@
         <UnitName Value="WinFileSystem"/>
         <EditorIndex Value="3"/>
         <TopLine Value="44"/>
-        <CursorPos X="139" Y="38"/>
+        <CursorPos X="20" Y="58"/>
         <UsageCount Value="230"/>
         <Loaded Value="True"/>
       </Unit10>

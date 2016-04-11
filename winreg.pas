@@ -95,12 +95,12 @@ end;
 
 function TWinReg.GetPasswordlessNetLogon: AnsiString;
 var
-  value: Double;
+  value: LongInt;
 begin
-  value:= ReadKeyDouble(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Control\Lsa', 'LimitBlankPasswordUse');
-  if value = 1 then
+  value:= ReadKeyLIint(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Control\Lsa', 'LimitBlankPasswordUse');
+  if value = 0 then
     result:= 'Passwordless network logon enabled!!!'
-  else if value = 0 then
+  else
     result:= 'Passwordless network logon disabled!!!';
 end;
 

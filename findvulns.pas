@@ -170,7 +170,7 @@ begin
   output:= concat(output, RegVulns.GetAutoLogon + sLineBreak);
   output:= concat(output, RegVulns.GetSNMP + sLineBreak);
   output:= concat(output, RegVulns.GetVNCPasswords + sLineBreak);
-  output:= concat(output, RegVulns.GetPasswordlessNetLogon);
+  output:= concat(output, RegVulns.GetPasswordlessNetLogon + sLineBreak);
   result:= output;
   RegVulns.Free;
 end;

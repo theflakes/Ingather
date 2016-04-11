@@ -56,7 +56,6 @@ begin
     result:= true
   else
     result:= false;
-  writeln(result);
 end;
 
 function TWinFileSystem.GetPath: AnsiString;
