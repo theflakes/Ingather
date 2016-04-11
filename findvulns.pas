@@ -106,7 +106,7 @@ var
   y: integer;
   writeOnce: boolean;
   path: string;
-  output: AnsiString;
+  output: AnsiString = '';
 begin
   WinSVCs:= TWinServices.Create;
   WinFS:= TWinFileSystem.Create;
@@ -115,9 +115,9 @@ begin
   for i:= Low(WinSVCs.Services) to High(WinSVCs.Services) do begin
     output:= concat(output, WinSVCs.Services[i].Name + sLineBreak);
     output:= concat(output, '--------------------------------------------' + sLineBreak);
-    output:= concat(output, '|-> Account run as :: '+WinSVCs.Services[i].StartName + sLineBreak);
+    output:= concat(output, '|-> Account run as :: ' + WinSVCs.Services[i].StartName + sLineBreak);
     path:= ServiceExtractPath(WinSVCs.Services[i].Path.PathName);
-    WinSVCs.Services[i].Path.Writeable:= WinFS.CheckFileIsWriteable(path);
+    WinSVCs.Services[i].Path.Writeable:= WinFS.CheckDirectoryIsWriteable(path);
     WinSVCs.Services[i].Path.Unquoted:= ServiceCheckPath(path);
     // check for service permission vulns, loop through each service's DACL
     for x:= Low(WinSVCs.Services[i].dacl) to High(WinSVCs.Services[i].dacl) do begin
@@ -159,7 +159,7 @@ end;
 function TFindVulns.GetRegVulns: AnsiString;
 var
   RegVulns: TWinReg;
-  output: AnsiString;
+  output: AnsiString = '';
 begin
   RegVulns:= TWinReg.Create;
   output:= concat(output, RegVulns.GetOSVersion + sLineBreak);
@@ -179,7 +179,7 @@ var
   WinFS    : TWinFileSystem;
   path     : AnsiString;
   pathList : TStringList;
-  output   : AnsiString;
+  output   : AnsiString = '';
 begin
   WinFS:= TWinFileSystem.Create;
   pathList:= TStringList.Create;
@@ -196,11 +196,11 @@ end;
 // check if INI file value is found and print appropriate output
 function TFindVulns.NFCheck(checkThis: string; str: string): AnsiString;
 var
-  output: AnsiString;
+  output: AnsiString = '';
 begin
   case checkThis of
-    'NF': output:= concat(output, ' \_> INI file exists but value not found' + sLineBreak);
-    else output:= concat(output, ' \_> '+str+' :: ' + checkThis + sLineBreak);
+    'Not Found': output:= concat(output, ' \_> INI file exists but value not found' + sLineBreak);
+    else output:= concat(output, ' \_> ' + str + ' :: ' + checkThis + sLineBreak);
   end;
   result:= output;
 end;
@@ -211,7 +211,7 @@ function TFindVulns.GetFSVulns: AnsiString;
 var
   FSVulns    : TWinFileSystem;
   PWcheck    : String;
-  output     : AnsiString;
+  output     : AnsiString = '';
 begin
   FSVulns:= TWinFileSystem.Create;
   output:= concat(output, 'UltraVNC passwords found in INI file:' + sLineBreak);

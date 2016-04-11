@@ -48,33 +48,24 @@ end;
 // search registry for VNC passwords
 function TWinReg.GetVNCPasswords: AnsiString;
 var
-  value: AnsiString;
-  output: AnsiString;
+  value: AnsiString = '';
+  output: AnsiString = '';
 begin
   output:= concat(output, 'VNC Registry Passwords:' + sLineBreak);
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\RealVNC\vncserver', 'Password');
-  if value = 'NF' then
-    output:= concat(output, ' \_> RealVNC :: no password found.' + sLineBreak)
-  else
-    output:= concat(output, ' \_> RealVNC :: '+value);
+  output:= concat(output, ' \_> RealVNC :: ' + value + sLineBreak);
   value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'Password');
-  if value = 'NF' then
-    output:= concat(output, ' \_> TightVNC :: no password found.' + sLineBreak)
-  else
-    output:= concat(output, ' \_> TightVNC :: '+value);
-  value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly' + sLineBreak);
-  if value = 'NF' then
-    output:= concat(output, ' \_> TightVNC :: no view-only password found.' + sLineBreak)
-  else
-    output:= concat(output, ' \_> TightVNC view-only :: '+value + sLineBreak);
+  output:= concat(output, ' \_> TightVNC :: ' + value + sLineBreak);
+  value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly');
+  output:= concat(output, ' \_> TightVNC view-only :: '+ value + sLineBreak);
   result:= output;
 end;
 
 // is auto logon enabled, if so, get the information
 function TWinReg.GetAutoLogon: AnsiString;
 var
-  value: AnsiString;
-  output: AnsiString;
+  value: AnsiString = '';
+  output: AnsiString = '';
 begin
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'AutoAdminLogon');
   if value = '1' then begin
@@ -151,7 +142,7 @@ var
   communities  : TStringList;
   name         : string;
   value        : double;
-  output       : AnsiString;
+  output       : AnsiString = '';
 begin
   communities:= TStringList.Create;
   EnumSubKeys(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', communities); // read all sub keys

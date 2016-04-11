@@ -51,10 +51,12 @@ end;
 function TWinFileSystem.CheckDirectoryIsWriteable(path: string): Boolean;
 begin
   path:= RemoveQuotes(path, '"');
+  path:= ExtractFilePath(path);
   if DirectoryIsWritable(path) then
     result:= true
   else
     result:= false;
+  writeln(result);
 end;
 
 function TWinFileSystem.GetPath: AnsiString;
