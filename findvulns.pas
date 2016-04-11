@@ -169,7 +169,8 @@ begin
   output:= concat(output, RegVulns.GetMSIAlwaysInstallElevatedStatus + sLineBreak);
   output:= concat(output, RegVulns.GetAutoLogon + sLineBreak);
   output:= concat(output, RegVulns.GetSNMP + sLineBreak);
-  output:= concat(output, RegVulns.GetVNCPasswords);
+  output:= concat(output, RegVulns.GetVNCPasswords + sLineBreak);
+  output:= concat(output, RegVulns.GetPasswordlessNetLogon);
   result:= output;
   RegVulns.Free;
 end;

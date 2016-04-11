@@ -22,6 +22,7 @@ type
       function GetAutoLogon: AnsiString;
       function GetSNMP: AnsiString;
       function GetVNCPasswords: Ansistring;
+      function GetPasswordlessNetLogon: AnsiString;
     private
       const DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)'; // Win versions with default cleartext passwords
       const NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';            // Win versions that will be matched in the above regex that do not store cleartext passwords
@@ -90,6 +91,17 @@ begin
     result:= 'UAC is enabled!!!'
   else if value = 0 then
     result:= 'UAC is disabled!!!';
+end;
+
+function TWinReg.GetPasswordlessNetLogon: AnsiString;
+var
+  value: Double;
+begin
+  value:= ReadKeyDouble(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Control\Lsa', 'LimitBlankPasswordUse');
+  if value = 1 then
+    result:= 'Passwordless network logon enabled!!!'
+  else if value = 0 then
+    result:= 'Passwordless network logon disabled!!!';
 end;
 
 function TWinReg.GetRDPStatus: AnsiString;
