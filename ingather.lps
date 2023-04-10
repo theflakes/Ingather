@@ -9,8 +9,9 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
-        <TopLine Value="19"/>
-        <CursorPos X="32" Y="95"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="181"/>
+        <CursorPos X="69" Y="229"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -18,10 +19,9 @@
         <Filename Value="findvulns.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FindVulns"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="143"/>
-        <CursorPos X="32" Y="183"/>
+        <TopLine Value="192"/>
+        <CursorPos Y="24"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit1>

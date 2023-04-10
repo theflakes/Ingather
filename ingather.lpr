@@ -226,7 +226,7 @@ begin
   writeln('      screen output will be suppressed.');
   writeln('Info:');
   writeln('       -h, --help        : print this help message');
-  writeln('       -l, --list        : print enumeration commands use by Ingather');
+  writeln('       -l, --list        : print enumeration commands run by Ingather');
   writeln;
 end;
 
