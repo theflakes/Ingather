@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="C:\lazarus\fpc\2.6.4\bin\i386-win32\fpc.exe" Date="1195615086"/>
-  <Params Value=" -MObjFPC -Scghi -CX -O3 -XX -l -vewnhibq -FiD:\Documents\Lazarus\ingather\lib\i386-win32 -FuC:\FP-srcs\Synapse\source\lib -FuC:\lazarus\components\lazutils -FuC:\lazarus\lcl -FuD:\Documents\Lazarus\ingather\ -FUD:\Documents\Lazarus\ingather\lib\i386-win32\ ingather.lpr"/>
-</CONFIG>
