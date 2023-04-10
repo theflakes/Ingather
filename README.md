@@ -23,7 +23,7 @@ NOTE: If output to file or network is specified,
       screen output will be suppressed.
 Info:
        -h, --help        : print this help message
-       -l, --list        : print enumeration commands run by Ingather
+       -l, --list        : print default enum commands and descriptions
 ```
 
 Reduce Lazarus EXE file size: http://lazplanet.blogspot.com/2013/03/how-to-reduce-exe-file-size-of-your.html
