@@ -2,243 +2,267 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="9"/>
+    <Version Value="12"/>
     <BuildModes Active="Release"/>
-    <Units Count="12">
+    <Units Count="16">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
-        <TopLine Value="73"/>
-        <CursorPos X="52" Y="37"/>
+        <TopLine Value="19"/>
+        <CursorPos X="32" Y="95"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="C:\FP-srcs\Synapse\source\lib\blcksock.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="992"/>
-        <CursorPos X="15" Y="1005"/>
-        <UsageCount Value="201"/>
-      </Unit1>
-      <Unit2>
         <Filename Value="findvulns.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FindVulns"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="157"/>
-        <CursorPos X="72" Y="173"/>
+        <TopLine Value="143"/>
+        <CursorPos X="32" Y="183"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
-      </Unit2>
-      <Unit3>
+      </Unit1>
+      <Unit2>
         <Filename Value="runas.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunAs"/>
         <EditorIndex Value="9"/>
-        <CursorPos X="95" Y="45"/>
+        <TopLine Value="22"/>
+        <CursorPos Y="50"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
-      </Unit3>
-      <Unit4>
+      </Unit2>
+      <Unit3>
         <Filename Value="netio.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="NetIO"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="45"/>
-        <CursorPos X="74" Y="132"/>
+        <CursorPos X="96" Y="27"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
-      </Unit4>
-      <Unit5>
+      </Unit3>
+      <Unit4>
         <Filename Value="runcmd.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunCMD"/>
         <EditorIndex Value="8"/>
-        <CursorPos X="77" Y="77"/>
+        <CursorPos X="97" Y="69"/>
         <UsageCount Value="221"/>
         <Loaded Value="True"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="209"/>
-      </Unit6>
-      <Unit7>
+      </Unit4>
+      <Unit5>
         <Filename Value="winservices.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinServices"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="113"/>
-        <CursorPos X="22" Y="16"/>
+        <TopLine Value="203"/>
+        <CursorPos X="5" Y="5"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
-      </Unit7>
-      <Unit8>
+      </Unit5>
+      <Unit6>
         <Filename Value="winusers.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinUsers"/>
         <EditorIndex Value="6"/>
-        <CursorPos X="64" Y="23"/>
+        <CursorPos X="5" Y="5"/>
         <UsageCount Value="230"/>
         <Loaded Value="True"/>
-      </Unit8>
-      <Unit9>
+      </Unit6>
+      <Unit7>
         <Filename Value="winreg.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="81"/>
-        <CursorPos X="17" Y="98"/>
+        <CursorPos X="30" Y="41"/>
         <UsageCount Value="330"/>
         <Loaded Value="True"/>
-      </Unit9>
-      <Unit10>
+      </Unit7>
+      <Unit8>
         <Filename Value="winfilesystem.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinFileSystem"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="44"/>
-        <CursorPos X="20" Y="58"/>
+        <CursorPos X="40" Y="96"/>
         <UsageCount Value="230"/>
         <Loaded Value="True"/>
-      </Unit10>
-      <Unit11>
+      </Unit8>
+      <Unit9>
         <Filename Value="misc.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <CursorPos X="36"/>
+        <CursorPos X="5" Y="5"/>
         <UsageCount Value="252"/>
         <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\FP-srcs\Synapse\source\lib\blcksock.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="992"/>
+        <CursorPos X="15" Y="1005"/>
+        <UsageCount Value="199"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="207"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="blcksock.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="82"/>
+        <CursorPos X="146" Y="87"/>
+        <UsageCount Value="19"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="125"/>
+        <UsageCount Value="8"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\lazarus\components\lazutils\lazfileutils.pas"/>
+        <UnitName Value="LazFileUtils"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="96" Y="20"/>
+        <UsageCount Value="8"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\lazarus\components\lazutils\lazutf8.pas"/>
+        <UnitName Value="LazUTF8"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3277"/>
+        <CursorPos X="20" Y="3372"/>
+        <UsageCount Value="8"/>
+      </Unit15>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="188" Column="8" TopLine="165"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="15" Column="29"/>
       </Position1>
       <Position2>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="115" Column="28" TopLine="95"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="34" Column="26" TopLine="2"/>
       </Position2>
       <Position3>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="31" Column="43" TopLine="8"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="16" Column="17"/>
       </Position3>
       <Position4>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="200" Column="58" TopLine="179"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="18" Column="35"/>
       </Position4>
       <Position5>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="171" Column="41" TopLine="145"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="178" Column="52" TopLine="151"/>
       </Position5>
       <Position6>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="226" Column="79" TopLine="186"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="181" Column="19" TopLine="151"/>
       </Position6>
       <Position7>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="210" Column="27" TopLine="186"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="180" Column="14" TopLine="155"/>
       </Position7>
       <Position8>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="170" Column="66" TopLine="129"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="94" Column="3" TopLine="61"/>
       </Position8>
       <Position9>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="49" Column="18"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="30" Column="44" TopLine="12"/>
       </Position9>
       <Position10>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="24" Column="43"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="101" Column="53" TopLine="82"/>
       </Position10>
       <Position11>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="22" Column="40" TopLine="8"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="96" Column="20" TopLine="82"/>
       </Position11>
       <Position12>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="133" Column="54" TopLine="111"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="100" Column="51" TopLine="87"/>
       </Position12>
       <Position13>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="148" Column="97" TopLine="140"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="153" Column="59" TopLine="110"/>
       </Position13>
       <Position14>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="172" Column="17" TopLine="149"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="38" Column="32" TopLine="11"/>
       </Position14>
       <Position15>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="46" Column="70" TopLine="19"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="64" Column="14" TopLine="38"/>
       </Position15>
       <Position16>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="201" Column="45" TopLine="174"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="125" Column="37" TopLine="99"/>
       </Position16>
       <Position17>
         <Filename Value="ingather.lpr"/>
-        <Caret Line="99" Column="70" TopLine="82"/>
+        <Caret Line="126" Column="58" TopLine="100"/>
       </Position17>
       <Position18>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="170" Column="54" TopLine="165"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="197" Column="38" TopLine="171"/>
       </Position18>
       <Position19>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="21" TopLine="9"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="37" Column="7" TopLine="20"/>
       </Position19>
       <Position20>
-        <Filename Value="winfilesystem.pas"/>
-        <Caret Line="45" Column="32" TopLine="30"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="101" Column="29" TopLine="74"/>
       </Position20>
       <Position21>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="124" Column="128" TopLine="160"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="125" Column="32" TopLine="99"/>
       </Position21>
       <Position22>
         <Filename Value="findvulns.pas"/>
-        <Caret Line="109" Column="26" TopLine="100"/>
+        <Caret Line="222" Column="44" TopLine="202"/>
       </Position22>
       <Position23>
         <Filename Value="findvulns.pas"/>
-        <Caret Line="165" Column="19" TopLine="142"/>
+        <Caret Line="251" Column="34" TopLine="185"/>
       </Position23>
       <Position24>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="187" Column="19" TopLine="164"/>
+        <Filename Value="winfilesystem.pas"/>
+        <Caret Line="86" Column="32" TopLine="50"/>
       </Position24>
       <Position25>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="199" Column="26" TopLine="179"/>
+        <Filename Value="winfilesystem.pas"/>
+        <Caret Line="22" Column="24"/>
       </Position25>
       <Position26>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="202" Column="34" TopLine="179"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="30" Column="43"/>
       </Position26>
       <Position27>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="214" Column="31" TopLine="192"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="100" Column="48" TopLine="79"/>
       </Position27>
       <Position28>
-        <Filename Value="findvulns.pas"/>
-        <Caret Line="162" Column="26" TopLine="142"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="29" Column="37" TopLine="7"/>
       </Position28>
       <Position29>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="102" Column="61" TopLine="88"/>
+        <Filename Value="ingather.lpr"/>
+        <Caret Line="16" Column="16" TopLine="13"/>
       </Position29>
-      <Position30>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="25" Column="16" TopLine="2"/>
-      </Position30>
     </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
 </CONFIG>

@@ -2,10 +2,10 @@ unit RunCMD;
 {
  AUTHOR:  Brian Kellogg
 
- GPL v.2 licensed
+ MIT licensed
 
  code from:
- http://wiki.freepascal.org/Executing_External_Programs
+      http://wiki.freepascal.org/Executing_External_Programs
 }
 
 {$mode objfpc}{$H+}
@@ -76,7 +76,7 @@ begin
   AProcess:= TProcess.Create(nil);
   // In Windows the dir command cannot be used directly because it's a built-in
   // shell command. Therefore cmd.exe and the extra parameters are needed.
-  AProcess.Executable:= 'c:\windows\system32\cmd.exe';
+  AProcess.Executable:= 'C:\Windows\System32\cmd.exe';
   AProcess.Parameters.Add('/c');
   AProcess.Parameters.Add(cmd);
   // Process option poUsePipes has to be used so the output can be captured.

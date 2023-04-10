@@ -2,7 +2,7 @@ unit WinFileSystem;
 {
  AUTHOR:  Brian Kellogg
 
- GPL v.2 licensed
+ MIT licensed
 }
 
 {$mode objfpc}{$H+}
@@ -10,7 +10,7 @@ unit WinFileSystem;
 interface
 
 uses
-  Classes, SysUtils, Dos, Misc, INIFiles, DOM, XMLRead, FileUtil;
+  Classes, SysUtils, Dos, Misc, INIFiles, DOM, XMLRead, FileUtil, LazFileUtils;
 type
   TWinFileSystem = class
      public
@@ -19,7 +19,7 @@ type
        function CheckFileIsWriteable(path: string): Boolean;
        function CheckDirectoryIsWriteable(path: string): Boolean;
        function RemoveQuotes(const S: string; const QuoteChar: Char): string;
-       procedure ReadXML(xmlFile: string; node: string);
+       function ReadXML(xmlFile: string; node: string): AnsiString;
      private
        function GetPath: AnsiString;
   end;
@@ -75,7 +75,7 @@ begin
 end;
 
 function TWinFileSystem.ReadINI(iniFile: string; section:string; value: string; default: string): AnsiString;
-Var
+var
  INI: TINIFile;
 begin
   INI:= TINIFile.Create(iniFile);
@@ -83,21 +83,22 @@ begin
   Ini.Free;
 end;
 
-procedure TWinFileSystem.ReadXML(xmlFile: string; node: string);
+function TWinFileSystem.ReadXML(xmlFile: string; node: string): AnsiString;
 var
   PassNode: TDOMNode;
   Doc: TXMLDocument;
+  output: AnsiString = '';
 begin
   if FileExists(xmlFile) then begin
     ReadXMLFile(Doc, xmlFile);
     PassNode := Doc.DocumentElement.FindNode(node);
     if PassNode.TextContent = '' then
-      writeln(PassNode.TextContent)
+      result:= concat(output, '[!!]' + PassNode.TextContent)
     else
-      writeln(' \_> '+xmlFile+' file exists but '+node+' not found');
+      result:= concat(output, '[**] '+xmlFile+' file exists but '+node+' not found');
     Doc.Free;
   end else
-    writeln(' \_> '+xmlFile+' file not found.');
+    result:= concat(output, '[**] '+xmlFile+' file not found.');
 end;
 
 end.

@@ -2,7 +2,7 @@ unit WinServices;
 {
  AUTHOR:  Brian Kellogg
 
- GPL v.2 licensed
+ MIT licensed
 
  service permission information: https://support.microsoft.com/en-us/kb/914392
 

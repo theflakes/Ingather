@@ -2,7 +2,7 @@ unit WinUsers;
 {
  AUTHOR:  Brian Kellogg
 
- GPL v.2 licensed
+ MIT licensed
 }
 
 {$mode objfpc}{$H+}

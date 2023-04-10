@@ -2,7 +2,7 @@ unit FindVulns;
 {
  AUTHOR:  Brian Kellogg
 
- GPL v.2 licensed
+ MIT licensed
 
  Priv escalation howto:
       http://fuzzysecurity.com/tutorials/16.html
@@ -13,8 +13,10 @@ unit FindVulns;
 
  service permission information: https://support.microsoft.com/en-us/kb/914392
  Service best practices:
-      Limit service DACLs to only those users who need a particular access type. Be especially cautious with the following rights.
-      If these rights are granted to a user or to a group that has low rights, the rights can be used to elevate to LocalSystem on the computer:
+      Limit service DACLs to only those users who need a particular access type.
+      Be especially cautious with the following rights.
+      If these rights are granted to a user or to a group that has low rights,
+      the rights can be used to elevate to LocalSystem on the computer:
       ChangeConf (DC)
       WDac (WD)
       WOwn (WO)
@@ -42,12 +44,28 @@ type
       const SVC_VULN_ACCOUNTS_NUM       = 13;
       const SVC_NOT_VULN_ACCOUNTS_NUM   = 16;
       const SVC_VULN_PERMS_NUM          = 5;
-      const SVC_NOT_VULN_ACCOUNTS: array[1..SVC_NOT_VULN_ACCOUNTS_NUM] of string = ('Local System', 'Domain Administrators', 'Enterprise Domain Controllers', 'Domain Controllers', 'Built-in (Local ) Administrators', 'Local Administrator Account', 'Creator Owner', 'Creator Group', 'Power Users', 'Replicator', 'Restricted Code', 'Write Restricted Code', 'Schema Administrators', 'Certificate Services Administrators', 'Enterprise Administrators', 'Group Policy Administrators');
-      const SVC_VULN_ACCOUNTS: array[1..SVC_VULN_ACCOUNTS_NUM] of string = ('Domain Guests', 'Domain Users', 'Domain Computers', 'Built-in (Local ) Guests', 'Built-in (Local ) Users', 'Local Guest Account', 'Printer Operators', 'Authenticated Users', 'Everyone (World)', 'Interactive Logon User', 'Anonymous Logon', 'Remote Desktop Users (for Terminal Services)', 'Anonymous Internet Users');
-      const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = ('ChangeConf', 'WDac', 'WOwn', 'GenericWrite', 'GenericAll');
+      const SVC_NOT_VULN_ACCOUNTS: array[1..SVC_NOT_VULN_ACCOUNTS_NUM] of string =(
+              'Local System', 'Domain Administrators',
+              'Enterprise Domain Controllers', 'Domain Controllers',
+              'Built-in (Local ) Administrators', 'Local Administrator Account',
+              'Creator Owner', 'Creator Group', 'Power Users', 'Replicator',
+              'Restricted Code', 'Write Restricted Code', 'Schema Administrators',
+              'Certificate Services Administrators', 'Enterprise Administrators',
+              'Group Policy Administrators'
+              );
+      const SVC_VULN_ACCOUNTS: array[1..SVC_VULN_ACCOUNTS_NUM] of string = (
+              'Domain Guests', 'Domain Users', 'Domain Computers',
+              'Built-in (Local ) Guests', 'Built-in (Local ) Users',
+              'Local Guest Account', 'Printer Operators', 'Authenticated Users',
+              'Everyone (World)', 'Interactive Logon User', 'Anonymous Logon',
+              'Remote Desktop Users (for Terminal Services)', 'Anonymous Internet Users'
+              );
+      const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = (
+              'ChangeConf', 'WDac', 'WOwn', 'GenericWrite', 'GenericAll'
+              );
       function NFCheck(checkThis: string; str: string): AnsiString;
       function ServiceExtractPath(path: string): string;
-      function ServiceCheckPath(path: String) : Boolean;
+      function ServiceCheckPath(path: string): Boolean;
   end;
 
 implementation
@@ -60,6 +78,7 @@ begin
   regex.Expression:= SVC_EXTRACT_PATH;
   if regex.Exec(path) then
     result:= regex.Match[0];
+  regex.Free;
 end;
 
 // find services with paths containing spaces and is not quoted
@@ -113,9 +132,8 @@ begin
   WinSVCs.GetServicesInfo;
   // lets check for service vulnerabilities
   for i:= Low(WinSVCs.Services) to High(WinSVCs.Services) do begin
-    output:= concat(output, WinSVCs.Services[i].Name + sLineBreak);
-    output:= concat(output, '--------------------------------------------' + sLineBreak);
-    output:= concat(output, '|-> Account run as :: ' + WinSVCs.Services[i].StartName + sLineBreak);
+    output:= concat(output, '[*] ' + WinSVCs.Services[i].Name + sLineBreak);
+    output:= concat(output, '[**] Account run as :: ' + WinSVCs.Services[i].StartName + sLineBreak);
     path:= ServiceExtractPath(WinSVCs.Services[i].Path.PathName);
     WinSVCs.Services[i].Path.Writeable:= WinFS.CheckDirectoryIsWriteable(path);
     WinSVCs.Services[i].Path.Unquoted:= ServiceCheckPath(path);
@@ -129,7 +147,7 @@ begin
             if StringInArray(WinSVCs.Services[i].dacl[x].perms[y], SVC_VULN_PERMS) then begin
               // only write the account name once
               if writeOnce then begin
-                output:= concat(output, '|-> Account with CONF/OWN perms :: '+WinSVCs.Services[i].dacl[x].entry);
+                output:= concat(output, '[!!] Account with CONF/OWN perms :: '+WinSVCs.Services[i].dacl[x].entry);
                 writeOnce := false;
               end;
               output:= concat(output, ' :: '+WinSVCs.Services[i].dacl[x].perms[y]);
@@ -143,11 +161,11 @@ begin
     // check for service path vulns
     if WinSVCs.Services[i].Path.PathName <> '' then
       if WinSVCs.Services[i].Path.Writeable or WinSVCs.Services[i].Path.Unquoted then begin
-        output:= concat(output, '|-> '+WinSVCs.Services[i].Path.PathName + sLineBreak);
+        output:= concat(output, '[**] '+WinSVCs.Services[i].Path.PathName + sLineBreak);
         if WinSVCs.Services[i].Path.Writeable then
-          output:= concat(output, ' \_> Service path is writable by you!!!' + sLineBreak);
+          output:= concat(output, '[!!] Service path is writable by you!!!' + sLineBreak);
         if WinSVCs.Services[i].Path.Unquoted then
-          output:= concat(output, ' \_> Service path has spaces and is unquoted!!!' + sLineBreak);
+          output:= concat(output, '[!!] Service path has spaces and is unquoted!!!' + sLineBreak);
       end;
     output:= concat(output, sLineBreak);
   end;
@@ -162,7 +180,7 @@ var
   output: AnsiString = '';
 begin
   RegVulns:= TWinReg.Create;
-  output:= concat(output, RegVulns.GetOSVersion + sLineBreak);
+  output:= concat(output, '[*] ' + RegVulns.GetOSVersion + sLineBreak);
   output:= concat(output, RegVulns.GetUACStatus + sLineBreak);
   output:= concat(output, RegVulns.GetRDPStatus + sLineBreak);
   output:= concat(output, RegVulns.GetWDigestCleartextPWStatus + sLineBreak);
@@ -185,10 +203,10 @@ begin
   WinFS:= TWinFileSystem.Create;
   pathList:= TStringList.Create;
   WinFS.GetPathList(pathList);
-  output:= concat(output, 'Directories in ENV PATH variable that are writeable by you.' + sLineBreak);
+  output:= concat(output, '[*] Directories in ENV PATH variable that are writeable by you.' + sLineBreak);
   for path in pathList do
     if WinFS.CheckDirectoryIsWriteable(path) then
-      output:= concat(output, ' \_> ' + path + sLineBreak);
+      output:= concat(output, '[!!] ' + path + sLineBreak);
   result:= output;
   pathList.Free;
   WinFS.Free;
@@ -200,8 +218,8 @@ var
   output: AnsiString = '';
 begin
   case checkThis of
-    'Not Found': output:= concat(output, ' \_> INI file exists but value not found' + sLineBreak);
-    else output:= concat(output, ' \_> ' + str + ' :: ' + checkThis + sLineBreak);
+    'Not Found': output:= concat(output, '[**] INI file exists but value not found' + sLineBreak);
+    else output:= concat(output, '[!!] ' + str + ' :: ' + checkThis + sLineBreak);
   end;
   result:= output;
 end;
@@ -215,7 +233,7 @@ var
   output     : AnsiString = '';
 begin
   FSVulns:= TWinFileSystem.Create;
-  output:= concat(output, 'UltraVNC passwords found in INI file:' + sLineBreak);
+  output:= concat(output, '[*] UltraVNC passwords found in INI file:' + sLineBreak);
   if FileExists('C:\Program Files\UltraVNC\ultravnc.ini') then begin
     PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd', 'NF');
     NFCheck(PWcheck, 'Password');
@@ -223,14 +241,14 @@ begin
     NFCheck(PWcheck, 'Password');
     FSVulns.Free;
   end else
-    output:= concat(output, ' \_> UltraVNC INI file not found.' + sLineBreak + sLineBreak);
-  output:= concat(output, 'Looking for admin password in sysprep files:' + sLineBreak);
+    output:= concat(output, '[**] UltraVNC INI file not found.' + sLineBreak + sLineBreak);
+  output:= concat(output, '[*] Looking for admin password in sysprep files:' + sLineBreak);
   if FileExists('C:\sysprep.ini') then begin
     PWcheck:= FSVulns.ReadINI('C:\sysprep.ini', 'GuiUnattended', 'AdminPassword', 'NF');
     NFCheck(PWcheck, 'Password');
   end else
-    output:= concat(output, ' \_> C:\sysprep.ini file not found.' + sLineBreak);
-  FSVulns.ReadXML('C:\sysprep\sysprep.xml', 'LocalAccounts');
+    output:= concat(output, '[**] C:\sysprep.ini file not found.' + sLineBreak);
+  output:= concat(output, '[**] ' + FSVulns.ReadXML('C:\sysprep\sysprep.xml', 'LocalAccounts'));
   result:= output;
   FSVulns.Free;
 end;

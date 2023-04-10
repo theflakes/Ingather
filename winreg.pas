@@ -2,7 +2,7 @@ unit WinReg;
  {
  AUTHOR:  Brian Kellogg
 
- GPL v.2 licensed
+ MIT licensed
 }
 
 {$mode objfpc}{$H+}
@@ -52,13 +52,13 @@ var
   value: AnsiString = '';
   output: AnsiString = '';
 begin
-  output:= concat(output, 'VNC Registry Passwords:' + sLineBreak);
+  output:= concat(output, '[*] VNC Registry Passwords:' + sLineBreak);
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\RealVNC\vncserver', 'Password');
-  output:= concat(output, ' \_> RealVNC :: ' + value + sLineBreak);
+  output:= concat(output, '[**] RealVNC :: ' + value + sLineBreak);
   value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'Password');
-  output:= concat(output, ' \_> TightVNC :: ' + value + sLineBreak);
+  output:= concat(output, '[**] TightVNC :: ' + value + sLineBreak);
   value:= ReadKeyAnsi(HKEY_CURRENT_USER, '\Software\TightVNC\Server', 'PasswordViewOnly');
-  output:= concat(output, ' \_> TightVNC view-only :: '+ value + sLineBreak);
+  output:= concat(output, '[**] TightVNC view-only :: '+ value + sLineBreak);
   result:= output;
 end;
 
@@ -70,15 +70,15 @@ var
 begin
   value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'AutoAdminLogon');
   if value = '1' then begin
-    output:= concat(output, 'Autologon enabled ---' + sLineBreak);
+    output:= concat(output, '[!] Autologon enabled' + sLineBreak);
     value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultUserName');
-    output:= concat(output, ' \_Username: '+value + sLineBreak);
+    output:= concat(output, '[**] Username: '+value + sLineBreak);
     value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultPassword');
-    output:= concat(output, ' \_Password: '+value + sLineBreak);
+    output:= concat(output, '[**] Password: '+value + sLineBreak);
     value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultDomainName');
-    output:= concat(output, ' \_Domain: '+value + sLineBreak);
+    output:= concat(output, '[**] Domain: '+value + sLineBreak);
   end else
-    output:= concat(output, 'Autologon not enabled.' + sLineBreak);
+    output:= concat(output, '[*] Autologon not enabled.' + sLineBreak);
   result:= output;
 end;
 
@@ -88,9 +88,9 @@ var
 begin
   value:= ReadKeyLIint(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', 'EnableLUA');
   if value = 1 then
-    result:= 'UAC is enabled!!!'
+    result:= '[*] UAC is enabled'
   else if value = 0 then
-    result:= 'UAC is disabled!!!';
+    result:= '[!] UAC is disabled';
 end;
 
 function TWinReg.GetPasswordlessNetLogon: AnsiString;
@@ -99,9 +99,9 @@ var
 begin
   value:= ReadKeyLIint(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Control\Lsa', 'LimitBlankPasswordUse');
   if value = 0 then
-    result:= 'Passwordless network logon enabled!!!'
+    result:= '[!] Passwordless network logon enabled'
   else
-    result:= 'Passwordless network logon disabled!!!';
+    result:= '[*] Passwordless network logon disabled';
 end;
 
 function TWinReg.GetRDPStatus: AnsiString;
@@ -110,9 +110,9 @@ var
 begin
   value:= ReadKeyLIint(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Control\Terminal Server', 'fDenyTSConnections');
   if value = 0 then
-    result:= 'RDP is enabled!!!'
+    result:= '[!] RDP is enabled'
   else if value = 1 then
-    result:= 'RDP is disabled!!!';
+    result:= '[*] RDP is disabled';
 end;
 
 function TWinReg.GetWDigestCleartextPWStatus: AnsiString;
@@ -127,13 +127,13 @@ begin
   findNonVulnOS.Expression:= NON_DFLT_CLEARTEXT_PW;
   value:= ReadKeyLIint(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest', 'UseLogonCredential');
   if value = 0 then
-    result:= 'WDigest cleartext passwords disabled.'
+    result:= '[*] WDigest cleartext passwords disabled.'
   else if value = 1 then
-    result:= 'WDigest cleartext passwords enabled!!!'
+    result:= '[!] WDigest cleartext passwords enabled'
   else if findVulnOS.Exec(GetOSVersion) and not findNonVulnOS.Exec(GetOSVersion) then
-    result:= 'WDigest cleartext passwords enabled!!!'
+    result:= '[!] WDigest cleartext passwords enabled'
   else
-    result:= 'WDigest cleartext passwords disabled.';
+    result:= '[*] WDigest cleartext passwords disabled.';
 end;
 
 function TWinReg.GetMSIAlwaysInstallElevatedStatus: AnsiString;
@@ -144,9 +144,9 @@ begin
   HKLMvalue:= ReadKeyLIint(HKEY_LOCAL_MACHINE, '\SOFTWARE\Policies\Microsoft\Windows\Installer', 'AlwaysInstallElevated');
   HKLUvalue:= ReadKeyLIint(HKEY_CURRENT_USER, '\SOFTWARE\Policies\Microsoft\Windows\Installer', 'AlwaysInstallElevated');
   if (HKLMvalue = 1) and (HKLUvalue = 1) then
-    result:= 'MSI installs always elevated vulnerability found.'
+    result:= '[!] MSI installs always elevated vulnerability found.'
   else
-    result:= 'Not vulnerable to ''always elevated MSI install'' vulnerability.';
+    result:= '[*] Not vulnerable to ''always elevated MSI install'' vulnerability.';
 end;
 
 function TWinReg.GetSNMP: AnsiString;
@@ -158,19 +158,19 @@ var
 begin
   communities:= TStringList.Create;
   EnumSubKeys(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', communities); // read all sub keys
-  output:= concat(output, 'SNMP Communities:' + sLineBreak);
+  output:= concat(output, '[*] SNMP Communities:' + sLineBreak);
   if communities.Count = 0 then
-    output:= concat(output, ' \_> No SNMP communities set.' + sLineBreak)
+    output:= concat(output, '[**] No SNMP communities set.' + sLineBreak)
   else
     for name in communities do begin
-      output:= concat(output, ' \_> '+name + sLineBreak);
+      output:= concat(output, '[**] '+name + sLineBreak);
       value:= ReadKeyDouble(HKEY_LOCAL_MACHINE, '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', name); // get subkey's value
       case FloatToStr(value) of // SNMP community allowed access
-        '4': output:= concat(output, ' :: read' + sLineBreak);
-        '8': output:= concat(output, ' :: read/write' + sLineBreak);
-        '1': output:= concat(output, ' :: no access' + sLineBreak);
-        '-1': output:= concat(output, ' :: no registry value defined' + sLineBreak);
-        else output:= concat(output, ' :: undefined' + sLineBreak);
+        '4': output:= concat(output, '[**] :: read' + sLineBreak);
+        '8': output:= concat(output, '[!!] :: read/write' + sLineBreak);
+        '1': output:= concat(output, '[**] :: no access' + sLineBreak);
+        '-1': output:= concat(output, '[**] :: no registry value defined' + sLineBreak);
+        else output:= concat(output, '[**] :: undefined' + sLineBreak);
       end;
     end;
   result:= output;
