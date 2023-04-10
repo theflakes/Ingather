@@ -216,7 +216,7 @@ begin
   writeln('       -z,               : use the Windows HTTP download function');
   writeln('                           otherwise use custom HTTP download function');
   writeln('Run options:');
-  writeln('       -c, --command     : run command and send output across network');
+  writeln('       -c, --command     : run custom command');
   writeln('       -e, --enum        : run all builtin enumerations');
   writeln('Output options:');
   writeln('       -i, --ip          : destination IP address');
@@ -226,7 +226,7 @@ begin
   writeln('      screen output will be suppressed.');
   writeln('Info:');
   writeln('       -h, --help        : print this help message');
-  writeln('       -l, --list        : print enumeration commands run by Ingather');
+  writeln('       -l, --list        : print default enum commands and descriptions');
   writeln;
 end;
 
