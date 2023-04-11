@@ -43,8 +43,8 @@ var
 begin
   // quick check parameters
   ErrorMsg:= CheckOptions(
-              'c:d:ehi:lo:p:s:z', 'command: download: enum help ip: list out: port: save:'
-              );
+    'c:d:ehi:lo:p:s:z', 'command: download: enum help ip: list out: port: save:'
+    );
   if (ErrorMsg <> '') or (HasOption('h','help')) or (ParamCount = 0) then begin
     if (ErrorMsg <> '') then writeln(ErrorMsg);
     WriteHelp;
