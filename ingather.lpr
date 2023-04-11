@@ -29,8 +29,8 @@ type
     function RunEnums(): AnsiString;
     function RunCmd(): AnsiString;
     function RunCmds(): AnsiString;
-    procedure Tx(output: AnsiString);
-    procedure SaveOutput(output: AnsiString);
+    function Tx(output: AnsiString): Boolean;
+    function SaveOutput(output: AnsiString): Boolean;
   end;
 
 { TIngather }
@@ -78,17 +78,10 @@ begin
   end;
 
   // Send output to another computer?
-  if HasOption('i', 'ip') and HasOption('p','port') then begin
-    Tx(output);
-    ScreenPrint:= false;
-  end;
-
+  if HasOption('i', 'ip') and HasOption('p','port') then ScreenPrint:= Tx(output);
   // Write all command outputs to a file?
-  if HasOption('o', 'out') then begin
-    SaveOutput(output);
-    ScreenPrint:= false;
-  end;
-
+  if HasOption('o', 'out') then ScreenPrint:= SaveOutput(output);
+  // no other output specified, so output to console
   if ScreenPrint then writeln(output);
 
   Terminate;
@@ -171,7 +164,7 @@ begin
   execute.Free;
 end;
 
-procedure TIngather.Tx(output: AnsiString);
+function TIngather.Tx(output: AnsiString): Boolean;
 var
   ip  : AnsiString = '';
   port: AnsiString = '';
@@ -183,9 +176,10 @@ begin
   writeln('[*] sending all output to ' + ip + ':' + port);
   nwrk.SendIt(ip, port, output);
   nwrk.Free;
+  result:= false;
 end;
 
-procedure TIngather.SaveOutput(output: AnsiString);
+function TIngather.SaveOutput(output: AnsiString): Boolean;
 var
   outfile: AnsiString;
   tfOut  : TextFile;
@@ -195,6 +189,7 @@ begin
   rewrite(tfOut);
   writeln(tfOut, output);
   writeln('[*] Wrote output to file');
+  result:= false;
 end;
 
 function TIngather.PrintHeader(cmd: string): AnsiString;
