@@ -43,9 +43,10 @@ var
 begin
   // quick check parameters
   ErrorMsg:= CheckOptions(
-                'cdehilopsz','command download enum help ip list out port save'
+              'c:d:ehi:lo:p:s:z', 'command: download: enum help ip: list out: port: save:'
               );
   if (ErrorMsg <> '') or (HasOption('h','help')) or (ParamCount = 0) then begin
+    if (ErrorMsg <> '') then writeln(ErrorMsg);
     WriteHelp;
     Terminate;
     Exit;
@@ -54,13 +55,13 @@ begin
   // Is user an admin
   output:= concat(output, IsAdmin());
 
-  if HasOption('l','list') then begin
+  if HasOption('l', 'list') then begin
     output:= concat(output, PrintHeader('Enumeration Commands'));
     output:= concat(output, PrintEnums(TDataDefs.CMDS));
   end;
 
   // download file
-  if HasOption('d','download') and HasOption('s','save') then begin
+  if HasOption('d', 'download') and HasOption('s','save') then begin
     DownloadFile;
   end;
 
@@ -69,7 +70,7 @@ begin
     output:= concat(output, RunCmd());
   end;
 
-  if HasOption('e','enum') then begin
+  if HasOption('e', 'enum') then begin
     // run system enumeration analysis
     output:= concat(output, RunEnums());
     // run basic enumeration commands
@@ -77,13 +78,13 @@ begin
   end;
 
   // Send output to another computer?
-  if HasOption('i','ip') and HasOption('p','port') then begin
+  if HasOption('i', 'ip') and HasOption('p','port') then begin
     Tx(output);
     ScreenPrint:= false;
   end;
 
   // Write all command outputs to a file?
-  if HasOption('o','out') then begin
+  if HasOption('o', 'out') then begin
     SaveOutput(output);
     ScreenPrint:= false;
   end;
@@ -186,8 +187,8 @@ end;
 
 procedure TIngather.SaveOutput(output: AnsiString);
 var
+  outfile: AnsiString;
   tfOut  : TextFile;
-  outfile: AnsiString = '';
 begin
   outfile:= Self.GetOptionValue('o','out');
   AssignFile(tfOut, outfile);
@@ -221,8 +222,8 @@ begin
   writeln('Purpose: Gather various forensic information.');
   writeln;
   writeln('Usage:');
-  writeln('  Ingather.exe -i 1.1.1.1 -p 4444 --enum -o output.txt');
-  writeln('  Ingather.exe -d http://www.abcded.com/abc.txt -s c:\temp\abc.text');
+  writeln('  Ingather.exe -i 1.1.1.1 -p 4444 --enum --out="output.txt"');
+  writeln('  Ingather.exe -d "http://www.abcded.com/abc.txt" -s c:\temp\abc.text');
   writeln('  Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
   writeln;
   writeln('Download file over HTTP:');

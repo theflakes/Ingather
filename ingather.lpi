@@ -67,7 +67,6 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="C:\lazarus\components\JsonTools\"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -98,7 +97,12 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <Units Count="11">
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LazUtils"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="12">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -153,6 +157,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="DataDefs"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\components\JsonTools\jsontools.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="JsonTools"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
