@@ -34,7 +34,7 @@ type
   end;
 
 { TIngather }
-
+// Main program flow control
 procedure TIngather.DoRun;
 var
   ErrorMsg        : String = '';
@@ -42,7 +42,9 @@ var
   ScreenPrint     : Boolean = true;
 begin
   // quick check parameters
-  ErrorMsg:= CheckOptions('cdhliposez','command download help list ip out port save enum');
+  ErrorMsg:= CheckOptions(
+                'cdehilopsz','command download enum help ip list out port save'
+              );
   if (ErrorMsg <> '') or (HasOption('h','help')) or (ParamCount = 0) then begin
     WriteHelp;
     Terminate;
@@ -214,27 +216,32 @@ end;
 procedure TIngather.WriteHelp;
 begin
   writeln;
-  writeln('Usage: Ingather.exe -i 1.1.1.1 -p 4444 -o output.txt');
-  writeln('       Ingather.exe -d http://www.abcded.com/abc.txt -s c:\temp\abc.text');
-  writeln('       Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
+  writeln('Author : Brian Kellogg');
+  writeln('License: MIT');
+  writeln('Purpose: Gather various forensic information.');
+  writeln;
+  writeln('Usage:');
+  writeln('  Ingather.exe -i 1.1.1.1 -p 4444 --enum -o output.txt');
+  writeln('  Ingather.exe -d http://www.abcded.com/abc.txt -s c:\temp\abc.text');
+  writeln('  Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
   writeln;
   writeln('Download file over HTTP:');
-  writeln('       -d, --download    : download file');
-  writeln('       -s, --save        : location to save downloaded file to');
-  writeln('       -z,               : use the Windows HTTP download function');
-  writeln('                           otherwise use custom HTTP download function');
+  writeln('  -d, --download : download file');
+  writeln('  -s, --save     : location to save downloaded file to');
+  writeln('  -z,            : use the Windows HTTP download function');
+  writeln('                   otherwise use custom HTTP download function');
   writeln('Run options:');
-  writeln('       -c, --command     : run custom command');
-  writeln('       -e, --enum        : run all builtin enumerations');
+  writeln('  -c, --command  : run custom command');
+  writeln('  -e, --enum     : run all builtin enumerations');
   writeln('Output options:');
-  writeln('       -i, --ip          : destination IP address');
-  writeln('       -p, --port        : destination port');
-  writeln('       -o, --out         : write enumeration command outputs to file');
-  writeln('NOTE: If output to file or network is specified,');
-  writeln('      screen output will be suppressed.');
+  writeln('  -i, --ip       : destination IP address');
+  writeln('  -p, --port     : destination port');
+  writeln('  -o, --out      : write enumeration command outputs to file');
+  writeln('  If output to file or network is specified,');
+  writeln('  screen output will be suppressed.');
   writeln('Info:');
-  writeln('       -h, --help        : print this help message');
-  writeln('       -l, --list        : print default enum commands and descriptions');
+  writeln('  -h, --help     : print this help message');
+  writeln('  -l, --list     : print default enum commands and descriptions');
   writeln;
 end;
 
@@ -251,6 +258,9 @@ end;
 
 var
   Application: TIngather;
+
+{$R *.res}
+
 begin
   Application:= TIngather.Create(nil);
   Application.Title:= 'Ingather';
