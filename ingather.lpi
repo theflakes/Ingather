@@ -82,7 +82,8 @@
             </Debugging>
             <LinkSmart Value="True"/>
             <Options>
-              <LinkerOptions Value="static gh"/>
+              <PassLinkerOptions Value="True"/>
+              <LinkerOptions Value="-static"/>
             </Options>
           </Linking>
         </CompilerOptions>
