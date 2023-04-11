@@ -1,4 +1,7 @@
 *.txt
+*.ppu
+*.o
+*.rsj
 backup/
 lib/
 out/
