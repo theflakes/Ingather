@@ -25,6 +25,7 @@ type
     function PrintHeader(cmd: string): AnsiString;
     function PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
     procedure DownloadFile();
+    function IsAdmin(): AnsiString;
     function RunEnums(): AnsiString;
     function RunCmd(): AnsiString;
     function RunCmds(): AnsiString;
@@ -37,7 +38,6 @@ type
 procedure TIngather.DoRun;
 var
   ErrorMsg        : String = '';
-  escalate        : TRunAs;
   output          : AnsiString = '';
   ScreenPrint     : Boolean = true;
 begin
@@ -50,12 +50,7 @@ begin
   end;
 
   // Is user an admin
-  escalate:= TRunAs.Create;
-  if escalate.IsUserAdmin then
-    output:= concat(output, '[!] You are an admin' + sLineBreak)
-  else
-    output:= concat(output, '[*] You are not an admin.' + sLineBreak);
-  escalate.Free;
+  output:= concat(output, IsAdmin());
 
   if HasOption('l','list') then begin
     output:= concat(output, PrintHeader('Enumeration Commands'));
@@ -94,6 +89,19 @@ begin
   if ScreenPrint then writeln(output);
 
   Terminate;
+end;
+
+function TIngather.IsAdmin(): AnsiString;
+var
+  escalate: TRunAs;
+begin
+  result:= '';
+  escalate:= TRunAs.Create;
+  if escalate.IsUserAdmin then
+    result:= concat(result, '[!] You are an admin' + sLineBreak)
+  else
+    result:= concat(result, '[*] You are not an admin.' + sLineBreak);
+  escalate.Free;
 end;
 
 procedure TIngather.DownloadFile();
