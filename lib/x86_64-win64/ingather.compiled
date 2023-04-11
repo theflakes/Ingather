@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1449427374"/>
-  <Params Value=" -MObjFPC -Scghi -CX -O3 -XX -kstatic -kheaptrc -k-gh -l -vewnhibq -FiC:\Users\thefl\code\Ingather\lib\x86_64-win64 -FuC:\lazarus\components\JsonTools -FuC:\Users\thefl\code\Ingather\ -FUC:\Users\thefl\code\Ingather\lib\x86_64-win64\ -FEC:\Users\thefl\code\Ingather\ -oC:\Users\thefl\code\Ingather\ingather.exe ingather.lpr"/>
-</CONFIG>
