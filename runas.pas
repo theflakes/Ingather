@@ -24,7 +24,10 @@ type
 
 implementation
 // external Windows function for checking group membership
-function CheckTokenMembership(TokenHandle: THandle; SidToCheck: PSID; var IsMember: BOOL): BOOL; stdcall; external advapi32;
+function CheckTokenMembership(TokenHandle: THandle;
+                              SidToCheck: PSID;
+                              var IsMember: BOOL
+                              ): BOOL; stdcall; external advapi32;
 
 // This function tells us if we're running with administrative permissions.
 function TRunAs.IsUserAdmin: Boolean;
@@ -36,8 +39,10 @@ var
 begin
     {
         This function returns true if you are currently running with admin privelages.
-        In Vista and later, if you are non-elevated, this function will return false (you are not running with administrative privelages).
-        If you *are* running elevated, then IsUserAdmin will return true, as you are running with admin privelages.
+        In Vista and later, if you are non-elevated, this function will return false
+        (you are not running with administrative privelages).
+        If you *are* running elevated, then IsUserAdmin will return true,
+        as you are running with admin privelages.
     }
     b := AllocateAndInitializeSid(
             SECURITY_NT_AUTHORITY,

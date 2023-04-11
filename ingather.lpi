@@ -63,6 +63,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="C:\lazarus\components\JsonTools\"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -78,7 +79,7 @@
             <LinkSmart Value="True"/>
             <Options>
               <PassLinkerOptions Value="True"/>
-              <LinkerOptions Value="-k-static"/>
+              <LinkerOptions Value="static heaptrc -gh"/>
             </Options>
           </Linking>
         </CompilerOptions>
@@ -93,7 +94,7 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <Units Count="10">
+    <Units Count="11">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -143,6 +144,11 @@
         <Filename Value="misc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="datadefs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DataDefs"/>
+      </Unit10>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -58,7 +58,8 @@ type
               'Built-in (Local ) Guests', 'Built-in (Local ) Users',
               'Local Guest Account', 'Printer Operators', 'Authenticated Users',
               'Everyone (World)', 'Interactive Logon User', 'Anonymous Logon',
-              'Remote Desktop Users (for Terminal Services)', 'Anonymous Internet Users'
+              'Remote Desktop Users (for Terminal Services)',
+              'Anonymous Internet Users'
               );
       const SVC_VULN_PERMS: array[1..SVC_VULN_PERMS_NUM] of string = (
               'ChangeConf', 'WDac', 'WOwn', 'GenericWrite', 'GenericAll'
@@ -74,6 +75,7 @@ function TFindVulns.ServiceExtractPath(path: string): string;
 var
   regex: TRegExpr;
 begin
+  result:= '';
   regex:= TRegExpr.Create;
   regex.Expression:= SVC_EXTRACT_PATH;
   if regex.Exec(path) then
@@ -103,7 +105,10 @@ begin
   regexNoSpace.Free;
 end;
 
-function TFindVulns.StringInArray(LookFor: string; LookIn: array of string): boolean;
+function TFindVulns.StringInArray(
+                                  LookFor: string;
+                                  LookIn: array of string
+                                  ): boolean;
 var
   compare: string;
 begin
@@ -248,7 +253,7 @@ begin
     NFCheck(PWcheck, 'Password');
   end else
     output:= concat(output, '[**] C:\sysprep.ini file not found.' + sLineBreak);
-  output:= concat(output, '[**] ' + FSVulns.ReadXML('C:\sysprep\sysprep.xml', 'LocalAccounts'));
+  output:= concat(output, FSVulns.ReadXML('C:\sysprep\sysprep.xml', 'LocalAccounts'));
   result:= output;
   FSVulns.Free;
 end;
