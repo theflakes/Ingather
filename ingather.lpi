@@ -98,7 +98,7 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <Units Count="12">
+    <Units Count="11">
       <Unit0>
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -153,11 +153,6 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="DataDefs"/>
       </Unit10>
-      <Unit11>
-        <Filename Value="C:\lazarus\components\JsonTools\jsontools.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="JsonTools"/>
-      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -10,8 +10,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="16"/>
-        <CursorPos X="29" Y="37"/>
+        <CursorPos X="28" Y="44"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -95,7 +94,7 @@
         <Filename Value="misc.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="7"/>
-        <CursorPos Y="9"/>
+        <CursorPos Y="31"/>
         <UsageCount Value="252"/>
         <Loaded Value="True"/>
       </Unit9>
@@ -106,17 +105,16 @@
         <EditorIndex Value="1"/>
         <TopLine Value="7"/>
         <CursorPos X="12" Y="94"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
         <Filename Value="C:\lazarus\components\JsonTools\jsontools.pas"/>
-        <IsPartOfProject Value="True"/>
         <UnitName Value="JsonTools"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="510"/>
         <CursorPos X="10" Y="537"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="24"/>
       </Unit11>
       <Unit12>
         <Filename Value="C:\FP-srcs\Synapse\source\lib\blcksock.pas"/>
@@ -166,7 +164,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="1255"/>
         <CursorPos X="42" Y="1287"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit18>
       <Unit19>

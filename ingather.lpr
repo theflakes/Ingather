@@ -9,7 +9,7 @@ program Ingather;
 
 uses
   Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD,
-  WinFileSystem, StrUtils, JsonTools, DataDefs
+  WinFileSystem, StrUtils, DataDefs
   { you can add units after this };
 
 type
