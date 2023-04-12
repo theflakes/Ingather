@@ -17,17 +17,22 @@ type
   TRunAs = class
     public
       function IsUserAdmin: Boolean;
-      function RunAsAdmin(hWnd: HWND; filename: string; Parameters: string): Boolean;
+      function RunAsAdmin(
+                  hWnd: HWND;
+                  filename: string;
+                  Parameters: string
+                ): Boolean;
     private
   end;
 
 
 implementation
 // external Windows function for checking group membership
-function CheckTokenMembership(TokenHandle: THandle;
-                              SidToCheck: PSID;
-                              var IsMember: BOOL
-                              ): BOOL; stdcall; external advapi32;
+function CheckTokenMembership(
+            TokenHandle: THandle;
+            SidToCheck: PSID;
+            var IsMember: BOOL
+          ): BOOL; stdcall; external advapi32;
 
 // This function tells us if we're running with administrative permissions.
 function TRunAs.IsUserAdmin: Boolean;
@@ -61,7 +66,11 @@ begin
     Result := b;
 end;
 
-function TRunAs.RunAsAdmin(hWnd: HWND; filename: string; Parameters: string): Boolean;
+function TRunAs.RunAsAdmin(
+            hWnd: HWND;
+            filename: string;
+            Parameters: string
+          ): Boolean;
 {
     See Step 3: Redesign for UAC Compatibility (UAC)
     http://msdn.microsoft.com/en-us/library/bb756922.aspx

@@ -7,8 +7,10 @@ unit WinServices;
  service permission information: https://support.microsoft.com/en-us/kb/914392
 
  Best practices:
-  Limit service DACLs to only those users who need a particular access type. Be especially cautious with the following rights.
-  If these rights are granted to a user or to a group that has low rights, the rights can be used to elevate to LocalSystem on the computer:
+  Limit service DACLs to only those users who need a particular access type.
+  Be especially cautious with the following rights.
+  If these rights are granted to a user or to a group that has low rights,
+  the rights can be used to elevate to LocalSystem on the computer:
   ChangeConf (DC)
   WDac (WD)
   WOwn (WO)
@@ -230,7 +232,9 @@ begin
   innerRegex:= TRegExpr.Create;
   innerRegex.Expression:= SVC_LINE_PART_REGEX;
   // setup output for the "wmic service get" command as csv to parse
-  cmdOut:= cmd.GetOutput(SVC_QRY_CONF, 'get Name,PathName,Started,StartMode,StartName,Status /format:csv', false);
+  cmdOut:= cmd.GetOutput(SVC_QRY_CONF,
+                        'get Name,PathName,Started,StartMode,StartName,Status /format:csv',
+                        false);
   if outerRegex.Exec(cmdOut) then
     while outerRegex.ExecNext do begin       // skip first row as it is the header row
       SetLength(Services, i + 1);            // set new length for dynamic array

@@ -15,7 +15,11 @@ type
   TWinFileSystem = class
      public
        procedure GetPathList(pathList: TStrings);
-       function ReadINI(iniFile: string; section:string; value: string; default: string): AnsiString;
+       function ReadINI(
+                  iniFile: string;
+                  section:string; value: string;
+                  default: string
+                ): AnsiString;
        function CheckFileIsWriteable(path: string): Boolean;
        function CheckDirectoryIsWriteable(path: string): Boolean;
        function RemoveQuotes(const S: string; const QuoteChar: Char): string;
@@ -25,7 +29,10 @@ type
   end;
 
 implementation
-function TWinFileSystem.RemoveQuotes(const S: string; const QuoteChar: Char): string;
+function TWinFileSystem.RemoveQuotes(
+                          const S: string;
+                          const QuoteChar: Char
+                        ): string;
 var
   Len: Integer;
 begin
@@ -36,7 +43,12 @@ begin
   if (Result[Len] <> QuoteChar) then Exit;   //Text is not quoted
   System.Delete(Result, Len, 1);
   System.Delete(Result, 1, 1);
-  Result := StringReplace(Result, QuoteChar+QuoteChar, QuoteChar, [rfReplaceAll]);
+  Result := StringReplace(
+              Result,
+              QuoteChar+QuoteChar,
+              QuoteChar,
+              [rfReplaceAll]
+            );
 end;
 
 function TWinFileSystem.CheckFileIsWriteable(path: string): Boolean;
@@ -74,7 +86,12 @@ begin
   strSplit.Free;
 end;
 
-function TWinFileSystem.ReadINI(iniFile: string; section:string; value: string; default: string): AnsiString;
+function TWinFileSystem.ReadINI(
+                          iniFile: string;
+                          section:string;
+                          value: string;
+                          default: string
+                        ): AnsiString;
 var
  INI: TINIFile;
 begin

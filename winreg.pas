@@ -44,7 +44,11 @@ function TWinReg.GetOSVersion: AnsiString;
 var
   winVer: AnsiString;
 begin
-  winVer:= ReadKeyAnsi(HKEY_LOCAL_MACHINE, '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
+  winVer:= ReadKeyAnsi(
+              HKEY_LOCAL_MACHINE,
+              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion',
+              'ProductName'
+            );
   result:= winVer;
 end;
 
@@ -55,17 +59,23 @@ var
   output: AnsiString = '';
 begin
   output:= concat(output, '[*] VNC Registry Passwords:' + sLineBreak);
-  value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE,
-                      '\SOFTWARE\RealVNC\vncserver',
-                      'Password');
+  value:= ReadKeyAnsi(
+            HKEY_LOCAL_MACHINE,
+            '\SOFTWARE\RealVNC\vncserver',
+            'Password'
+          );
   output:= concat(output, '[**] RealVNC :: ' + value + sLineBreak);
-  value:= ReadKeyAnsi(HKEY_CURRENT_USER,
-                      '\Software\TightVNC\Server',
-                      'Password');
+  value:= ReadKeyAnsi(
+            HKEY_CURRENT_USER,
+            '\Software\TightVNC\Server',
+            'Password'
+          );
   output:= concat(output, '[**] TightVNC :: ' + value + sLineBreak);
-  value:= ReadKeyAnsi(HKEY_CURRENT_USER,
-                      '\Software\TightVNC\Server',
-                      'PasswordViewOnly');
+  value:= ReadKeyAnsi(
+            HKEY_CURRENT_USER,
+            '\Software\TightVNC\Server',
+            'PasswordViewOnly'
+          );
   output:= concat(output, '[**] TightVNC view-only :: '+ value + sLineBreak);
   result:= output;
 end;
@@ -76,22 +86,30 @@ var
   value: AnsiString = '';
   output: AnsiString = '';
 begin
-  value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE,
-                      '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-                      'AutoAdminLogon');
+  value:= ReadKeyAnsi(
+            HKEY_LOCAL_MACHINE,
+            '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
+            'AutoAdminLogon'
+          );
   if value = '1' then begin
     output:= concat(output, '[!] Autologon enabled' + sLineBreak);
-    value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE,
-                        '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-                        'DefaultUserName');
+    value:= ReadKeyAnsi(
+              HKEY_LOCAL_MACHINE,
+              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
+              'DefaultUserName'
+            );
     output:= concat(output, '[**] Username: '+value + sLineBreak);
-    value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE,
-                        '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-                        'DefaultPassword');
+    value:= ReadKeyAnsi(
+              HKEY_LOCAL_MACHINE,
+              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
+              'DefaultPassword'
+            );
     output:= concat(output, '[**] Password: '+value + sLineBreak);
-    value:= ReadKeyAnsi(HKEY_LOCAL_MACHINE,
-                        '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-                        'DefaultDomainName');
+    value:= ReadKeyAnsi(
+              HKEY_LOCAL_MACHINE,
+              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
+              'DefaultDomainName'
+            );
     output:= concat(output, '[**] Domain: '+value + sLineBreak);
   end else
     output:= concat(output, '[*] Autologon not enabled.' + sLineBreak);
@@ -103,9 +121,11 @@ var
   value: LongInt;
 begin
   result:= '';
-  value:= ReadKeyLIint(HKEY_LOCAL_MACHINE,
-                      '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
-                      'EnableLUA');
+  value:= ReadKeyLIint(
+            HKEY_LOCAL_MACHINE,
+            '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
+            'EnableLUA'
+          );
   if value = 1 then
     result:= '[*] UAC is enabled'
   else if value = 0 then
@@ -116,9 +136,11 @@ function TWinReg.GetPasswordlessNetLogon: AnsiString;
 var
   value: LongInt;
 begin
-  value:= ReadKeyLIint(HKEY_LOCAL_MACHINE,
-                      '\SYSTEM\CurrentControlSet\Control\Lsa',
-                      'LimitBlankPasswordUse');
+  value:= ReadKeyLIint(
+            HKEY_LOCAL_MACHINE,
+            '\SYSTEM\CurrentControlSet\Control\Lsa',
+            'LimitBlankPasswordUse'
+          );
   if value = 0 then
     result:= '[!] Passwordless network logon enabled'
   else
@@ -130,9 +152,11 @@ var
   value: LongInt;
 begin
   result:= '';
-  value:= ReadKeyLIint(HKEY_LOCAL_MACHINE,
-                      '\SYSTEM\CurrentControlSet\Control\Terminal Server',
-                      'fDenyTSConnections');
+  value:= ReadKeyLIint(
+            HKEY_LOCAL_MACHINE,
+            '\SYSTEM\CurrentControlSet\Control\Terminal Server',
+            'fDenyTSConnections'
+          );
   if value = 0 then
     result:= '[!] RDP is enabled'
   else if value = 1 then
@@ -149,9 +173,11 @@ begin
   findNonVulnOS:= TRegExpr.Create;
   findVulnOS.Expression:= DFLT_CLEARTEXT_PW;
   findNonVulnOS.Expression:= NON_DFLT_CLEARTEXT_PW;
-  value:= ReadKeyLIint(HKEY_LOCAL_MACHINE,
-                      '\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest',
-                      'UseLogonCredential');
+  value:= ReadKeyLIint(
+            HKEY_LOCAL_MACHINE,
+            '\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest',
+            'UseLogonCredential'
+          );
   if value = 0 then
     result:= '[*] WDigest cleartext passwords disabled.'
   else if value = 1 then
@@ -167,16 +193,20 @@ var
   HKLMvalue: LongInt;
   HKLUvalue: LongInt;
 begin
-  HKLMvalue:= ReadKeyLIint(HKEY_LOCAL_MACHINE,
-                          '\SOFTWARE\Policies\Microsoft\Windows\Installer',
-                          'AlwaysInstallElevated');
-  HKLUvalue:= ReadKeyLIint(HKEY_CURRENT_USER,
-                          '\SOFTWARE\Policies\Microsoft\Windows\Installer',
-                          'AlwaysInstallElevated');
+  HKLMvalue:= ReadKeyLIint(
+                HKEY_LOCAL_MACHINE,
+                '\SOFTWARE\Policies\Microsoft\Windows\Installer',
+                'AlwaysInstallElevated'
+              );
+  HKLUvalue:= ReadKeyLIint(
+                HKEY_CURRENT_USER,
+                '\SOFTWARE\Policies\Microsoft\Windows\Installer',
+                'AlwaysInstallElevated'
+              );
   if (HKLMvalue = 1) and (HKLUvalue = 1) then
     result:= '[!] MSI installs always elevated vulnerability found.'
   else
-    result:= '[*] Not vulnerable to ''always elevated MSI install'' vulnerability.';
+    result:= '[*] Not vulnerable to "always elevated MSI install" vulnerability.';
 end;
 
 function TWinReg.GetSNMP: AnsiString;
@@ -187,18 +217,22 @@ var
   output       : AnsiString = '';
 begin
   communities:= TStringList.Create;
-  EnumSubKeys(HKEY_LOCAL_MACHINE,
-              '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities',
-              communities); // read all sub keys
+  EnumSubKeys(
+    HKEY_LOCAL_MACHINE,
+    '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities',
+    communities
+  ); // read all sub keys
   output:= concat(output, '[*] SNMP Communities:' + sLineBreak);
   if communities.Count = 0 then
     output:= concat(output, '[**] No SNMP communities set.' + sLineBreak)
   else
     for name in communities do begin
       output:= concat(output, '[**] '+name + sLineBreak);
-      value:= ReadKeyDouble(HKEY_LOCAL_MACHINE,
-                            '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities',
-                            name); // get subkey's value
+      value:= ReadKeyDouble(
+                HKEY_LOCAL_MACHINE,
+                '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities',
+                name
+              ); // get subkey's value
       case FloatToStr(value) of // SNMP community allowed access
         '4': output:= concat(output, '[**] :: read' + sLineBreak);
         '8': output:= concat(output, '[!!] :: read/write' + sLineBreak);

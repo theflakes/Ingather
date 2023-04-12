@@ -20,7 +20,10 @@ type
       function StringToStream(const AString: string): TStream;
       function IsIP(ip: AnsiString): Boolean;
       function IsPort(port: AnsiString): Boolean;
-      function FoundLocationStr(headers: TStringlist; out FoundPos: integer): integer;
+      function FoundLocationStr(
+                headers: TStringlist;
+                out FoundPos: integer
+              ): integer;
   end;
 
 
@@ -86,7 +89,15 @@ begin
 end;
 
 // external Windows function for HTTP download
-function URLDownloadToFile(pCaller: pointer; URL: PChar; FileName: PChar; Reserved: DWORD; lpfnCB : pointer): HResult; stdcall; external 'urlmon.dll' name 'URLDownloadToFileA';
+function URLDownloadToFile(
+                            pCaller: pointer;
+                            URL: PChar;
+                            FileName: PChar;
+                            Reserved: DWORD;
+                            lpfnCB : pointer
+                          ): HResult;
+                            stdcall;
+                            external 'urlmon.dll' name 'URLDownloadToFileA';
 
 // use Windows built in function for HTTP download
 procedure TNetIO.WinHTTPGet(Source: String; Dest: String);
@@ -98,7 +109,9 @@ begin
 end;
 
 // private function to find 'Location:' in redirect error header...
-function TNetIO.FoundLocationStr(headers: TStringlist; out FoundPos: integer): integer;
+function TNetIO.FoundLocationStr(headers: TStringlist;
+                                out FoundPos: integer
+                                ): integer;
 var i: integer;
 begin
   result:= -1;  //for safety
@@ -148,7 +161,10 @@ begin
             FoundLine:= FoundLocationStr(http.Headers, FoundStrPos);
             if (FoundLine >= 0) and (FoundLine <= http.Headers.count) then
             begin
-              result:= StringReplace(Http.Headers.Strings[FoundLine],'Location: ','',[]); //strip the line with 'Location: http: someurl.com' down to JUST the URL
+              result:= StringReplace(
+                        Http.Headers.Strings[FoundLine],
+                        'Location: ',
+                      '',[]); //strip the line with 'Location: http: someurl.com' down to JUST the URL
               result:= DownloadHTTP(result, TargetFile); // There be recursion here to handle nested redirects!!!
             end else
               result:= 'Could not find redirect URL!!!'; //couldn't find redirect URL Location in header

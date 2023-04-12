@@ -18,8 +18,16 @@ type
   TRunCMD = class
     public
       function Run(cmd: string): TStream;
-      function GetOutput(cmdStrA: string; cmdStrB: AnsiString; quotes: boolean): string;
-      function GetOutput(cmdStrA: string; cmdStrB: AnsiString; cmdStrC: AnsiString): string;
+      function GetOutput(
+                  cmdStrA: string;
+                  cmdStrB: AnsiString;
+                  quotes: boolean
+                ): string;
+      function GetOutput(
+                  cmdStrA: string;
+                  cmdStrB: AnsiString;
+                  cmdStrC: AnsiString
+                ): string;
       function StreamToString(Stream: TStream): AnsiString;
     private
       const BUF_SIZE = 2048; // Buffer size for reading the output in chunks
@@ -36,7 +44,11 @@ begin
     if len > 0 then Stream.ReadBuffer(Result[1], len);
 end;
 
-function TRunCMD.GetOutput(cmdStrA: string; cmdStrB: AnsiString; quotes: boolean): string;
+function TRunCMD.GetOutput(
+            cmdStrA: string;
+            cmdStrB: AnsiString;
+            quotes: boolean
+          ): string;
 var
   RunThis        : string;
   OutputStream   : TStream;
@@ -50,7 +62,11 @@ begin
   OutputStream.Free;
 end;
 
-function TRunCMD.GetOutput(cmdStrA: string; cmdStrB: AnsiString; cmdStrC: AnsiString): string;
+function TRunCMD.GetOutput(
+            cmdStrA: string;
+            cmdStrB: AnsiString;
+            cmdStrC: AnsiString
+          ): string;
 var
   RunThis        : string;
   OutputStream   : TStream;
