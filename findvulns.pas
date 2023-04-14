@@ -138,21 +138,30 @@ begin
   // lets check for service vulnerabilities
   for i:= Low(WinSVCs.Services) to High(WinSVCs.Services) do begin
     output:= concat(output, '[*] ' + WinSVCs.Services[i].Name + sLineBreak);
-    output:= concat(output, '[**] Account run as :: ' + WinSVCs.Services[i].StartName + sLineBreak);
+    output:= concat(
+              output,
+              '[**] Account run as :: ' +
+              WinSVCs.Services[i].StartName +
+              sLineBreak);
     path:= ServiceExtractPath(WinSVCs.Services[i].Path.PathName);
     WinSVCs.Services[i].Path.Writeable:= WinFS.CheckDirectoryIsWriteable(path);
     WinSVCs.Services[i].Path.Unquoted:= ServiceCheckPath(path);
     // check for service permission vulns, loop through each service's DACL
-    for x:= Low(WinSVCs.Services[i].dacl) to High(WinSVCs.Services[i].dacl) do begin
+    for x:= Low(WinSVCs.Services[i].dacl) to
+            High(WinSVCs.Services[i].dacl) do begin
       if WinSVCs.Services[i].dacl[x].allow then begin
-        if not StringInArray(WinSVCs.Services[i].dacl[x].entry, SVC_NOT_VULN_ACCOUNTS) then begin
+        if not StringInArray(WinSVCs.Services[i].dacl[x].entry,
+                              SVC_NOT_VULN_ACCOUNTS) then begin
           writeOnce := true;
           // loop through each entry in the DACL
-          for y:= Low(WinSVCs.Services[i].dacl[x].perms) to High(WinSVCs.Services[i].dacl[x].perms) do begin
-            if StringInArray(WinSVCs.Services[i].dacl[x].perms[y], SVC_VULN_PERMS) then begin
+          for y:= Low(WinSVCs.Services[i].dacl[x].perms) to
+                  High(WinSVCs.Services[i].dacl[x].perms) do begin
+            if StringInArray(WinSVCs.Services[i].dacl[x].perms[y],
+                            SVC_VULN_PERMS) then begin
               // only write the account name once
               if writeOnce then begin
-                output:= concat(output, '[!!] Account with CONF/OWN perms :: '+WinSVCs.Services[i].dacl[x].entry);
+                output:= concat(output, '[!!] Account with CONF/OWN perms :: ' +
+                                WinSVCs.Services[i].dacl[x].entry);
                 writeOnce := false;
               end;
               output:= concat(output, ' :: '+WinSVCs.Services[i].dacl[x].perms[y]);
@@ -165,12 +174,16 @@ begin
     end;
     // check for service path vulns
     if WinSVCs.Services[i].Path.PathName <> '' then
-      if WinSVCs.Services[i].Path.Writeable or WinSVCs.Services[i].Path.Unquoted then begin
-        output:= concat(output, '[**] '+WinSVCs.Services[i].Path.PathName + sLineBreak);
+      if WinSVCs.Services[i].Path.Writeable or
+          WinSVCs.Services[i].Path.Unquoted then begin
+        output:= concat(output, '[**] '+WinSVCs.Services[i].Path.PathName +
+                        sLineBreak);
         if WinSVCs.Services[i].Path.Writeable then
-          output:= concat(output, '[!!] Service path is writable by you!!!' + sLineBreak);
+          output:= concat(output, '[!!] Service path is writable by you!!!' +
+                          sLineBreak);
         if WinSVCs.Services[i].Path.Unquoted then
-          output:= concat(output, '[!!] Service path has spaces and is unquoted!!!' + sLineBreak);
+          output:= concat(output, '[!!] Service path has spaces and is unquoted!!!' +
+                          sLineBreak);
       end;
     output:= concat(output, sLineBreak);
   end;
@@ -208,7 +221,9 @@ begin
   WinFS:= TWinFileSystem.Create;
   pathList:= TStringList.Create;
   WinFS.GetPathList(pathList);
-  output:= concat(output, '[*] Directories in ENV PATH variable that are writeable by you.' + sLineBreak);
+  output:= concat(output,
+            '[*] Directories in ENV PATH variable that are writeable by you.' +
+            sLineBreak);
   for path in pathList do
     if WinFS.CheckDirectoryIsWriteable(path) then
       output:= concat(output, '[!!] ' + path + sLineBreak);
@@ -223,7 +238,9 @@ var
   output: AnsiString = '';
 begin
   case checkThis of
-    'Not Found': output:= concat(output, '[**] INI file exists but value not found' + sLineBreak);
+    'Not Found': output:= concat(output,
+                          '[**] INI file exists but value not found' +
+                          sLineBreak);
     else output:= concat(output, '[!!] ' + str + ' :: ' + checkThis + sLineBreak);
   end;
   result:= output;
@@ -240,20 +257,26 @@ begin
   FSVulns:= TWinFileSystem.Create;
   output:= concat(output, '[*] UltraVNC passwords found in INI file:' + sLineBreak);
   if FileExists('C:\Program Files\UltraVNC\ultravnc.ini') then begin
-    PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd', 'NF');
+    PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini',
+                              'ultravnc', 'passwd', 'NF');
     NFCheck(PWcheck, 'Password');
-    PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini', 'ultravnc', 'passwd2', 'NF');
+    PWcheck:= FSVulns.ReadINI('C:\Program Files\UltraVNC\ultravnc.ini',
+                              'ultravnc', 'passwd2', 'NF');
     NFCheck(PWcheck, 'Password');
     FSVulns.Free;
   end else
-    output:= concat(output, '[**] UltraVNC INI file not found.' + sLineBreak + sLineBreak);
-  output:= concat(output, '[*] Looking for admin password in sysprep files:' + sLineBreak);
+    output:= concat(output, '[**] UltraVNC INI file not found.' +
+                    sLineBreak + sLineBreak);
+  output:= concat(output, '[*] Looking for admin password in sysprep files:' +
+                  sLineBreak);
   if FileExists('C:\sysprep.ini') then begin
-    PWcheck:= FSVulns.ReadINI('C:\sysprep.ini', 'GuiUnattended', 'AdminPassword', 'NF');
+    PWcheck:= FSVulns.ReadINI('C:\sysprep.ini', 'GuiUnattended',
+                              'AdminPassword', 'NF');
     NFCheck(PWcheck, 'Password');
   end else
     output:= concat(output, '[**] C:\sysprep.ini file not found.' + sLineBreak);
-  output:= concat(output, FSVulns.ReadXML('C:\sysprep\sysprep.xml', 'LocalAccounts'));
+  output:= concat(output, FSVulns.ReadXML('C:\sysprep\sysprep.xml',
+                  'LocalAccounts'));
   result:= output;
   FSVulns.Free;
 end;
