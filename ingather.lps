@@ -9,6 +9,7 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
+        <TopLine Value="19"/>
         <CursorPos X="30" Y="19"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -28,7 +29,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunAs"/>
         <EditorIndex Value="10"/>
-        <TopLine Value="28"/>
+        <TopLine Value="21"/>
         <CursorPos X="30" Y="21"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -75,8 +76,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="150"/>
-        <CursorPos X="72" Y="239"/>
+        <CursorPos X="61" Y="31"/>
         <UsageCount Value="330"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -104,8 +104,8 @@
         <UnitName Value="DataDefs"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="34" Y="104"/>
-        <UsageCount Value="68"/>
+        <CursorPos X="41" Y="44"/>
+        <UsageCount Value="69"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
