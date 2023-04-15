@@ -20,7 +20,7 @@ TYPE
       CONST
         NUM_CMDS = 28;
       TYPE
-        CommandArray = ARRAY[1..NUM_CMDS, 1..2] OF string;
+        CommandArray = ARRAY[1..NUM_CMDS, 1..2] OF STRING;
       CONST
 	      CMDS: CommandArray = (
           (
@@ -136,13 +136,13 @@ TYPE
             'Search C: drive FOR various strings'
           )
 	      );
-      FUNCTION FormatOutput(output: AnsiString): AnsiString;
+      FUNCTION FormatOutput(output: ANSISTRING): ANSISTRING;
     PRIVATE
   END;
 
 IMPLEMENTATION
 // format output
-FUNCTION TDataDefs.FormatOutput(output: AnsiString): AnsiString;
+FUNCTION TDataDefs.FormatOutput(output: ANSISTRING): ANSISTRING;
 BEGIN
   result:= output;
 END;

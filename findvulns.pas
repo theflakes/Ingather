@@ -32,11 +32,11 @@ USES
 TYPE
   TFindVulns = CLASS
     PUBLIC
-      FUNCTION GetVulnServices: AnsiString;
-      FUNCTION GetRegVulns: AnsiString;
-      FUNCTION CheckEnvPathPerms: AnsiString;
-      FUNCTION GetFSVulns: AnsiString;
-      FUNCTION StringInArray(LookFor: string; LookIn: ARRAY OF string): boolean;
+      FUNCTION GetVulnServices: ANSISTRING;
+      FUNCTION GetRegVulns: ANSISTRING;
+      FUNCTION CheckEnvPathPerms: ANSISTRING;
+      FUNCTION GetFSVulns: ANSISTRING;
+      FUNCTION StringInArray(LookFor: STRING; LookIn: ARRAY OF STRING): BOOLEAN;
     PRIVATE
       CONST SVC_CHK_QUOTES              = '(?-s)^"';
       CONST SVC_CHK_PATH_SPACE          = '(?-s)^\S+.exe';
@@ -44,7 +44,7 @@ TYPE
       CONST SVC_VULN_ACCOUNTS_NUM       = 13;
       CONST SVC_NOT_VULN_ACCOUNTS_NUM   = 16;
       CONST SVC_VULN_PERMS_NUM          = 5;
-      CONST SVC_NOT_VULN_ACCOUNTS: ARRAY[1..SVC_NOT_VULN_ACCOUNTS_NUM] OF string =(
+      CONST SVC_NOT_VULN_ACCOUNTS: ARRAY[1..SVC_NOT_VULN_ACCOUNTS_NUM] OF STRING =(
               'Local System', 'Domain Administrators',
               'Enterprise Domain Controllers', 'Domain Controllers',
               'Built-IN (Local ) Administrators', 'Local Administrator Account',
@@ -53,7 +53,7 @@ TYPE
               'Certificate Services Administrators', 'Enterprise Administrators',
               'Group Policy Administrators'
               );
-      CONST SVC_VULN_ACCOUNTS: ARRAY[1..SVC_VULN_ACCOUNTS_NUM] OF string = (
+      CONST SVC_VULN_ACCOUNTS: ARRAY[1..SVC_VULN_ACCOUNTS_NUM] OF STRING = (
               'Domain Guests', 'Domain Users', 'Domain Computers',
               'Built-IN (Local ) Guests', 'Built-IN (Local ) Users',
               'Local Guest Account', 'Printer Operators', 'Authenticated Users',
@@ -61,17 +61,17 @@ TYPE
               'Remote Desktop Users (FOR Terminal Services)',
               'Anonymous Internet Users'
               );
-      CONST SVC_VULN_PERMS: ARRAY[1..SVC_VULN_PERMS_NUM] OF string = (
+      CONST SVC_VULN_PERMS: ARRAY[1..SVC_VULN_PERMS_NUM] OF STRING = (
               'ChangeConf', 'WDac', 'WOwn', 'GenericWrite', 'GenericAll'
               );
-      FUNCTION NFCheck(checkThis: string; str: string): AnsiString;
-      FUNCTION ServiceExtractPath(path: string): string;
-      FUNCTION ServiceCheckPath(path: string): Boolean;
+      FUNCTION NFCheck(checkThis: STRING; str: STRING): ANSISTRING;
+      FUNCTION ServiceExtractPath(path: STRING): STRING;
+      FUNCTION ServiceCheckPath(path: STRING): BOOLEAN;
   END;
 
 IMPLEMENTATION
 // extract the executable path from the service startup directive
-FUNCTION TFindVulns.ServiceExtractPath(path: string): string;
+FUNCTION TFindVulns.ServiceExtractPath(path: STRING): STRING;
 VAR
   regex: TRegExpr;
 BEGIN
@@ -84,7 +84,7 @@ BEGIN
 END;
 
 // find services with paths containing spaces AND is NOT quoted
-FUNCTION TFindVulns.ServiceCheckPath(path: string): Boolean;
+FUNCTION TFindVulns.ServiceCheckPath(path: STRING): BOOLEAN;
 VAR
   regexNoQuotes : TRegExpr;
   regexNoSpace : TRegExpr;
@@ -106,11 +106,11 @@ BEGIN
 END;
 
 FUNCTION TFindVulns.StringInArray(
-                                  LookFor: string;
-                                  LookIn: ARRAY OF string
-                                  ): boolean;
+                                  LookFor: STRING;
+                                  LookIn: ARRAY OF STRING
+                                  ): BOOLEAN;
 VAR
-  compare: string;
+  compare: STRING;
 BEGIN
   FOR compare IN Lookin DO BEGIN
     IF LookFor = compare THEN BEGIN
@@ -121,16 +121,16 @@ BEGIN
   result := false;
 END;
 
-FUNCTION TFindVulns.GetVulnServices: AnsiString;
+FUNCTION TFindVulns.GetVulnServices: ANSISTRING;
 VAR
   WinSVCs: TWinServices;
   WinFS: TWinFileSystem;
-  i: integer;
-  x: integer;
-  y: integer;
-  writeOnce: boolean;
-  path: string;
-  output: AnsiString = '';
+  i: INTEGER;
+  x: INTEGER;
+  y: INTEGER;
+  writeOnce: BOOLEAN;
+  path: STRING;
+  output: ANSISTRING = '';
 BEGIN
   WinSVCs:= TWinServices.Create;
   WinFS:= TWinFileSystem.Create;
@@ -192,10 +192,10 @@ BEGIN
   WinSVCs.Free;
 END;
 
-FUNCTION TFindVulns.GetRegVulns: AnsiString;
+FUNCTION TFindVulns.GetRegVulns: ANSISTRING;
 VAR
   RegVulns: TWinReg;
-  output: AnsiString = '';
+  output: ANSISTRING = '';
 BEGIN
   RegVulns:= TWinReg.Create;
   output:= concat(output, '[*] ' + RegVulns.GetOSVersion + sLineBreak);
@@ -211,12 +211,12 @@ BEGIN
   RegVulns.Free;
 END;
 
-FUNCTION TFindVulns.CheckEnvPathPerms: AnsiString;
+FUNCTION TFindVulns.CheckEnvPathPerms: ANSISTRING;
 VAR
   WinFS    : TWinFileSystem;
-  path     : AnsiString;
+  path     : ANSISTRING;
   pathList : TStringList;
-  output   : AnsiString = '';
+  output   : ANSISTRING = '';
 BEGIN
   WinFS:= TWinFileSystem.Create;
   pathList:= TStringList.Create;
@@ -233,9 +233,9 @@ BEGIN
 END;
 
 // check IF INI file value is found AND print appropriate output
-FUNCTION TFindVulns.NFCheck(checkThis: string; str: string): AnsiString;
+FUNCTION TFindVulns.NFCheck(checkThis: STRING; str: STRING): ANSISTRING;
 VAR
-  output: AnsiString = '';
+  output: ANSISTRING = '';
 BEGIN
   CASE checkThis OF
     'Not Found': output:= concat(output,
@@ -248,11 +248,11 @@ END;
 
 // look FOR vulns IN the filesystem AND files
 // this PROCEDURE needs to be smarter
-FUNCTION TFindVulns.GetFSVulns: AnsiString;
+FUNCTION TFindVulns.GetFSVulns: ANSISTRING;
 VAR
   FSVulns    : TWinFileSystem;
-  PWcheck    : String;
-  output     : AnsiString = '';
+  PWcheck    : STRING;
+  output     : ANSISTRING = '';
 BEGIN
   FSVulns:= TWinFileSystem.Create;
   output:= concat(output, '[*] UltraVNC passwords found IN INI file:' + sLineBreak);

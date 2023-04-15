@@ -17,26 +17,26 @@ USES
 TYPE
   TRunCMD = CLASS
     PUBLIC
-      FUNCTION Run(cmd: string): TStream;
+      FUNCTION Run(cmd: STRING): TStream;
       FUNCTION GetOutput(
-                  cmdStrA: string;
-                  cmdStrB: AnsiString;
-                  quotes: boolean
-                ): string;
+                  cmdStrA: STRING;
+                  cmdStrB: ANSISTRING;
+                  quotes: BOOLEAN
+                ): STRING;
       FUNCTION GetOutput(
-                  cmdStrA: string;
-                  cmdStrB: AnsiString;
-                  cmdStrC: AnsiString
-                ): string;
-      FUNCTION StreamToString(Stream: TStream): AnsiString;
+                  cmdStrA: STRING;
+                  cmdStrB: ANSISTRING;
+                  cmdStrC: ANSISTRING
+                ): STRING;
+      FUNCTION StreamToString(Stream: TStream): ANSISTRING;
     PRIVATE
       CONST BUF_SIZE = 2048; // Buffer size FOR reading the output IN chunks
   END;
 
 IMPLEMENTATION
-FUNCTION TRunCMD.StreamToString(Stream: TStream): AnsiString;
+FUNCTION TRunCMD.StreamToString(Stream: TStream): ANSISTRING;
 VAR
-    len: Integer;
+    len: INTEGER;
 BEGIN
     Stream.Position:= 0;
     len:= Stream.Size - Stream.Position;
@@ -45,12 +45,12 @@ BEGIN
 END;
 
 FUNCTION TRunCMD.GetOutput(
-            cmdStrA: string;
-            cmdStrB: AnsiString;
-            quotes: boolean
-          ): string;
+            cmdStrA: STRING;
+            cmdStrB: ANSISTRING;
+            quotes: BOOLEAN
+          ): STRING;
 VAR
-  RunThis        : string;
+  RunThis        : STRING;
   OutputStream   : TStream;
 BEGIN
   IF quotes THEN
@@ -63,12 +63,12 @@ BEGIN
 END;
 
 FUNCTION TRunCMD.GetOutput(
-            cmdStrA: string;
-            cmdStrB: AnsiString;
-            cmdStrC: AnsiString
-          ): string;
+            cmdStrA: STRING;
+            cmdStrB: ANSISTRING;
+            cmdStrC: ANSISTRING
+          ): STRING;
 VAR
-  RunThis        : string;
+  RunThis        : STRING;
   OutputStream   : TStream;
 BEGIN
   RunThis:= concat(cmdStrA, cmdStrB, cmdStrC);
@@ -77,11 +77,11 @@ BEGIN
   OutputStream.Free;
 END;
 
-FUNCTION TRunCMD.Run(cmd: string): TStream;
+FUNCTION TRunCMD.Run(cmd: STRING): TStream;
 VAR
   OutputStream : TStream;
   AProcess     : TProcess;
-  BytesRead    : Longint;
+  BytesRead    : LONGINT;
   Buffer       : ARRAY[1..BUF_SIZE] OF byte;
 BEGIN
   // Create a stream object to store the generated output IN. This could

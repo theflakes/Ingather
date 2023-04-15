@@ -14,35 +14,35 @@ USES
 TYPE
   TWinReg = CLASS
     PUBLIC
-      FUNCTION GetOSVersion: AnsiString;
-      FUNCTION GetUACStatus: AnsiString;
-      FUNCTION GetRDPStatus: AnsiString;
-      FUNCTION GetWDigestCleartextPWStatus: AnsiString;
-      FUNCTION GetMSIAlwaysInstallElevatedStatus: AnsiString;
-      FUNCTION GetAutoLogon: AnsiString;
-      FUNCTION GetSNMP: AnsiString;
-      FUNCTION GetVNCPasswords: Ansistring;
-      FUNCTION GetPasswordlessNetLogon: AnsiString;
+      FUNCTION GetOSVersion: ANSISTRING;
+      FUNCTION GetUACStatus: ANSISTRING;
+      FUNCTION GetRDPStatus: ANSISTRING;
+      FUNCTION GetWDigestCleartextPWStatus: ANSISTRING;
+      FUNCTION GetMSIAlwaysInstallElevatedStatus: ANSISTRING;
+      FUNCTION GetAutoLogon: ANSISTRING;
+      FUNCTION GetSNMP: ANSISTRING;
+      FUNCTION GetVNCPasswords: ANSISTRING;
+      FUNCTION GetPasswordlessNetLogon: ANSISTRING;
     PRIVATE
       // Win versions with default cleartext passwords
       CONST DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)';
       // Win versions that will be matched IN the above regex that DO NOT store cleartext passwords
       CONST NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';
-      FUNCTION ReadKeyLIint(HKEY: LongWord; regPath: string; key: string): LongInt;
-      FUNCTION ReadKeyAnsi(HKEY: LongWord; regPath: string; key: string): AnsiString;
-      FUNCTION ReadKeyBool(HKEY: LongWord; regPath: string; key: string): boolean;
-      FUNCTION ReadKeyDouble(HKEY: LongWord; regPath: string; key: string): double;
-      FUNCTION ReadKeyDTime(HKEY: LongWord; regPath: string; key: string): TDateTime;
-      FUNCTION ReadKeyDate(HKEY: LongWord; regPath: string; key: string): TDate;
-      FUNCTION ReadKeyTime(HKEY: LongWord; regPath: string; key: string): TTime;
-      FUNCTION ReadKeyBin(HKEY: LongWord; regPath: string; key: string; bufSize: integer): LongInt;
-      PROCEDURE EnumSubKeys(HKEY: LongWord; key: string; SubKeyNames: TStrings);
+      FUNCTION ReadKeyLIint(HKEY: LongWord; regPath: STRING; key: STRING): LONGINT;
+      FUNCTION ReadKeyAnsi(HKEY: LongWord; regPath: STRING; key: STRING): ANSISTRING;
+      FUNCTION ReadKeyBool(HKEY: LongWord; regPath: STRING; key: STRING): BOOLEAN;
+      FUNCTION ReadKeyDouble(HKEY: LongWord; regPath: STRING; key: STRING): double;
+      FUNCTION ReadKeyDTime(HKEY: LongWord; regPath: STRING; key: STRING): TDateTime;
+      FUNCTION ReadKeyDate(HKEY: LongWord; regPath: STRING; key: STRING): TDate;
+      FUNCTION ReadKeyTime(HKEY: LongWord; regPath: STRING; key: STRING): TTime;
+      FUNCTION ReadKeyBin(HKEY: LongWord; regPath: STRING; key: STRING; bufSize: INTEGER): LONGINT;
+      PROCEDURE EnumSubKeys(HKEY: LongWord; key: STRING; SubKeyNames: TStrings);
   END;
 
 IMPLEMENTATION
-FUNCTION TWinReg.GetOSVersion: AnsiString;
+FUNCTION TWinReg.GetOSVersion: ANSISTRING;
 VAR
-  winVer: AnsiString;
+  winVer: ANSISTRING;
 BEGIN
   winVer:= ReadKeyAnsi(
               HKEY_LOCAL_MACHINE,
@@ -53,10 +53,10 @@ BEGIN
 END;
 
 // search registry FOR VNC passwords
-FUNCTION TWinReg.GetVNCPasswords: AnsiString;
+FUNCTION TWinReg.GetVNCPasswords: ANSISTRING;
 VAR
-  value: AnsiString = '';
-  output: AnsiString = '';
+  value: ANSISTRING = '';
+  output: ANSISTRING = '';
 BEGIN
   output:= concat(output, '[*] VNC Registry Passwords:' + sLineBreak);
   value:= ReadKeyAnsi(
@@ -81,10 +81,10 @@ BEGIN
 END;
 
 // is auto logon enabled, IF so, get the information
-FUNCTION TWinReg.GetAutoLogon: AnsiString;
+FUNCTION TWinReg.GetAutoLogon: ANSISTRING;
 VAR
-  value: AnsiString = '';
-  output: AnsiString = '';
+  value: ANSISTRING = '';
+  output: ANSISTRING = '';
 BEGIN
   value:= ReadKeyAnsi(
             HKEY_LOCAL_MACHINE,
@@ -116,9 +116,9 @@ BEGIN
   result:= output;
 END;
 
-FUNCTION TWinReg.GetUACStatus: AnsiString;
+FUNCTION TWinReg.GetUACStatus: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
 BEGIN
   result:= '';
   value:= ReadKeyLIint(
@@ -132,9 +132,9 @@ BEGIN
     result:= '[!] UAC is disabled';
 END;
 
-FUNCTION TWinReg.GetPasswordlessNetLogon: AnsiString;
+FUNCTION TWinReg.GetPasswordlessNetLogon: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
 BEGIN
   value:= ReadKeyLIint(
             HKEY_LOCAL_MACHINE,
@@ -147,9 +147,9 @@ BEGIN
     result:= '[*] Passwordless network logon disabled';
 END;
 
-FUNCTION TWinReg.GetRDPStatus: AnsiString;
+FUNCTION TWinReg.GetRDPStatus: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
 BEGIN
   result:= '';
   value:= ReadKeyLIint(
@@ -163,9 +163,9 @@ BEGIN
     result:= '[*] RDP is disabled';
 END;
 
-FUNCTION TWinReg.GetWDigestCleartextPWStatus: AnsiString;
+FUNCTION TWinReg.GetWDigestCleartextPWStatus: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
   findVulnOS: TRegExpr;
   findNonVulnOS :TRegExpr;
 BEGIN
@@ -188,10 +188,10 @@ BEGIN
     result:= '[*] WDigest cleartext passwords disabled.';
 END;
 
-FUNCTION TWinReg.GetMSIAlwaysInstallElevatedStatus: AnsiString;
+FUNCTION TWinReg.GetMSIAlwaysInstallElevatedStatus: ANSISTRING;
 VAR
-  HKLMvalue: LongInt;
-  HKLUvalue: LongInt;
+  HKLMvalue: LONGINT;
+  HKLUvalue: LONGINT;
 BEGIN
   HKLMvalue:= ReadKeyLIint(
                 HKEY_LOCAL_MACHINE,
@@ -209,12 +209,12 @@ BEGIN
     result:= '[*] Not vulnerable to "always elevated MSI install" vulnerability.';
 END;
 
-FUNCTION TWinReg.GetSNMP: AnsiString;
+FUNCTION TWinReg.GetSNMP: ANSISTRING;
 VAR
   communities  : TStringList;
-  name         : string;
+  name         : STRING;
   value        : double;
-  output       : AnsiString = '';
+  output       : ANSISTRING = '';
 BEGIN
   communities:= TStringList.Create;
   EnumSubKeys(
@@ -245,7 +245,7 @@ BEGIN
 END;
 
 // read all sub keys IN a registry key
-PROCEDURE TWinReg.EnumSubKeys(HKEY: LongWord; key: string; SubKeyNames: TStrings);
+PROCEDURE TWinReg.EnumSubKeys(HKEY: LongWord; key: STRING; SubKeyNames: TStrings);
 VAR
   Registry      : TRegistry;
 BEGIN
@@ -257,7 +257,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyLIint(HKEY: LongWord; regPath: string; key: string): LongInt;
+FUNCTION TWinReg.ReadKeyLIint(HKEY: LongWord; regPath: STRING; key: STRING): LONGINT;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -270,7 +270,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyAnsi(HKEY: LongWord; regPath: string; key: string): AnsiString;
+FUNCTION TWinReg.ReadKeyAnsi(HKEY: LongWord; regPath: STRING; key: STRING): ANSISTRING;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -283,7 +283,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyBool(HKEY: LongWord; regPath: string; key: string): boolean;
+FUNCTION TWinReg.ReadKeyBool(HKEY: LongWord; regPath: STRING; key: STRING): BOOLEAN;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -296,7 +296,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyDouble(HKEY: LongWord; regPath: string; key: string): double;
+FUNCTION TWinReg.ReadKeyDouble(HKEY: LongWord; regPath: STRING; key: STRING): double;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -309,7 +309,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyDTime(HKEY: LongWord; regPath: string; key: string): TDateTime;
+FUNCTION TWinReg.ReadKeyDTime(HKEY: LongWord; regPath: STRING; key: STRING): TDateTime;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -320,7 +320,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyDate(HKEY: LongWord; regPath: string; key: string): TDate;
+FUNCTION TWinReg.ReadKeyDate(HKEY: LongWord; regPath: STRING; key: STRING): TDate;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -331,7 +331,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyTime(HKEY: LongWord; regPath: string; key: string): TTime;
+FUNCTION TWinReg.ReadKeyTime(HKEY: LongWord; regPath: STRING; key: STRING): TTime;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -342,7 +342,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyBin(HKEY: LongWord; regPath: string; key: string; bufSize: integer): LongInt;
+FUNCTION TWinReg.ReadKeyBin(HKEY: LongWord; regPath: STRING; key: STRING; bufSize: INTEGER): LONGINT;
 VAR
   Registry: TRegistry;
   Buffer  : ARRAY OF byte;

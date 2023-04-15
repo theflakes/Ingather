@@ -16,30 +16,30 @@ TYPE
   { TIngather }
   TIngather = CLASS(TCustomApplication)
   PROTECTED
-    PROCEDURE DoRun; override;
+    PROCEDURE DoRun; OVERRIDE;
   PUBLIC
-    CONSTRUCTOR Create(TheOwner: TComponent); override;
-    DESTRUCTOR Destroy; override;
-    PROCEDURE WriteHelp; virtual;
+    CONSTRUCTOR Create(TheOwner: TComponent); OVERRIDE;
+    DESTRUCTOR Destroy; OVERRIDE;
+    PROCEDURE WriteHelp; VIRTUAL;
   PRIVATE
-    FUNCTION PrintHeader(cmd: string): AnsiString;
-    FUNCTION PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
+    FUNCTION PrintHeader(cmd: STRING): ANSISTRING;
+    FUNCTION PrintEnums(cmds: TDataDefs.CommandArray): ANSISTRING;
     PROCEDURE DownloadFile();
-    FUNCTION IsAdmin(): AnsiString;
-    FUNCTION RunEnums(): AnsiString;
-    FUNCTION RunCmd(): AnsiString;
-    FUNCTION RunCmds(): AnsiString;
-    FUNCTION Tx(output: AnsiString): Boolean;
-    FUNCTION SaveOutput(output: AnsiString): Boolean;
+    FUNCTION IsAdmin(): ANSISTRING;
+    FUNCTION RunEnums(): ANSISTRING;
+    FUNCTION RunCmd(): ANSISTRING;
+    FUNCTION RunCmds(): ANSISTRING;
+    FUNCTION Tx(output: ANSISTRING): BOOLEAN;
+    FUNCTION SaveOutput(output: ANSISTRING): BOOLEAN;
   END;
 
 { TIngather }
 // Main PROGRAM flow control
 PROCEDURE TIngather.DoRun;
 VAR
-  ErrorMsg        : String = '';
-  output          : AnsiString = '';
-  ScreenPrint     : Boolean = true;
+  ErrorMsg        : STRING = '';
+  output          : ANSISTRING = '';
+  ScreenPrint     : BOOLEAN = true;
 BEGIN
   // quick check parameters
   ErrorMsg:= CheckOptions(
@@ -87,7 +87,7 @@ BEGIN
   Terminate;
 END;
 
-FUNCTION TIngather.IsAdmin(): AnsiString;
+FUNCTION TIngather.IsAdmin(): ANSISTRING;
 VAR
   escalate: TRunAs;
 BEGIN
@@ -102,10 +102,10 @@ END;
 
 PROCEDURE TIngather.DownloadFile();
 VAR
-  ErrorMsg: String = '';
+  ErrorMsg: STRING = '';
   nwrk    : TNetIO;
-  download: string = '';
-  save    : string = '';
+  download: STRING = '';
+  save    : STRING = '';
 BEGIN
   nwrk:= TNetIO.Create;
   download:= Self.GetOptionValue('d','download');
@@ -119,7 +119,7 @@ BEGIN
   nwrk.Free;
 END;
 
-FUNCTION TIngather.RunEnums(): AnsiString;
+FUNCTION TIngather.RunEnums(): ANSISTRING;
 VAR
   vulns : TFindVulns;
 BEGIN
@@ -136,10 +136,10 @@ BEGIN
   vulns.Free;
 END;
 
-FUNCTION TIngather.RunCmd(): AnsiString;
+FUNCTION TIngather.RunCmd(): ANSISTRING;
 VAR
   execute: TRunCMD;
-  command: String = '';
+  command: STRING = '';
 BEGIN
   execute:= TRunCMD.Create;
   writeln('[*] Running custom commands');
@@ -148,9 +148,9 @@ BEGIN
   execute.Free;
 END;
 
-FUNCTION TIngather.RunCmds(): AnsiString;
+FUNCTION TIngather.RunCmds(): ANSISTRING;
 VAR
-  x      : Integer;
+  x      : INTEGER;
   execute: TRunCMD;
 BEGIN
   writeln('[*] Running misc. enumeration commands');
@@ -164,10 +164,10 @@ BEGIN
   execute.Free;
 END;
 
-FUNCTION TIngather.Tx(output: AnsiString): Boolean;
+FUNCTION TIngather.Tx(output: ANSISTRING): BOOLEAN;
 VAR
-  ip  : AnsiString = '';
-  port: AnsiString = '';
+  ip  : ANSISTRING = '';
+  port: ANSISTRING = '';
   nwrk: TNetIO;
 BEGIN
   nwrk:= TNetIO.Create;
@@ -179,10 +179,10 @@ BEGIN
   result:= false;
 END;
 
-FUNCTION TIngather.SaveOutput(output: AnsiString): Boolean;
+FUNCTION TIngather.SaveOutput(output: ANSISTRING): BOOLEAN;
 VAR
-  outfile: AnsiString;
-  tfOut  : TextFile;
+  outfile: ANSISTRING;
+  tfOut  : TEXTFILE;
 BEGIN
   outfile:= Self.GetOptionValue('o','out');
   AssignFile(tfOut, outfile);
@@ -192,15 +192,15 @@ BEGIN
   result:= false;
 END;
 
-FUNCTION TIngather.PrintHeader(cmd: string): AnsiString;
+FUNCTION TIngather.PrintHeader(cmd: STRING): ANSISTRING;
 BEGIN
   result:= '';
   result:= concat(result, '[*] '+cmd+sLineBreak);
 END;
 
-FUNCTION TIngather.PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
+FUNCTION TIngather.PrintEnums(cmds: TDataDefs.CommandArray): ANSISTRING;
 VAR
-  x: integer;
+  x: INTEGER;
 BEGIN
   result:= '';
   FOR x:= 1 to TDataDefs.NUM_CMDS DO BEGIN

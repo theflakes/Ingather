@@ -16,25 +16,25 @@ TYPE
      PUBLIC
        PROCEDURE GetPathList(pathList: TStrings);
        FUNCTION ReadINI(
-                  iniFile: string;
-                  section:string; value: string;
-                  default: string
-                ): AnsiString;
-       FUNCTION CheckFileIsWriteable(path: string): Boolean;
-       FUNCTION CheckDirectoryIsWriteable(path: string): Boolean;
-       FUNCTION RemoveQuotes(CONST S: string; CONST QuoteChar: Char): string;
-       FUNCTION ReadXML(xmlFile: string; node: string): AnsiString;
+                  iniFile: STRING;
+                  section:STRING; value: STRING;
+                  default: STRING
+                ): ANSISTRING;
+       FUNCTION CheckFileIsWriteable(path: STRING): BOOLEAN;
+       FUNCTION CheckDirectoryIsWriteable(path: STRING): BOOLEAN;
+       FUNCTION RemoveQuotes(CONST S: STRING; CONST QuoteChar: Char): STRING;
+       FUNCTION ReadXML(xmlFile: STRING; node: STRING): ANSISTRING;
      PRIVATE
-       FUNCTION GetPath: AnsiString;
+       FUNCTION GetPath: ANSISTRING;
   END;
 
 IMPLEMENTATION
 FUNCTION TWinFileSystem.RemoveQuotes(
-                          CONST S: string;
+                          CONST S: STRING;
                           CONST QuoteChar: Char
-                        ): string;
+                        ): STRING;
 VAR
-  Len: Integer;
+  Len: INTEGER;
 BEGIN
   Result := S;
   Len := Length(Result);
@@ -51,7 +51,7 @@ BEGIN
             );
 END;
 
-FUNCTION TWinFileSystem.CheckFileIsWriteable(path: string): Boolean;
+FUNCTION TWinFileSystem.CheckFileIsWriteable(path: STRING): BOOLEAN;
 BEGIN
   path:= RemoveQuotes(path, '"');
   IF FileIsWritable(path) THEN
@@ -60,7 +60,7 @@ BEGIN
     result:= false;
 END;
 
-FUNCTION TWinFileSystem.CheckDirectoryIsWriteable(path: string): Boolean;
+FUNCTION TWinFileSystem.CheckDirectoryIsWriteable(path: STRING): BOOLEAN;
 BEGIN
   path:= RemoveQuotes(path, '"');
   path:= ExtractFilePath(path);
@@ -70,14 +70,14 @@ BEGIN
     result:= false;
 END;
 
-FUNCTION TWinFileSystem.GetPath: AnsiString;
+FUNCTION TWinFileSystem.GetPath: ANSISTRING;
 BEGIN
   result:= GetEnv('PATH');
 END;
 
 PROCEDURE TWinFileSystem.GetPathList(pathList: TStrings);
 VAR
-  path     : AnsiString;
+  path     : ANSISTRING;
   strSplit : TMisc;
 BEGIN
   strSplit:= TMisc.Create;
@@ -87,11 +87,11 @@ BEGIN
 END;
 
 FUNCTION TWinFileSystem.ReadINI(
-                          iniFile: string;
-                          section:string;
-                          value: string;
-                          default: string
-                        ): AnsiString;
+                          iniFile: STRING;
+                          section:STRING;
+                          value: STRING;
+                          default: STRING
+                        ): ANSISTRING;
 VAR
  INI: TINIFile;
 BEGIN
@@ -100,11 +100,11 @@ BEGIN
   Ini.Free;
 END;
 
-FUNCTION TWinFileSystem.ReadXML(xmlFile: string; node: string): AnsiString;
+FUNCTION TWinFileSystem.ReadXML(xmlFile: STRING; node: STRING): ANSISTRING;
 VAR
   PassNode: TDOMNode;
   Doc: TXMLDocument;
-  output: AnsiString = '';
+  output: ANSISTRING = '';
 BEGIN
   IF FileExists(xmlFile) THEN BEGIN
     ReadXMLFile(Doc, xmlFile);
