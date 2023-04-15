@@ -1,4 +1,4 @@
-unit RunAs;
+UNIT RunAs;
 {
  AUTHOR:  Brian Kellogg
 
@@ -10,43 +10,43 @@ unit RunAs;
 
 {$mode objfpc}{$H+}
 
-interface
-uses
+INTERFACE
+USES
   Classes, SysUtils, Windows, ShellAPI;
-type
-  TRunAs = class
-    public
-      function IsUserAdmin: Boolean;
-      function RunAsAdmin(
+TYPE
+  TRunAs = CLASS
+    PUBLIC
+      FUNCTION IsUserAdmin: Boolean;
+      FUNCTION RunAsAdmin(
                   hWnd: HWND;
                   filename: string;
                   Parameters: string
                 ): Boolean;
-    private
-  end;
+    PRIVATE
+  END;
 
 
-implementation
-// external Windows function for checking group membership
-function CheckTokenMembership(
+IMPLEMENTATION
+// external Windows FUNCTION FOR checking group membership
+FUNCTION CheckTokenMembership(
             TokenHandle: THandle;
             SidToCheck: PSID;
-            var IsMember: BOOL
+            VAR IsMember: BOOL
           ): BOOL; stdcall; external advapi32;
 
-// This function tells us if we're running with administrative permissions.
-function TRunAs.IsUserAdmin: Boolean;
-const
+// This FUNCTION tells us IF we're running with administrative permissions.
+FUNCTION TRunAs.IsUserAdmin: Boolean;
+CONST
   SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority = (Value: (0, 0, 0, 0, 0, 5));
-var
+VAR
     b                  : BOOL;
     AdministratorsGroup: PSID;
-begin
+BEGIN
     {
-        This function returns true if you are currently running with admin privelages.
-        In Vista and later, if you are non-elevated, this function will return false
-        (you are not running with administrative privelages).
-        If you *are* running elevated, then IsUserAdmin will return true,
+        This FUNCTION returns true IF you are currently running with admin privelages.
+        In Vista AND later, IF you are non-elevated, this FUNCTION will return false
+        (you are NOT running with administrative privelages).
+        If you *are* running elevated, THEN IsUserAdmin will return true,
         as you are running with admin privelages.
     }
     b := AllocateAndInitializeSid(
@@ -54,42 +54,42 @@ begin
             2, //2 sub-authorities
             SECURITY_BUILTIN_DOMAIN_RID,    //sub-authority 0
             DOMAIN_ALIAS_RID_ADMINS,        //sub-authority 1
-            0, 0, 0, 0, 0, 0,               //sub-authorities 2-7 not passed
+            0, 0, 0, 0, 0, 0,               //sub-authorities 2-7 NOT passed
             AdministratorsGroup);
-    if (b) then
-    begin
-        if not CheckTokenMembership(0, AdministratorsGroup, b) then
+    IF (b) THEN
+    BEGIN
+        IF NOT CheckTokenMembership(0, AdministratorsGroup, b) THEN
             b := False;
         FreeSid(AdministratorsGroup);
-    end;
+    END;
 
     Result := b;
-end;
+END;
 
-function TRunAs.RunAsAdmin(
+FUNCTION TRunAs.RunAsAdmin(
             hWnd: HWND;
             filename: string;
             Parameters: string
           ): Boolean;
 {
-    See Step 3: Redesign for UAC Compatibility (UAC)
+    See Step 3: Redesign FOR UAC Compatibility (UAC)
     http://msdn.microsoft.com/en-us/library/bb756922.aspx
 }
-var
+VAR
     sei: TShellExecuteInfo;
-begin
+BEGIN
     ZeroMemory(@sei, SizeOf(sei));
     sei.cbSize := SizeOf(TShellExecuteInfo);
     sei.Wnd := hwnd;
-    sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    sei.fMask := SEE_MASK_FLAG_DDEWAIT OR SEE_MASK_FLAG_NO_UI;
     sei.lpVerb := PChar('runas');
     sei.lpFile := PChar(Filename); // PAnsiChar;
-    if parameters <> '' then
+    IF parameters <> '' THEN
         sei.lpParameters := PChar(parameters); // PAnsiChar;
     sei.nShow := SW_SHOWNORMAL; //Integer;
 
     Result := ShellExecuteExA(@sei);
-end;
+END;
 
-end.
+END.
 

@@ -1,4 +1,4 @@
-unit NetIO;
+UNIT NetIO;
 {
  AUTHOR:  Brian Kellogg
 
@@ -7,62 +7,62 @@ unit NetIO;
 
 {$mode objfpc}{$H+}
 
-interface
-uses
+INTERFACE
+USES
   Classes, SysUtils, blcksock, synsock, regexpr, httpsend, strutils;
-type
-  TNetIO = class
-    public
-      procedure SendIt(ip: AnsiString; port: AnsiString; Output: AnsiString);
-      procedure WinHTTPGet(Source: String; Dest: String);
-      function DownloadHTTP(URL, TargetFile: string): String;
-    private
-      function StringToStream(const AString: string): TStream;
-      function IsIP(ip: AnsiString): Boolean;
-      function IsPort(port: AnsiString): Boolean;
-      function FoundLocationStr(
+TYPE
+  TNetIO = CLASS
+    PUBLIC
+      PROCEDURE SendIt(ip: AnsiString; port: AnsiString; Output: AnsiString);
+      PROCEDURE WinHTTPGet(Source: String; Dest: String);
+      FUNCTION DownloadHTTP(URL, TargetFile: string): String;
+    PRIVATE
+      FUNCTION StringToStream(CONST AString: string): TStream;
+      FUNCTION IsIP(ip: AnsiString): Boolean;
+      FUNCTION IsPort(port: AnsiString): Boolean;
+      FUNCTION FoundLocationStr(
                 headers: TStringlist;
                 out FoundPos: integer
               ): integer;
-  end;
+  END;
 
 
-implementation
-// Convert string to stream for network comms
-Function TNetIO.StringToStream(const AString: string): TStream;
-begin
+IMPLEMENTATION
+// Convert string to stream FOR network comms
+Function TNetIO.StringToStream(CONST AString: string): TStream;
+BEGIN
   Result:= TStringStream.Create(AString);
-end;
+END;
 
 Function TNetIO.IsIP(ip: AnsiString): Boolean;
-var
+VAR
   IPregex: TRegExpr;
-begin
+BEGIN
   IPregex:= TRegExpr.Create;
   IPregex.Expression:= '^([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))$';
-  if IPregex.Exec(ip) then
+  IF IPregex.Exec(ip) THEN
     Result:= true
-  else
+  ELSE
     Result:= false;
   IPregex.Free
-end;
+END;
 
 Function TNetIO.IsPort(port: AnsiString): Boolean;
-begin
-  if (strToint(port) >= 0) and (strToint(port) <= 65535) then
+BEGIN
+  IF (strToint(port) >= 0) AND (strToint(port) <= 65535) THEN
     Result:= true
-  else
+  ELSE
     Result:= false;
-end;
+END;
 
-procedure TNetIO.SendIt(ip: AnsiString; port: AnsiString; output : AnsiString);
-var
+PROCEDURE TNetIO.SendIt(ip: AnsiString; port: AnsiString; output : AnsiString);
+VAR
   Client    : TTCPBlockSocket;
   StrStream : TStream;
-begin
+BEGIN
   // send to another computer listening on the specified IP:Port with nc -vlp 4444
-  if isIP(ip) then begin
-    if isPort(port) then begin
+  IF isIP(ip) THEN BEGIN
+    IF isPort(port) THEN BEGIN
       Client:= TTCPBlockSocket.Create;
       Client.RaiseExcept:= True;
       Client.Connect(IP, Port);
@@ -70,26 +70,26 @@ begin
       Client.SendStreamRAW(StrStream);
       Client.CloseSocket;
       Client.Free;
-    end
-    else begin
+    END
+    ELSE BEGIN
       writeln;
       writeln('>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       writeln('---> Invalid port!!!');
       writeln('<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
       writeln;
-    end;
-  end
-  else begin
+    END;
+  END
+  ELSE BEGIN
     writeln;
     writeln('>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     writeln('---> Invalid IP address!!!');
     writeln('<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
     writeln;
-  end;
-end;
+  END;
+END;
 
-// external Windows function for HTTP download
-function URLDownloadToFile(
+// external Windows FUNCTION FOR HTTP download
+FUNCTION URLDownloadToFile(
                             pCaller: pointer;
                             URL: PChar;
                             FileName: PChar;
@@ -99,86 +99,86 @@ function URLDownloadToFile(
                             stdcall;
                             external 'urlmon.dll' name 'URLDownloadToFileA';
 
-// use Windows built in function for HTTP download
-procedure TNetIO.WinHTTPGet(Source: String; Dest: String);
-begin
- if URLDownloadToFile(nil, PChar(Source), PChar(Dest), 0, nil)=0 then
+// use Windows built IN FUNCTION FOR HTTP download
+PROCEDURE TNetIO.WinHTTPGet(Source: String; Dest: String);
+BEGIN
+ IF URLDownloadToFile(nil, PChar(Source), PChar(Dest), 0, nil)=0 THEN
    writeln('Download ok!')
- else
+ ELSE
    writeln('Error downloading '+Source);
-end;
+END;
 
-// private function to find 'Location:' in redirect error header...
-function TNetIO.FoundLocationStr(headers: TStringlist;
+// PRIVATE FUNCTION to find 'Location:' IN redirect error header...
+FUNCTION TNetIO.FoundLocationStr(headers: TStringlist;
                                 out FoundPos: integer
                                 ): integer;
-var i: integer;
-begin
-  result:= -1;  //for safety
+VAR i: integer;
+BEGIN
+  result:= -1;  //FOR safety
   // find lind redirect URL is on
-  for i:= 0 to Headers.Count do
-  begin
+  FOR i:= 0 to Headers.Count DO
+  BEGIN
     FoundPos:= FindPart('Location: ', Headers.Strings[i]);
-    if FoundPos > 0 then //has to be above 0 otherwise nothing was found
-    begin
+    IF FoundPos > 0 THEN //has to be above 0 otherwise nothing was found
+    BEGIN
       result:= i; //return the line number that "Location: " is on
-      exit; //exit this function only the first time that iLoc is > 0
-    end;
-  end;
-end;
+      EXIT; //EXIT this FUNCTION only the first time that iLoc is > 0
+    END;
+  END;
+END;
 
-// FP Synapse built-in HTTP download function, deals with HTTP redirects
-function TNetIO.DownloadHTTP(URL, TargetFile: String): String;
-const
+// FP Synapse built-IN HTTP download FUNCTION, deals with HTTP redirects
+FUNCTION TNetIO.DownloadHTTP(URL, TargetFile: String): String;
+CONST
   MaxRetries    = 3;
-var
+VAR
   HTTPGetResult : Boolean;
   http          : THTTPSend;
   RetryAttempt  : Integer;
   FoundStrPos   : Integer;
   FoundLine     : Integer;
-begin
+BEGIN
   RetryAttempt:= 1;
   http:= THTTPSend.Create;
   try
     try
       HTTPGetResult:= http.HTTPMethod('GET', URL); // Try to get the file
-      while (HTTPGetResult = False) and (RetryAttempt < MaxRetries) do
-      begin
+      while (HTTPGetResult = False) AND (RetryAttempt < MaxRetries) DO
+      BEGIN
         Sleep(500 * RetryAttempt);
         HTTPGetResult:= http.HTTPMethod('GET', URL);
         RetryAttempt:= RetryAttempt + 1;
-      end;
-      case http.Resultcode of // If we have an answer from the server, check if the file was sent to us
+      END;
+      CASE http.Resultcode OF // If we have an answer from the server, check IF the file was sent to us
         100..299:
-          begin
+          BEGIN
             http.Document.SaveToFile(TargetFile);
             result:= 'File downloaded.';
-          end; //informational, success
+          END; //informational, success
         301, 302, 307:
-          begin
+          BEGIN
             FoundStrPos:= 0;
             FoundLine:= FoundLocationStr(http.Headers, FoundStrPos);
-            if (FoundLine >= 0) and (FoundLine <= http.Headers.count) then
-            begin
+            IF (FoundLine >= 0) AND (FoundLine <= http.Headers.count) THEN
+            BEGIN
               result:= StringReplace(
                         Http.Headers.Strings[FoundLine],
                         'Location: ',
                       '',[]); //strip the line with 'Location: http: someurl.com' down to JUST the URL
               result:= DownloadHTTP(result, TargetFile); // There be recursion here to handle nested redirects!!!
-            end else
-              result:= 'Could not find redirect URL!!!'; //couldn't find redirect URL Location in header
-          end;
-        400..499: result:= 'File download failed!!!'; // client error; 404 not found etc
+            END ELSE
+              result:= 'Could NOT find redirect URL!!!'; //couldn't find redirect URL Location IN header
+          END;
+        400..499: result:= 'File download failed!!!'; // client error; 404 NOT found etc
         500..599: result:= 'File download failed!!!'; // internal server error
-        else result:= 'File download failed!!!';
-      end;
+        ELSE result:= 'File download failed!!!';
+      END;
     except
-      result:= 'File download failed!!!'; // We don't care for the reason for this error; the download failed.
-    end;
+      result:= 'File download failed!!!'; // We don't care FOR the reason FOR this error; the download failed.
+    END;
   finally
     http.Free;
-  end;
-end;
+  END;
+END;
 
-end.
+END.

@@ -1,4 +1,4 @@
-unit WinUsers;
+UNIT WinUsers;
 {
  AUTHOR:  Brian Kellogg
 
@@ -7,36 +7,36 @@ unit WinUsers;
 
 {$mode objfpc}{$H+}
 
-interface
+INTERFACE
 
-uses
+USES
   Classes, SysUtils;
-type
-  TWinUsers = class
-    public
-    private
-  end;
+TYPE
+  TWinUsers = CLASS
+    PUBLIC
+    PRIVATE
+  END;
 
-type
-  Tgroup = record
+TYPE
+  Tgroup = RECORD
     Name: string;
     Domain: string;
     SID: string;
-  end;
+  END;
 
-  Tuser = record
+  Tuser = RECORD
     Name: string;
     Domain: string;
     SID: string;
     Groups: Tgroup;
-  end;
+  END;
 
-  TWinUser = class
-    public
-    private
-  end;
+  TWinUser = CLASS
+    PUBLIC
+    PRIVATE
+  END;
 
-implementation
+IMPLEMENTATION
 
-end.
+END.
 

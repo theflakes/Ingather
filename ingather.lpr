@@ -1,4 +1,4 @@
-program Ingather;
+PROGRAM Ingather;
 {
  AUTHOR:  Brian Kellogg
 
@@ -7,122 +7,122 @@ program Ingather;
 
 {$mode objfpc}{$H+}
 
-uses
+USES
   Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD,
   WinFileSystem, StrUtils, DataDefs
   { you can add units after this };
 
-type
+TYPE
   { TIngather }
-  TIngather = class(TCustomApplication)
-  protected
-    procedure DoRun; override;
-  public
-    constructor Create(TheOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure WriteHelp; virtual;
-  private
-    function PrintHeader(cmd: string): AnsiString;
-    function PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
-    procedure DownloadFile();
-    function IsAdmin(): AnsiString;
-    function RunEnums(): AnsiString;
-    function RunCmd(): AnsiString;
-    function RunCmds(): AnsiString;
-    function Tx(output: AnsiString): Boolean;
-    function SaveOutput(output: AnsiString): Boolean;
-  end;
+  TIngather = CLASS(TCustomApplication)
+  PROTECTED
+    PROCEDURE DoRun; override;
+  PUBLIC
+    CONSTRUCTOR Create(TheOwner: TComponent); override;
+    DESTRUCTOR Destroy; override;
+    PROCEDURE WriteHelp; virtual;
+  PRIVATE
+    FUNCTION PrintHeader(cmd: string): AnsiString;
+    FUNCTION PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
+    PROCEDURE DownloadFile();
+    FUNCTION IsAdmin(): AnsiString;
+    FUNCTION RunEnums(): AnsiString;
+    FUNCTION RunCmd(): AnsiString;
+    FUNCTION RunCmds(): AnsiString;
+    FUNCTION Tx(output: AnsiString): Boolean;
+    FUNCTION SaveOutput(output: AnsiString): Boolean;
+  END;
 
 { TIngather }
-// Main program flow control
-procedure TIngather.DoRun;
-var
+// Main PROGRAM flow control
+PROCEDURE TIngather.DoRun;
+VAR
   ErrorMsg        : String = '';
   output          : AnsiString = '';
   ScreenPrint     : Boolean = true;
-begin
+BEGIN
   // quick check parameters
   ErrorMsg:= CheckOptions(
     'c:d:ehi:lo:p:s:z', 'command: download: enum help ip: list out: port: save:'
     );
-  if (ErrorMsg <> '') or (HasOption('h','help')) or (ParamCount = 0) then begin
-    if (ErrorMsg <> '') then writeln(ErrorMsg);
+  IF (ErrorMsg <> '') OR (HasOption('h','help')) OR (ParamCount = 0) THEN BEGIN
+    IF (ErrorMsg <> '') THEN writeln(ErrorMsg);
     WriteHelp;
     Terminate;
     Exit;
-  end;
+  END;
 
   // Is user an admin
   output:= concat(output, IsAdmin());
 
-  if HasOption('l', 'list') then begin
+  IF HasOption('l', 'list') THEN BEGIN
     output:= concat(output, PrintHeader('Enumeration Commands'));
     output:= concat(output, PrintEnums(TDataDefs.CMDS));
-  end;
+  END;
 
   // download file
-  if HasOption('d', 'download') and HasOption('s','save') then begin
+  IF HasOption('d', 'download') AND HasOption('s','save') THEN BEGIN
     DownloadFile;
-  end;
+  END;
 
-  // do vulnerability enumeration on host
-  if HasOption('c', 'command') then begin
+  // DO vulnerability enumeration on host
+  IF HasOption('c', 'command') THEN BEGIN
     output:= concat(output, RunCmd());
-  end;
+  END;
 
-  if HasOption('e', 'enum') then begin
+  IF HasOption('e', 'enum') THEN BEGIN
     // run system enumeration analysis
     output:= concat(output, RunEnums());
     // run basic enumeration commands
     output:= concat(output, RunCmds());
-  end;
+  END;
 
   // Send output to another computer?
-  if HasOption('i', 'ip') and HasOption('p','port') then ScreenPrint:= Tx(output);
+  IF HasOption('i', 'ip') AND HasOption('p','port') THEN ScreenPrint:= Tx(output);
   // Write all command outputs to a file?
-  if HasOption('o', 'out') then ScreenPrint:= SaveOutput(output);
+  IF HasOption('o', 'out') THEN ScreenPrint:= SaveOutput(output);
   // no other output specified, so output to console
-  if ScreenPrint then writeln(output);
+  IF ScreenPrint THEN writeln(output);
 
   Terminate;
-end;
+END;
 
-function TIngather.IsAdmin(): AnsiString;
-var
+FUNCTION TIngather.IsAdmin(): AnsiString;
+VAR
   escalate: TRunAs;
-begin
+BEGIN
   result:= '';
   escalate:= TRunAs.Create;
-  if escalate.IsUserAdmin then
+  IF escalate.IsUserAdmin THEN
     result:= concat(result, '[!] You are an admin' + sLineBreak)
-  else
-    result:= concat(result, '[*] You are not an admin.' + sLineBreak);
+  ELSE
+    result:= concat(result, '[*] You are NOT an admin.' + sLineBreak);
   escalate.Free;
-end;
+END;
 
-procedure TIngather.DownloadFile();
-var
+PROCEDURE TIngather.DownloadFile();
+VAR
   ErrorMsg: String = '';
   nwrk    : TNetIO;
   download: string = '';
   save    : string = '';
-begin
+BEGIN
   nwrk:= TNetIO.Create;
   download:= Self.GetOptionValue('d','download');
   save:= Self.GetOptionValue('s','save');
-  if HasOption('z') then
+  IF HasOption('z') THEN
     nwrk.WinHTTPGet(download, save)
-  else begin
+  ELSE BEGIN
     ErrorMsg:= nwrk.DownloadHTTP(download, save);
     writeln(ErrorMsg);
-  end;
+  END;
   nwrk.Free;
-end;
+END;
 
-function TIngather.RunEnums(): AnsiString;
-var
+FUNCTION TIngather.RunEnums(): AnsiString;
+VAR
   vulns : TFindVulns;
-begin
+BEGIN
   result:= '';
   vulns:= TFindVulns.Create;
   writeln('[*] Inspecting the registry');
@@ -134,42 +134,42 @@ begin
   writeln('[*] Inspecting service configurations');
   result:= concat(result, vulns.GetVulnServices + sLineBreak);
   vulns.Free;
-end;
+END;
 
-function TIngather.RunCmd(): AnsiString;
-var
+FUNCTION TIngather.RunCmd(): AnsiString;
+VAR
   execute: TRunCMD;
   command: String = '';
-begin
+BEGIN
   execute:= TRunCMD.Create;
   writeln('[*] Running custom commands');
   command:= Self.GetOptionValue('c','command');
   result:= execute.getOutput(command, '', false);
   execute.Free;
-end;
+END;
 
-function TIngather.RunCmds(): AnsiString;
-var
+FUNCTION TIngather.RunCmds(): AnsiString;
+VAR
   x      : Integer;
   execute: TRunCMD;
-begin
+BEGIN
   writeln('[*] Running misc. enumeration commands');
   result:= '';
   execute:= TRunCMD.Create;
-  for x:= 1 to TDataDefs.NUM_CMDS do begin
+  FOR x:= 1 to TDataDefs.NUM_CMDS DO BEGIN
     result:= concat(result, PrintHeader(TDataDefs.CMDS[x][1]));
     result:= concat(result, execute.getOutput(TDataDefs.CMDS[x][1], '', false));
     result:= concat(result, sLineBreak)
-  end;
+  END;
   execute.Free;
-end;
+END;
 
-function TIngather.Tx(output: AnsiString): Boolean;
-var
+FUNCTION TIngather.Tx(output: AnsiString): Boolean;
+VAR
   ip  : AnsiString = '';
   port: AnsiString = '';
   nwrk: TNetIO;
-begin
+BEGIN
   nwrk:= TNetIO.Create;
   ip:= Self.GetOptionValue('i','ip');
   port:= Self.GetOptionValue('p','port');
@@ -177,40 +177,40 @@ begin
   nwrk.SendIt(ip, port, output);
   nwrk.Free;
   result:= false;
-end;
+END;
 
-function TIngather.SaveOutput(output: AnsiString): Boolean;
-var
+FUNCTION TIngather.SaveOutput(output: AnsiString): Boolean;
+VAR
   outfile: AnsiString;
   tfOut  : TextFile;
-begin
+BEGIN
   outfile:= Self.GetOptionValue('o','out');
   AssignFile(tfOut, outfile);
   rewrite(tfOut);
   writeln(tfOut, output);
   writeln('[*] Wrote output to file');
   result:= false;
-end;
+END;
 
-function TIngather.PrintHeader(cmd: string): AnsiString;
-begin
+FUNCTION TIngather.PrintHeader(cmd: string): AnsiString;
+BEGIN
   result:= '';
   result:= concat(result, '[*] '+cmd+sLineBreak);
-end;
+END;
 
-function TIngather.PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
-var
+FUNCTION TIngather.PrintEnums(cmds: TDataDefs.CommandArray): AnsiString;
+VAR
   x: integer;
-begin
+BEGIN
   result:= '';
-  for x:= 1 to TDataDefs.NUM_CMDS do begin
+  FOR x:= 1 to TDataDefs.NUM_CMDS DO BEGIN
     result:= concat(result, '[**] Command: '+cmds[x][1]+sLineBreak);
     result:= concat(result, ' Description: '+cmds[x][2]+sLineBreak);
-  end;
-end;
+  END;
+END;
 
-procedure TIngather.WriteHelp;
-begin
+PROCEDURE TIngather.WriteHelp;
+BEGIN
   writeln;
   writeln('Author : Brian Kellogg');
   writeln('License: MIT');
@@ -224,8 +224,8 @@ begin
   writeln('Download file over HTTP:');
   writeln('  -d, --download : download file');
   writeln('  -s, --save     : location to save downloaded file to');
-  writeln('  -z,            : use the Windows HTTP download function');
-  writeln('                   otherwise use custom HTTP download function');
+  writeln('  -z,            : use the Windows HTTP download FUNCTION');
+  writeln('                   otherwise use custom HTTP download FUNCTION');
   writeln('Run options:');
   writeln('  -c, --command  : run custom command');
   writeln('  -e, --enum     : run all builtin enumerations');
@@ -233,33 +233,33 @@ begin
   writeln('  -i, --ip       : destination IP address');
   writeln('  -p, --port     : destination port');
   writeln('  -o, --out      : write enumeration command outputs to file');
-  writeln('  If output to file or network is specified,');
+  writeln('  If output to file OR network is specified,');
   writeln('  screen output will be suppressed.');
   writeln('Info:');
   writeln('  -h, --help     : print this help message');
-  writeln('  -l, --list     : print default enum commands and descriptions');
+  writeln('  -l, --list     : print default enum commands AND descriptions');
   writeln;
-end;
+END;
 
-constructor TIngather.Create(TheOwner: TComponent);
-begin
+CONSTRUCTOR TIngather.Create(TheOwner: TComponent);
+BEGIN
   inherited Create(TheOwner);
   StopOnException:= True;
-end;
+END;
 
-destructor TIngather.Destroy;
-begin
+DESTRUCTOR TIngather.Destroy;
+BEGIN
   inherited Destroy;
-end;
+END;
 
-var
+VAR
   Application: TIngather;
 
 {$R *.res}
 
-begin
+BEGIN
   Application:= TIngather.Create(nil);
   Application.Title:= 'Ingather';
   Application.Run;
   Application.Free;
-end.
+END.

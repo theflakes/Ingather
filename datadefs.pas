@@ -1,39 +1,39 @@
-unit DataDefs;
+UNIT DataDefs;
 {
   AUTHOR:  Brian Kellogg
 
   MIT licensed
 
-  Unit holding data definitions and manipulations
+  Unit holding data definitions AND manipulations
 }
 
 {$mode ObjFPC}{$H+}
 
-interface
+INTERFACE
 
-uses
+USES
   Classes, SysUtils;
 
-type
-  TDataDefs = class
-    public
-      const
+TYPE
+  TDataDefs = CLASS
+    PUBLIC
+      CONST
         NUM_CMDS = 28;
-      type
-        CommandArray = array[1..NUM_CMDS, 1..2] of string;
-      const
+      TYPE
+        CommandArray = ARRAY[1..NUM_CMDS, 1..2] OF string;
+      CONST
 	      CMDS: CommandArray = (
           (
             'whoami /all',
-            'Currently logged in user info'
+            'Currently logged IN user info'
           ),
           (
             'hostname',
-            'Name of device'
+            'Name OF device'
           ),
           (
             'systeminfo | findstr /B /C:"OS Name" /C:"OS Version"',
-            'Print OS name and Version'
+            'Print OS name AND Version'
           ),
           (
             'gpresult /Z',
@@ -41,7 +41,7 @@ type
           ),
           (
             'net users',
-            'Dump list of user accounts'
+            'Dump list OF user accounts'
           ),
           (
             'wmic useraccount get name,sid',
@@ -92,7 +92,7 @@ type
             'Local ARP cache entries'
           ),
           (
-            'type c:\Windows\System32\drivers\etc\hosts',
+            'TYPE c:\Windows\System32\drivers\etc\hosts',
             'Hosts file contents'
           ),
           (
@@ -121,11 +121,11 @@ type
           ),
           (
             'reg query HKLM /f password /t REG_SZ /s',
-            'Search registry local machine hive for keys with "password" in the name'
+            'Search registry local machine hive FOR keys with "password" IN the name'
           ),
           (
             'reg query HKCU /f password /t REG_SZ /s',
-            'Search registry user hive for keys with "password" in the name'
+            'Search registry user hive FOR keys with "password" IN the name'
           ),
           (
             'powershell -c "Get-ChildItem C:\Users -Recurse -Depth 3 | Select-Object -ExpandProperty fullname | Sort-Object"',
@@ -133,19 +133,19 @@ type
           ),
           (
             'cd \ & dir /s *password* == *cred* == *vnc* == *account*',
-            'Search C: drive for various strings'
+            'Search C: drive FOR various strings'
           )
 	      );
-      function FormatOutput(output: AnsiString): AnsiString;
-    private
-  end;
+      FUNCTION FormatOutput(output: AnsiString): AnsiString;
+    PRIVATE
+  END;
 
-implementation
+IMPLEMENTATION
 // format output
-function TDataDefs.FormatOutput(output: AnsiString): AnsiString;
-begin
+FUNCTION TDataDefs.FormatOutput(output: AnsiString): AnsiString;
+BEGIN
   result:= output;
-end;
+END;
 
-end.
+END.
 

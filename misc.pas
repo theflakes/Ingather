@@ -1,4 +1,4 @@
-unit misc;
+UNIT misc;
 {
  AUTHOR:  Brian Kellogg
 
@@ -7,27 +7,27 @@ unit misc;
 
 {$mode objfpc}{$H+}
 
-interface
+INTERFACE
 
-uses
+USES
   Classes, SysUtils;
-type
-  TMisc = class
-     public
-       procedure Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
-     private
+TYPE
+  TMisc = CLASS
+     PUBLIC
+       PROCEDURE Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
+     PRIVATE
 
-   end;
+   END;
 
-implementation
+IMPLEMENTATION
 // split string by delimiter
-procedure TMisc.Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
-begin
+PROCEDURE TMisc.Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
+BEGIN
    ListOfStrings.Clear;
    ListOfStrings.Delimiter       := Delimiter;
    ListOfStrings.StrictDelimiter := True;
    ListOfStrings.DelimitedText   := Str;
-end;
+END;
 
-end.
+END.
 

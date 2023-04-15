@@ -1,4 +1,4 @@
-unit WinFileSystem;
+UNIT WinFileSystem;
 {
  AUTHOR:  Brian Kellogg
 
@@ -7,40 +7,40 @@ unit WinFileSystem;
 
 {$mode objfpc}{$H+}
 
-interface
+INTERFACE
 
-uses
+USES
   Classes, SysUtils, Dos, Misc, INIFiles, DOM, XMLRead, FileUtil, LazFileUtils;
-type
-  TWinFileSystem = class
-     public
-       procedure GetPathList(pathList: TStrings);
-       function ReadINI(
+TYPE
+  TWinFileSystem = CLASS
+     PUBLIC
+       PROCEDURE GetPathList(pathList: TStrings);
+       FUNCTION ReadINI(
                   iniFile: string;
                   section:string; value: string;
                   default: string
                 ): AnsiString;
-       function CheckFileIsWriteable(path: string): Boolean;
-       function CheckDirectoryIsWriteable(path: string): Boolean;
-       function RemoveQuotes(const S: string; const QuoteChar: Char): string;
-       function ReadXML(xmlFile: string; node: string): AnsiString;
-     private
-       function GetPath: AnsiString;
-  end;
+       FUNCTION CheckFileIsWriteable(path: string): Boolean;
+       FUNCTION CheckDirectoryIsWriteable(path: string): Boolean;
+       FUNCTION RemoveQuotes(CONST S: string; CONST QuoteChar: Char): string;
+       FUNCTION ReadXML(xmlFile: string; node: string): AnsiString;
+     PRIVATE
+       FUNCTION GetPath: AnsiString;
+  END;
 
-implementation
-function TWinFileSystem.RemoveQuotes(
-                          const S: string;
-                          const QuoteChar: Char
+IMPLEMENTATION
+FUNCTION TWinFileSystem.RemoveQuotes(
+                          CONST S: string;
+                          CONST QuoteChar: Char
                         ): string;
-var
+VAR
   Len: Integer;
-begin
+BEGIN
   Result := S;
   Len := Length(Result);
-  if (Len < 2) then Exit;                    //Quoted text must have at least 2 chars
-  if (Result[1] <> QuoteChar) then Exit;     //Text is not quoted
-  if (Result[Len] <> QuoteChar) then Exit;   //Text is not quoted
+  IF (Len < 2) THEN Exit;                    //Quoted text must have at least 2 chars
+  IF (Result[1] <> QuoteChar) THEN Exit;     //Text is NOT quoted
+  IF (Result[Len] <> QuoteChar) THEN Exit;   //Text is NOT quoted
   System.Delete(Result, Len, 1);
   System.Delete(Result, 1, 1);
   Result := StringReplace(
@@ -49,74 +49,74 @@ begin
               QuoteChar,
               [rfReplaceAll]
             );
-end;
+END;
 
-function TWinFileSystem.CheckFileIsWriteable(path: string): Boolean;
-begin
+FUNCTION TWinFileSystem.CheckFileIsWriteable(path: string): Boolean;
+BEGIN
   path:= RemoveQuotes(path, '"');
-  if FileIsWritable(path) then
+  IF FileIsWritable(path) THEN
     result:= true
-  else
+  ELSE
     result:= false;
-end;
+END;
 
-function TWinFileSystem.CheckDirectoryIsWriteable(path: string): Boolean;
-begin
+FUNCTION TWinFileSystem.CheckDirectoryIsWriteable(path: string): Boolean;
+BEGIN
   path:= RemoveQuotes(path, '"');
   path:= ExtractFilePath(path);
-  if DirectoryIsWritable(path) then
+  IF DirectoryIsWritable(path) THEN
     result:= true
-  else
+  ELSE
     result:= false;
-end;
+END;
 
-function TWinFileSystem.GetPath: AnsiString;
-begin
+FUNCTION TWinFileSystem.GetPath: AnsiString;
+BEGIN
   result:= GetEnv('PATH');
-end;
+END;
 
-procedure TWinFileSystem.GetPathList(pathList: TStrings);
-var
+PROCEDURE TWinFileSystem.GetPathList(pathList: TStrings);
+VAR
   path     : AnsiString;
   strSplit : TMisc;
-begin
+BEGIN
   strSplit:= TMisc.Create;
   path:= GetPath;
   strSplit.Split(';', path, pathList);
   strSplit.Free;
-end;
+END;
 
-function TWinFileSystem.ReadINI(
+FUNCTION TWinFileSystem.ReadINI(
                           iniFile: string;
                           section:string;
                           value: string;
                           default: string
                         ): AnsiString;
-var
+VAR
  INI: TINIFile;
-begin
+BEGIN
   INI:= TINIFile.Create(iniFile);
   result:= INI.ReadString(section, value, default);
   Ini.Free;
-end;
+END;
 
-function TWinFileSystem.ReadXML(xmlFile: string; node: string): AnsiString;
-var
+FUNCTION TWinFileSystem.ReadXML(xmlFile: string; node: string): AnsiString;
+VAR
   PassNode: TDOMNode;
   Doc: TXMLDocument;
   output: AnsiString = '';
-begin
-  if FileExists(xmlFile) then begin
+BEGIN
+  IF FileExists(xmlFile) THEN BEGIN
     ReadXMLFile(Doc, xmlFile);
     PassNode := Doc.DocumentElement.FindNode(node);
-    if PassNode.TextContent = '' then
+    IF PassNode.TextContent = '' THEN
       result:= concat(output, '[!!]' + PassNode.TextContent)
-    else
-      result:= concat(output, '[**] '+xmlFile+' file exists but '+node+' not found');
+    ELSE
+      result:= concat(output, '[**] '+xmlFile+' file exists but '+node+' NOT found');
     Doc.Free;
-  end else
-    result:= concat(output, '[**] '+xmlFile+' file not found.');
-end;
+  END ELSE
+    result:= concat(output, '[**] '+xmlFile+' file NOT found.');
+END;
 
-end.
+END.
 
