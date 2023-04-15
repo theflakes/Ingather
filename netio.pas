@@ -140,8 +140,8 @@ VAR
 BEGIN
   RetryAttempt:= 1;
   http:= THTTPSend.Create;
-  try
-    try
+  TRY
+    TRY
       HTTPGetResult:= http.HTTPMethod('GET', URL); // Try to get the file
       while (HTTPGetResult = False) AND (RetryAttempt < MaxRetries) DO
       BEGIN
@@ -173,10 +173,10 @@ BEGIN
         500..599: result:= 'File download failed!!!'; // internal server error
         ELSE result:= 'File download failed!!!';
       END;
-    except
+    EXCEPT
       result:= 'File download failed!!!'; // We don't care FOR the reason FOR this error; the download failed.
     END;
-  finally
+  FINALLY
     http.Free;
   END;
 END;

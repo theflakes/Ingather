@@ -104,7 +104,7 @@ BEGIN
   // All generated output from AProcess is read IN a loop UNTIL no more data is available
   REPEAT
     // Get the new data from the process to a maximum OF the buffer size that was allocated.
-    // Note that all read(...) calls will block except FOR the last one, which returns 0 (zero).
+    // Note that all read(...) calls will block EXCEPT FOR the last one, which returns 0 (zero).
     BytesRead:= AProcess.Output.Read(Buffer, BUF_SIZE);
     // Add the bytes that were read to the stream FOR later usage
     OutputStream.Write(Buffer, BytesRead);
