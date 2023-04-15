@@ -9,7 +9,7 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
-        <CursorPos X="52" Y="230"/>
+        <CursorPos X="30" Y="19"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -28,7 +28,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunAs"/>
         <EditorIndex Value="10"/>
-        <TopLine Value="30"/>
+        <TopLine Value="28"/>
         <CursorPos X="30" Y="21"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -38,7 +38,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="NetIO"/>
         <EditorIndex Value="8"/>
-        <CursorPos X="55" Y="161"/>
+        <CursorPos X="38" Y="25"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -47,7 +47,6 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunCMD"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="53"/>
         <CursorPos X="39" Y="23"/>
         <UsageCount Value="221"/>
         <Loaded Value="True"/>
@@ -75,10 +74,9 @@
         <Filename Value="winreg.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="196"/>
-        <CursorPos X="5" Y="210"/>
+        <TopLine Value="150"/>
+        <CursorPos X="72" Y="239"/>
         <UsageCount Value="330"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -104,9 +102,10 @@
         <Filename Value="datadefs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="DataDefs"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="34" Y="104"/>
-        <UsageCount Value="66"/>
+        <UsageCount Value="68"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
