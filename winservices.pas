@@ -26,30 +26,30 @@ USES
   Classes, SysUtils, regexpr, RunCMD, Misc;
 TYPE
   TdaclVulns = RECORD
-    config: BOOLEAN;
-    escalate: BOOLEAN;
+    config: Boolean;
+    escalate: Boolean;
   END;
 
   Tdacl = RECORD
-    allow: BOOLEAN;
-    entry: STRING;
-    perms: ARRAY OF STRING;
+    allow: Boolean;
+    entry: String;
+    perms: ARRAY OF String;
     vulns: TdaclVulns;
   END;
 
   TPathName = RECORD
-    PathName: STRING;
-    Unquoted: BOOLEAN;
-    Writeable: BOOLEAN;
+    PathName: String;
+    Unquoted: Boolean;
+    Writeable: Boolean;
   END;
 
   TService = RECORD
-    Name: STRING;
+    Name: String;
     Path: TPathName;
-    Started: STRING;
-    StartMode: STRING;
-    StartName: STRING;
-    Status: STRING;
+    Started: String;
+    StartMode: String;
+    StartName: String;
+    Status: String;
     dacl: ARRAY OF Tdacl;
   END;
 
@@ -58,10 +58,10 @@ TYPE
       Services: ARRAY OF TService;
       PROCEDURE GetServicesInfo;
     PRIVATE
-      FUNCTION Users(userAbbr: STRING): STRING;
-      FUNCTION Perms(permAbbr: STRING): STRING;
+      FUNCTION Users(userAbbr: String): String;
+      FUNCTION Perms(permAbbr: String): String;
       PROCEDURE GetServicePerms;
-      PROCEDURE SplitPermAbbreviaions(Str: STRING; ListOfStrings: TStrings);
+      PROCEDURE SplitPermAbbreviaions(Str: String; ListOfStrings: TStrings);
       CONST SVC_QRY_CONF             = 'wmic service ';
       CONST SVC_QRY_PERMS            = 'sc sdshow ';
       CONST SVC_PERM_REGEX           = '(?-sg)\((A|D)\S+\)';
@@ -71,7 +71,7 @@ TYPE
 
 // convert user/group abbreviations to user/group names
 IMPLEMENTATION
-FUNCTION TWinServices.Users(userAbbr: STRING): STRING;
+FUNCTION TWinServices.Users(userAbbr: String): String;
 BEGIN
   CASE userAbbr OF
     'DA': result:= 'Domain Administrators';
@@ -124,7 +124,7 @@ BEGIN
 END;
 
 // convert service permissions abbreviations to full names
-FUNCTION TWinServices.Perms(permAbbr: STRING): STRING;
+FUNCTION TWinServices.Perms(permAbbr: String): String;
 BEGIN
   CASE permAbbr OF
     'CC': result:= 'QueryConf';
@@ -149,7 +149,7 @@ BEGIN
 END;
 
 // split service permissions into their two letter abbreviations
-PROCEDURE TWinServices.SplitPermAbbreviaions(Str: STRING; ListOfStrings: TStrings);
+PROCEDURE TWinServices.SplitPermAbbreviaions(Str: String; ListOfStrings: TStrings);
 BEGIN
   ListOfStrings.Clear;
   while Length(Str) >= 2 DO BEGIN
@@ -160,16 +160,16 @@ END;
 
 PROCEDURE TWinServices.GetServicePerms;
 VAR
-  i              : INTEGER;
-  daclIndex      : INTEGER;     // track ARRAY OF dacls
-  permIndex      : INTEGER;     // track permissions per dacl
+  i              : Integer;
+  daclIndex      : Integer;     // track ARRAY OF dacls
+  permIndex      : Integer;     // track permissions per dacl
   cmd            : TRunCMD;
-  cmdOut         : ANSISTRING;
-  tmpStr         : STRING;
+  cmdOut         : AnsiString;
+  tmpStr         : String;
   regex          : TRegExpr;
   list           : TStringList;
   permList       : TStringList;
-  perm           : STRING;
+  perm           : String;
   strSplit       : TMisc;
 BEGIN
   cmd:= TRunCMD.Create;
@@ -218,13 +218,13 @@ END;
 PROCEDURE TWinServices.GetServicesInfo;
 VAR
   cmd            : TRunCMD;
-  cmdOut         : ANSISTRING;
+  cmdOut         : AnsiString;
   outerRegex     : TRegExpr;
   innerRegex     : TRegExpr;
-  i              : INTEGER = 0;
-  count          : INTEGER;     // used to assign the innerRegex find to the correct field IN the Service RECORD
-  outerMatch     : STRING;
-  innerMatch     : STRING;
+  i              : Integer = 0;
+  count          : Integer;     // used to assign the innerRegex find to the correct field IN the Service RECORD
+  outerMatch     : String;
+  innerMatch     : String;
 BEGIN
   cmd:= TRunCMD.Create;
   outerRegex:= TRegExpr.Create;
@@ -239,7 +239,7 @@ BEGIN
     while outerRegex.ExecNext DO BEGIN       // skip first row as it is the header row
       SetLength(Services, i + 1);            // set new length FOR dynamic ARRAY
       count:= 1;
-      outerMatch:= outerRegex.Match[0]+',';  // add a "," at the END OF the STRING so that the regex matches on the last entry
+      outerMatch:= outerRegex.Match[0]+',';  // add a "," at the END OF the String so that the regex matches on the last entry
       IF innerRegex.Exec(outerMatch) THEN    // cannot use split FUNCTION as it eats the quotation marks
         while innerRegex.ExecNext DO BEGIN   // skip first row as it is the computer name
           innerMatch:= StringReplace(innerRegex.Match[0], ',', '', []);

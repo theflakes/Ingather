@@ -16,12 +16,12 @@ USES
 TYPE
   TRunAs = CLASS
     PUBLIC
-      FUNCTION IsUserAdmin: BOOLEAN;
+      FUNCTION IsUserAdmin: Boolean;
       FUNCTION RunAsAdmin(
                   hWnd: HWND;
-                  filename: STRING;
-                  Parameters: STRING
-                ): BOOLEAN;
+                  filename: String;
+                  Parameters: String
+                ): Boolean;
     PRIVATE
   END;
 
@@ -35,7 +35,7 @@ FUNCTION CheckTokenMembership(
           ): BOOL; stdcall; external advapi32;
 
 // This FUNCTION tells us IF we're running with administrative permissions.
-FUNCTION TRunAs.IsUserAdmin: BOOLEAN;
+FUNCTION TRunAs.IsUserAdmin: Boolean;
 CONST
   SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority = (Value: (0, 0, 0, 0, 0, 5));
 VAR
@@ -68,9 +68,9 @@ END;
 
 FUNCTION TRunAs.RunAsAdmin(
             hWnd: HWND;
-            filename: STRING;
-            Parameters: STRING
-          ): BOOLEAN;
+            filename: String;
+            Parameters: String
+          ): Boolean;
 {
     See Step 3: Redesign FOR UAC Compatibility (UAC)
     http://msdn.microsoft.com/en-us/library/bb756922.aspx
@@ -86,7 +86,7 @@ BEGIN
     sei.lpFile := PChar(Filename); // PAnsiChar;
     IF parameters <> '' THEN
         sei.lpParameters := PChar(parameters); // PAnsiChar;
-    sei.nShow := SW_SHOWNORMAL; //INTEGER;
+    sei.nShow := SW_SHOWNORMAL; //Integer;
 
     Result := ShellExecuteExA(@sei);
 END;

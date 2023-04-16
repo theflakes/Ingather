@@ -13,28 +13,28 @@ USES
 TYPE
   TNetIO = CLASS
     PUBLIC
-      PROCEDURE SendIt(ip: ANSISTRING; port: ANSISTRING; Output: ANSISTRING);
-      PROCEDURE WinHTTPGet(Source: STRING; Dest: STRING);
-      FUNCTION DownloadHTTP(URL, TargetFile: STRING): STRING;
+      PROCEDURE SendIt(ip: AnsiString; port: AnsiString; Output: AnsiString);
+      PROCEDURE WinHTTPGet(Source: String; Dest: String);
+      FUNCTION DownloadHTTP(URL, TargetFile: String): String;
     PRIVATE
-      FUNCTION StringToStream(CONST AString: STRING): TStream;
-      FUNCTION IsIP(ip: ANSISTRING): BOOLEAN;
-      FUNCTION IsPort(port: ANSISTRING): BOOLEAN;
+      FUNCTION StringToStream(CONST AString: String): TStream;
+      FUNCTION IsIP(ip: AnsiString): Boolean;
+      FUNCTION IsPort(port: AnsiString): Boolean;
       FUNCTION FoundLocationStr(
                 headers: TStringlist;
-                out FoundPos: INTEGER
-              ): INTEGER;
+                out FoundPos: Integer
+              ): Integer;
   END;
 
 
 IMPLEMENTATION
-// Convert STRING to stream FOR network comms
-Function TNetIO.StringToStream(CONST AString: STRING): TStream;
+// Convert String to stream FOR network comms
+Function TNetIO.StringToStream(CONST AString: String): TStream;
 BEGIN
   Result:= TStringStream.Create(AString);
 END;
 
-Function TNetIO.IsIP(ip: ANSISTRING): BOOLEAN;
+Function TNetIO.IsIP(ip: AnsiString): Boolean;
 VAR
   IPregex: TRegExpr;
 BEGIN
@@ -47,7 +47,7 @@ BEGIN
   IPregex.Free
 END;
 
-Function TNetIO.IsPort(port: ANSISTRING): BOOLEAN;
+Function TNetIO.IsPort(port: AnsiString): Boolean;
 BEGIN
   IF (strToint(port) >= 0) AND (strToint(port) <= 65535) THEN
     Result:= true
@@ -55,7 +55,7 @@ BEGIN
     Result:= false;
 END;
 
-PROCEDURE TNetIO.SendIt(ip: ANSISTRING; port: ANSISTRING; output : ANSISTRING);
+PROCEDURE TNetIO.SendIt(ip: AnsiString; port: AnsiString; output : AnsiString);
 VAR
   Client    : TTCPBlockSocket;
   StrStream : TStream;
@@ -100,7 +100,7 @@ FUNCTION URLDownloadToFile(
                             external 'urlmon.dll' name 'URLDownloadToFileA';
 
 // use Windows built IN FUNCTION FOR HTTP download
-PROCEDURE TNetIO.WinHTTPGet(Source: STRING; Dest: STRING);
+PROCEDURE TNetIO.WinHTTPGet(Source: String; Dest: String);
 BEGIN
  IF URLDownloadToFile(nil, PChar(Source), PChar(Dest), 0, nil)=0 THEN
    writeln('Download ok!')
@@ -110,9 +110,9 @@ END;
 
 // PRIVATE FUNCTION to find 'Location:' IN redirect error header...
 FUNCTION TNetIO.FoundLocationStr(headers: TStringlist;
-                                out FoundPos: INTEGER
-                                ): INTEGER;
-VAR i: INTEGER;
+                                out FoundPos: Integer
+                                ): Integer;
+VAR i: Integer;
 BEGIN
   result:= -1;  //FOR safety
   // find lind redirect URL is on
@@ -128,15 +128,15 @@ BEGIN
 END;
 
 // FP Synapse built-IN HTTP download FUNCTION, deals with HTTP redirects
-FUNCTION TNetIO.DownloadHTTP(URL, TargetFile: STRING): STRING;
+FUNCTION TNetIO.DownloadHTTP(URL, TargetFile: String): String;
 CONST
   MaxRetries    = 3;
 VAR
-  HTTPGetResult : BOOLEAN;
+  HTTPGetResult : Boolean;
   http          : THTTPSend;
-  RetryAttempt  : INTEGER;
-  FoundStrPos   : INTEGER;
-  FoundLine     : INTEGER;
+  RetryAttempt  : Integer;
+  FoundStrPos   : Integer;
+  FoundLine     : Integer;
 BEGIN
   RetryAttempt:= 1;
   http:= THTTPSend.Create;

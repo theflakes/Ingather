@@ -14,14 +14,14 @@ USES
 TYPE
   TMisc = CLASS
      PUBLIC
-       PROCEDURE Split(Delimiter: Char; Str: STRING; ListOfStrings: TStrings);
+       PROCEDURE Split(Delimiter: Char; Str: String; ListOfStrings: TStrings);
      PRIVATE
 
    END;
 
 IMPLEMENTATION
-// split STRING by delimiter
-PROCEDURE TMisc.Split(Delimiter: Char; Str: STRING; ListOfStrings: TStrings);
+// split String by delimiter
+PROCEDURE TMisc.Split(Delimiter: Char; Str: String; ListOfStrings: TStrings);
 BEGIN
    ListOfStrings.Clear;
    ListOfStrings.Delimiter       := Delimiter;

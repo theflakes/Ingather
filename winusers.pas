@@ -19,15 +19,15 @@ TYPE
 
 TYPE
   Tgroup = RECORD
-    Name: STRING;
-    Domain: STRING;
-    SID: STRING;
+    Name: String;
+    Domain: String;
+    SID: String;
   END;
 
   Tuser = RECORD
-    Name: STRING;
-    Domain: STRING;
-    SID: STRING;
+    Name: String;
+    Domain: String;
+    SID: String;
     Groups: Tgroup;
   END;
 
