@@ -9,8 +9,7 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="15" Y="17"/>
+        <CursorPos X="36" Y="28"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -103,8 +102,9 @@
         <Filename Value="datadefs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="DataDefs"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos Y="16"/>
+        <CursorPos X="25" Y="43"/>
         <UsageCount Value="79"/>
         <Loaded Value="True"/>
       </Unit10>
