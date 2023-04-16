@@ -28,14 +28,14 @@ TYPE
       CONST DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)';
       // Win versions that will be matched IN the above regex that DO NOT store cleartext passwords
       CONST NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';
-      FUNCTION ReadKeyLIint(HKEY: LONGWORD; regPath: STRING; key: STRING): LongInt;
+      FUNCTION ReadKeyLIint(HKEY: LONGWORD; regPath: STRING; key: STRING): LONGINT;
       FUNCTION ReadKeyAnsi(HKEY: LONGWORD; regPath: STRING; key: STRING): ANSISTRING;
       FUNCTION ReadKeyBool(HKEY: LONGWORD; regPath: STRING; key: STRING): boolean;
       FUNCTION ReadKeyDouble(HKEY: LONGWORD; regPath: STRING; key: STRING): DOUBLE;
       FUNCTION ReadKeyDTime(HKEY: LONGWORD; regPath: STRING; key: STRING): TDateTime;
       FUNCTION ReadKeyDate(HKEY: LONGWORD; regPath: STRING; key: STRING): TDate;
       FUNCTION ReadKeyTime(HKEY: LONGWORD; regPath: STRING; key: STRING): TTime;
-      FUNCTION ReadKeyBin(HKEY: LONGWORD; regPath: STRING; key: STRING; bufSize: integer): LongInt;
+      FUNCTION ReadKeyBin(HKEY: LONGWORD; regPath: STRING; key: STRING; bufSize: integer): LONGINT;
       PROCEDURE EnumSubKeys(HKEY: LONGWORD; key: STRING; SubKeyNames: TStrings);
   END;
 
@@ -118,7 +118,7 @@ END;
 
 FUNCTION TWinReg.GetUACStatus: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
 BEGIN
   result:= '';
   value:= ReadKeyLIint(
@@ -134,7 +134,7 @@ END;
 
 FUNCTION TWinReg.GetPasswordlessNetLogon: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
 BEGIN
   value:= ReadKeyLIint(
             HKEY_LOCAL_MACHINE,
@@ -149,7 +149,7 @@ END;
 
 FUNCTION TWinReg.GetRDPStatus: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
 BEGIN
   result:= '';
   value:= ReadKeyLIint(
@@ -165,7 +165,7 @@ END;
 
 FUNCTION TWinReg.GetWDigestCleartextPWStatus: ANSISTRING;
 VAR
-  value: LongInt;
+  value: LONGINT;
   findVulnOS: TRegExpr;
   findNonVulnOS :TRegExpr;
 BEGIN
@@ -190,8 +190,8 @@ END;
 
 FUNCTION TWinReg.GetMSIAlwaysInstallElevatedStatus: ANSISTRING;
 VAR
-  HKLMvalue: LongInt;
-  HKLUvalue: LongInt;
+  HKLMvalue: LONGINT;
+  HKLUvalue: LONGINT;
 BEGIN
   HKLMvalue:= ReadKeyLIint(
                 HKEY_LOCAL_MACHINE,
@@ -270,7 +270,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyLIint(HKEY: LONGWORD; regPath: STRING; key: STRING): LongInt;
+FUNCTION TWinReg.ReadKeyLIint(HKEY: LONGWORD; regPath: STRING; key: STRING): LONGINT;
 VAR
   Registry: TRegistry;
 BEGIN
@@ -355,7 +355,7 @@ BEGIN
   Registry.Free;
 END;
 
-FUNCTION TWinReg.ReadKeyBin(HKEY: LONGWORD; regPath: STRING; key: STRING; bufSize: integer): LongInt;
+FUNCTION TWinReg.ReadKeyBin(HKEY: LONGWORD; regPath: STRING; key: STRING; bufSize: integer): LONGINT;
 VAR
   Registry: TRegistry;
   Buffer  : ARRAY OF byte;
