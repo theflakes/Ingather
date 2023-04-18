@@ -161,7 +161,7 @@ END;
 PROCEDURE TWinServices.GetServicePerms;
 VAR
   i              : Integer;
-  daclIndex      : Integer;     // track ARRAY OF dacls
+  daclIndex      : Integer;     // track array Oof dacls
   permIndex      : Integer;     // track permissions per dacl
   cmd            : TRunCMD;
   cmdOut         : AnsiString;
@@ -181,24 +181,24 @@ BEGIN
   FOR i:= Low(Services) to High(Services) DO BEGIN
     daclIndex:= 0;
     cmdOut:= cmd.GetOutput(SVC_QRY_PERMS, Services[i].Name, false);
-    // lets work through all OF the dacls FOR the service
+    // lets work through all of the dacls for the service
     IF regex.Exec(cmdOut) THEN
       REPEAT BEGIN
         permIndex:= 0;
         tmpStr:= StringReplace(regex.Match[0], '(', '', []);
         tmpStr:= StringReplace(tmpStr, ')', '', []);
         strSplit.Split(';', tmpStr, list);
-        SetLength(Services[i].dacl, daclIndex + 1);  // set new length FOR dynamic ARRAY
-        // is this an allow OR deny dacl?
+        SetLength(Services[i].dacl, daclIndex + 1);  // set new length for dynamic array
+        // is this an allow or deny dacl?
         IF list.Strings[0] = 'A' THEN
           Services[i].dacl[daclIndex].allow:= true
         ELSE IF list.Strings[0] = 'D' THEN
           Services[i].dacl[daclIndex].allow:= false;
-        // user OR group dacl applies to FOR the service
+        // user or group dacl applies to for the service
         Services[i].dacl[daclIndex].entry:= Users(list.Strings[5]);
-        // split service permissions into their sets OF two
+        // split service permissions into their sets of two
         SplitPermAbbreviaions(list.Strings[2], permList);
-        // find the long name FOR each 2 charecter permission abbreviation
+        // find the long name for each 2 charecter permission abbreviation
         FOR perm IN permList DO BEGIN
           SetLength(Services[i].dacl[daclIndex].perms, permIndex + 1);  // set new length FOR dynamic ARRAY
           Services[i].dacl[daclIndex].perms[permIndex]:= Perms(perm);
@@ -214,7 +214,7 @@ BEGIN
   cmd.Free;
 END;
 
-// populate services ARRAY OF records with all OF the services' information
+// populate services array OF records with all OF the services' information
 PROCEDURE TWinServices.GetServicesInfo;
 VAR
   cmd            : TRunCMD;
@@ -222,7 +222,7 @@ VAR
   outerRegex     : TRegExpr;
   innerRegex     : TRegExpr;
   i              : Integer = 0;
-  count          : Integer;     // used to assign the innerRegex find to the correct field IN the Service RECORD
+  count          : Integer;     // used to assign the innerRegex find to the correct field in the Service record
   outerMatch     : String;
   innerMatch     : String;
 BEGIN
@@ -237,10 +237,10 @@ BEGIN
                         false);
   IF outerRegex.Exec(cmdOut) THEN
     while outerRegex.ExecNext DO BEGIN       // skip first row as it is the header row
-      SetLength(Services, i + 1);            // set new length FOR dynamic ARRAY
+      SetLength(Services, i + 1);            // set new length FOR dynamic array
       count:= 1;
-      outerMatch:= outerRegex.Match[0]+',';  // add a "," at the END OF the String so that the regex matches on the last entry
-      IF innerRegex.Exec(outerMatch) THEN    // cannot use split FUNCTION as it eats the quotation marks
+      outerMatch:= outerRegex.Match[0]+',';  // add a "," at the end of the String so that the regex matches on the last entry
+      IF innerRegex.Exec(outerMatch) THEN    // cannot use split function as it eats the quotation marks
         while innerRegex.ExecNext DO BEGIN   // skip first row as it is the computer name
           innerMatch:= StringReplace(innerRegex.Match[0], ',', '', []);
           CASE count OF
@@ -251,7 +251,7 @@ BEGIN
             5: Services[i].StartName:= innerMatch;
             6: Services[i].Status:= innerMatch;
           END;
-          // delete the current innerRegex find so it isn't used again AND again AND ...
+          // delete the current innerRegex find so it isn't used again and again and ...
           outerMatch:= StringReplace(outerMatch, innerRegex.Match[0], '', []);
           count:= count + 1;
         END;

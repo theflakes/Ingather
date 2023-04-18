@@ -28,7 +28,7 @@ TYPE
 
 
 IMPLEMENTATION
-// Convert String to stream FOR network comms
+// Convert String to stream for network comms
 Function TNetIO.StringToStream(CONST AString: String): TStream;
 BEGIN
   Result:= TStringStream.Create(AString);
@@ -88,7 +88,7 @@ BEGIN
   END;
 END;
 
-// external Windows FUNCTION FOR HTTP download
+// external Windows function for HTTP download
 FUNCTION URLDownloadToFile(
                             pCaller: pointer;
                             URL: PChar;
@@ -99,7 +99,7 @@ FUNCTION URLDownloadToFile(
                             stdcall;
                             external 'urlmon.dll' name 'URLDownloadToFileA';
 
-// use Windows built IN FUNCTION FOR HTTP download
+// use Windows built-in function for HTTP download
 PROCEDURE TNetIO.WinHTTPGet(Source: String; Dest: String);
 BEGIN
  IF URLDownloadToFile(nil, PChar(Source), PChar(Dest), 0, nil)=0 THEN
@@ -108,13 +108,13 @@ BEGIN
    writeln('Error downloading '+Source);
 END;
 
-// PRIVATE FUNCTION to find 'Location:' IN redirect error header...
+// private function to find 'Location:' in redirect error header...
 FUNCTION TNetIO.FoundLocationStr(headers: TStringlist;
                                 out FoundPos: Integer
                                 ): Integer;
 VAR i: Integer;
 BEGIN
-  result:= -1;  //FOR safety
+  result:= -1;  // for safety
   // find lind redirect URL is on
   FOR i:= 0 to Headers.Count DO
   BEGIN
@@ -127,7 +127,7 @@ BEGIN
   END;
 END;
 
-// FP Synapse built-IN HTTP download FUNCTION, deals with HTTP redirects
+// FP Synapse built-in HTTP download function, deals with HTTP redirects
 FUNCTION TNetIO.DownloadHTTP(URL, TargetFile: String): String;
 CONST
   MaxRetries    = 3;
@@ -149,7 +149,7 @@ BEGIN
         HTTPGetResult:= http.HTTPMethod('GET', URL);
         RetryAttempt:= RetryAttempt + 1;
       END;
-      CASE http.Resultcode OF // If we have an answer from the server, check IF the file was sent to us
+      CASE http.Resultcode OF // If we have an answer from the server, check if the file was sent to us
         100..299:
           BEGIN
             http.Document.SaveToFile(TargetFile);
@@ -164,17 +164,17 @@ BEGIN
               result:= StringReplace(
                         Http.Headers.Strings[FoundLine],
                         'Location: ',
-                      '',[]); //strip the line with 'Location: http: someurl.com' down to JUST the URL
+                      '',[]); //strip the line with 'Location: http: someurl.com' down to just the URL
               result:= DownloadHTTP(result, TargetFile); // There be recursion here to handle nested redirects!!!
             END ELSE
-              result:= 'Could NOT find redirect URL!!!'; //couldn't find redirect URL Location IN header
+              result:= 'Could NOT find redirect URL!!!'; //couldn't find redirect URL Location in header
           END;
         400..499: result:= 'File download failed!!!'; // client error; 404 NOT found etc
         500..599: result:= 'File download failed!!!'; // internal server error
         ELSE result:= 'File download failed!!!';
       END;
     EXCEPT
-      result:= 'File download failed!!!'; // We don't care FOR the reason FOR this error; the download failed.
+      result:= 'File download failed!!!'; // We don't care about the reason for this error; the download failed.
     END;
   FINALLY
     http.Free;

@@ -83,7 +83,7 @@ BEGIN
   regex.Free;
 END;
 
-// find services with paths containing spaces AND is NOT quoted
+// find services with paths containing spaces and is not quoted
 FUNCTION TFindVulns.ServiceCheckPath(path: String): Boolean;
 VAR
   regexNoQuotes : TRegExpr;
@@ -135,7 +135,7 @@ BEGIN
   WinSVCs:= TWinServices.Create;
   WinFS:= TWinFileSystem.Create;
   WinSVCs.GetServicesInfo;
-  // lets check FOR service vulnerabilities
+  // lets check for service vulnerabilities
   FOR i:= Low(WinSVCs.Services) to High(WinSVCs.Services) DO BEGIN
     output:= concat(output, '[*] ' + WinSVCs.Services[i].Name + sLineBreak);
     output:= concat(
@@ -232,7 +232,7 @@ BEGIN
   WinFS.Free;
 END;
 
-// check IF INI file value is found AND print appropriate output
+// check if INI file value is found AND print appropriate output
 FUNCTION TFindVulns.NFCheck(checkThis: String; str: String): AnsiString;
 VAR
   output: AnsiString = '';
@@ -246,8 +246,8 @@ BEGIN
   result:= output;
 END;
 
-// look FOR vulns IN the filesystem AND files
-// this PROCEDURE needs to be smarter
+// look FOR vulns inf the filesystem and files
+// this procedure needs to be smarter
 FUNCTION TFindVulns.GetFSVulns: AnsiString;
 VAR
   FSVulns    : TWinFileSystem;

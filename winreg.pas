@@ -26,7 +26,7 @@ TYPE
     PRIVATE
       // Win versions with default cleartext passwords
       CONST DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)';
-      // Win versions that will be matched IN the above regex that DO NOT store cleartext passwords
+      // Win versions that will be matched in the above regex that do not store cleartext passwords
       CONST NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';
       FUNCTION ReadKeyLIint(HKEY: LongWord; regPath: String; key: String): LongInt;
       FUNCTION ReadKeyAnsi(HKEY: LongWord; regPath: String; key: String): AnsiString;
@@ -52,7 +52,7 @@ BEGIN
   result:= winVer;
 END;
 
-// search registry FOR VNC passwords
+// search registry for VNC passwords
 FUNCTION TWinReg.GetVNCPasswords: AnsiString;
 VAR
   value: AnsiString = '';
@@ -80,7 +80,7 @@ BEGIN
   result:= output;
 END;
 
-// is auto logon enabled, IF so, get the information
+// is auto logon enabled, if so, get the information
 FUNCTION TWinReg.GetAutoLogon: AnsiString;
 VAR
   value: AnsiString = '';

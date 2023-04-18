@@ -65,7 +65,7 @@ BEGIN
     DownloadFile;
   END;
 
-  // DO vulnerability enumeration on host
+  // Do vulnerability enumeration on host
   IF HasOption('c', 'command') THEN BEGIN
     output:= concat(output, RunCmd());
   END;

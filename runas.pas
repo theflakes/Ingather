@@ -27,7 +27,7 @@ TYPE
 
 
 IMPLEMENTATION
-// external Windows FUNCTION FOR checking group membership
+// external Windows function for checking group membership
 FUNCTION CheckTokenMembership(
             TokenHandle: THandle;
             SidToCheck: PSID;
@@ -43,10 +43,10 @@ VAR
     AdministratorsGroup: PSID;
 BEGIN
     {
-        This FUNCTION returns true IF you are currently running with admin privelages.
-        In Vista AND later, IF you are non-elevated, this FUNCTION will return false
-        (you are NOT running with administrative privelages).
-        If you *are* running elevated, THEN IsUserAdmin will return true,
+        This function returns true if you are currently running with admin privelages.
+        In Vista AND later, IF you are non-elevated, this function will return false
+        (you are not running with administrative privelages).
+        If you *are* running elevated, then IsUserAdmin will return true,
         as you are running with admin privelages.
     }
     b := AllocateAndInitializeSid(
@@ -72,7 +72,7 @@ FUNCTION TRunAs.RunAsAdmin(
             Parameters: String
           ): Boolean;
 {
-    See Step 3: Redesign FOR UAC Compatibility (UAC)
+    See Step 3: Redesign for UAC Compatibility (UAC)
     http://msdn.microsoft.com/en-us/library/bb756922.aspx
 }
 VAR
