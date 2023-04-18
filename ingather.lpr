@@ -224,8 +224,8 @@ BEGIN
   writeln('Download file over HTTP:');
   writeln('  -d, --download : download file');
   writeln('  -s, --save     : location to save downloaded file to');
-  writeln('  -z,            : use the Windows HTTP download FUNCTION');
-  writeln('                   otherwise use custom HTTP download FUNCTION');
+  writeln('  -z,            : use the Windows HTTP download function');
+  writeln('                   otherwise use custom HTTP download function');
   writeln('Run options:');
   writeln('  -c, --command  : run custom command');
   writeln('  -e, --enum     : run all builtin enumerations');
@@ -233,11 +233,11 @@ BEGIN
   writeln('  -i, --ip       : destination IP address');
   writeln('  -p, --port     : destination port');
   writeln('  -o, --out      : write enumeration command outputs to file');
-  writeln('  If output to file OR network is specified,');
+  writeln('  If output to file or network is specified,');
   writeln('  screen output will be suppressed.');
   writeln('Info:');
   writeln('  -h, --help     : print this help message');
-  writeln('  -l, --list     : print default enum commands AND descriptions');
+  writeln('  -l, --list     : print default enum commands and descriptions');
   writeln;
 END;
 

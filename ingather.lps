@@ -9,8 +9,9 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="200"/>
-        <CursorPos X="8" Y="68"/>
+        <CursorPos X="50" Y="234"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -28,10 +29,9 @@
         <Filename Value="runas.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunAs"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
         <TopLine Value="30"/>
-        <CursorPos X="33" Y="30"/>
+        <CursorPos X="4" Y="41"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit2>
