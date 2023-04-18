@@ -30,6 +30,7 @@
         <UnitName Value="RunAs"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
+        <TopLine Value="30"/>
         <CursorPos X="33" Y="30"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
