@@ -33,7 +33,7 @@ Info:
 Reduce Lazarus EXE file size: http://lazplanet.blogspot.com/2013/03/how-to-reduce-exe-file-size-OF-your.html
 
 Synapse Lazarus TCP package:  http://www.ararat.cz/synapse/doku.php/download; Install: http://wiki.freepascal.org/Synapse#Installation
-- Download Synapse AND extract it to the `\lazarus\components\` directory.
+- Download Synapse and extract it to the `\lazarus\components\` directory.
 
 DISCLAIMER:
-This PROGRAM is FOR educational use AND/OR vulnerability enumeration by cyber security professionals only.  All responsability AND negative consequences FOR its use falls entirely on the one executing it.
+This program is for educational use and/or vulnerability enumeration by cyber security professionals only.  All responsability and negative consequences for its use falls entirely on the one executing it.
