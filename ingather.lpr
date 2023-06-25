@@ -210,35 +210,38 @@ BEGIN
 END;
 
 PROCEDURE TIngather.WriteHelp;
+VAR
+  help: AnsiString;
 BEGIN
-  writeln;
-  writeln('Author : Brian Kellogg');
-  writeln('License: MIT');
-  writeln('Purpose: Gather various forensic information.');
-  writeln;
-  writeln('Usage:');
-  writeln('  Ingather.exe -i 1.1.1.1 -p 4444 --enum --out="output.txt"');
-  writeln('  Ingather.exe -d "http://www.abcded.com/abc.txt" -s c:\temp\abc.text');
-  writeln('  Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444');
-  writeln;
-  writeln('Download file over HTTP:');
-  writeln('  -d, --download : download file');
-  writeln('  -s, --save     : location to save downloaded file to');
-  writeln('  -z,            : use the Windows HTTP download function');
-  writeln('                   otherwise use custom HTTP download function');
-  writeln('Run options:');
-  writeln('  -c, --command  : run custom command');
-  writeln('  -e, --enum     : run all builtin enumerations');
-  writeln('Output options:');
-  writeln('  -i, --ip       : destination IP address');
-  writeln('  -p, --port     : destination port');
-  writeln('  -o, --out      : write enumeration command outputs to file');
-  writeln('  If output to file or network is specified,');
-  writeln('  screen output will be suppressed.');
-  writeln('Info:');
-  writeln('  -h, --help     : print this help message');
-  writeln('  -l, --list     : print default enum commands and descriptions');
-  writeln;
+  help:= LineEnding +
+          'Author : Brian Kellogg' + LineEnding +
+          'License: MIT' + LineEnding +
+          'Purpose: Gather various forensic information.' + LineEnding +
+          LineEnding +
+          'Usage:' + LineEnding +
+          '  Ingather.exe -i 1.1.1.1 -p 4444 --enum --out="output.txt"' + LineEnding +
+          '  Ingather.exe -i 1.1.1.1 -p 4444 --enum --out="output.txt"' + LineEnding +
+          '  Ingather.exe -c "ipconfig /all" -i 1.1.1.1 -p 4444' + LineEnding +
+          LineEnding +
+          'Download file over HTTP:' + LineEnding +
+          '  -d, --download : download file' + LineEnding +
+          '  -s, --save     : location to save downloaded file to' + LineEnding +
+          '  -z,            : use the Windows HTTP download function' + LineEnding +
+          '                   otherwise use custom HTTP download function' + LineEnding +
+          'Run options:' + LineEnding +
+          '  -c, --command  : run custom command' + LineEnding +
+          '  -e, --enum     : run all builtin enumerations' + LineEnding +
+          'Output options:' + LineEnding +
+          '  -i, --ip       : destination IP address' + LineEnding +
+          '  -p, --port     : destination port' + LineEnding +
+          '  -o, --out      : write enumeration command outputs to file' + LineEnding +
+          '  If output to file or network is specified,' + LineEnding +
+          '  screen output will be suppressed.' + LineEnding +
+          'Info:' + LineEnding +
+          '  -h, --help     : print this help message' + LineEnding +
+          '  -l, --list     : print default enum commands and descriptions' + LineEnding +
+          LineEnding;
+  write(help);
 END;
 
 CONSTRUCTOR TIngather.Create(TheOwner: TComponent);
