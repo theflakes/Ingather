@@ -98,6 +98,14 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
+    <RequiredPackages Count="2">
+      <Item1>
+        <PackageName Value="LazUtils"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="laz_synapse"/>
+      </Item2>
+    </RequiredPackages>
     <Units Count="11">
       <Unit0>
         <Filename Value="ingather.lpr"/>

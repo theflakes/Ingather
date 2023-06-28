@@ -9,7 +9,7 @@ PROGRAM Ingather;
 
 USES
   Classes, SysUtils, CustApp, WinUsers, RunAs, NetIO, FindVulns, RunCMD,
-  WinFileSystem, StrUtils, DataDefs
+  WinFileSystem, StrUtils, DataDefs, laz_synapse
   { you can add units after this };
 
 TYPE
