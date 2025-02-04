@@ -204,8 +204,8 @@ VAR
 BEGIN
   result:= '';
   FOR x:= 1 to TDataDefs.NUM_CMDS DO BEGIN
-    result:= concat(result, '[**] Command: '+cmds[x][1]+sLineBreak);
-    result:= concat(result, ' Description: '+cmds[x][2]+sLineBreak);
+    result:= concat(result, '[*] Command: '+cmds[x][1]+sLineBreak);
+    result:= concat(result, '    - '+cmds[x][2]+sLineBreak);
   END;
 END;
 
