@@ -19,6 +19,7 @@ TYPE
       FUNCTION GetSNMP: AnsiString;
       FUNCTION GetVNCPasswords: AnsiString;
       FUNCTION GetPasswordlessNetLogon: AnsiString;
+      FUNCTION GetStartupPersistence: AnsiString;
     PRIVATE
       CONST DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)';
       CONST NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';
@@ -100,6 +101,38 @@ FUNCTION TWinReg.GetOSVersion: AnsiString;
 BEGIN
   // Use PtrUInt to avoid range errors with HKEY constants
   Result := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
+END;
+
+FUNCTION TWinReg.GetStartupPersistence: AnsiString;
+VAR
+  Reg: TRegistry;
+  ValueNames: TStringList;
+  Name, Path: String;
+BEGIN
+  Result := '[*] Startup Persistence (HKLM Run):' + sLineBreak;
+  ValueNames := TStringList.Create;
+  Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
+  TRY
+    Reg.RootKey := PtrUInt(HKEY_LOCAL_MACHINE);
+    IF Reg.OpenKeyReadOnly('\SOFTWARE\Microsoft\Windows\CurrentVersion\Run') THEN
+    BEGIN
+      Reg.GetValueNames(ValueNames);
+      IF ValueNames.Count = 0 THEN
+        Result := Result + '[**] No entries found.' + sLineBreak
+      ELSE
+        FOR Name IN ValueNames DO
+        BEGIN
+          // Use our smart reader to handle the data type automatically
+          Path := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE),
+                                  '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run',
+                                  Name);
+          Result := Result + Format('[**] %s :: %s', [Name, Path]) + sLineBreak;
+        END;
+    END;
+  FINALLY
+    ValueNames.Free;
+    Reg.Free;
+  END;
 END;
 
 FUNCTION TWinReg.GetVNCPasswords: AnsiString;

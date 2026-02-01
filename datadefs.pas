@@ -18,7 +18,7 @@ TYPE
   TDataDefs = CLASS
     PUBLIC
       CONST
-        NUM_CMDS = 29;
+        NUM_CMDS = 44;
       TYPE
         CommandArray = ARRAY[1..NUM_CMDS, 1..2] OF String;
       CONST
@@ -138,6 +138,66 @@ TYPE
               (
                 'powershell -c "Get-MpPreference"',
                 'Get Defender settings'
+              ),
+              (
+                'query user',
+                'Identify other users with active sessions on this system'
+              ),
+              (
+                'cmdkey /list',
+                'List stored usernames and credentials'
+              ),
+              (
+                'powershell -c "Get-MpComputerStatus"',
+                'Check Defender engine version and signature status'
+              ),
+              (
+                'wmic product get name,version',
+                'List all installed software and versions'
+              ),
+              (
+                'net localgroup',
+                'List all local groups available on the system'
+              ),
+              (
+                'powershell -c "Get-PSDrive -PSProvider FileSystem"',
+                'Identify mapped network drives and hidden partitions'
+              ),
+              (
+                'net session',
+                'List active sessions (requires elevated privileges)'
+              ),
+              (
+                'powershell -c "Get-History"',
+                'View command history for the current PowerShell session'
+              ),
+              (
+                'doskey /history',
+                'View command history for the current CMD session'
+              ),
+              (
+                'net config workstation',
+                'Verify current domain and logon server information'
+              ),
+              (
+                'wmic startup list full',
+                'Dump all startup persistence entries'
+              ),
+              (
+                'sc query state= all',
+                'List all services, including stopped ones'
+              ),
+              (
+                'powershell -c "Test-NetConnection -ComputerName 127.0.0.1 -Port 445"',
+                'Check if local SMB port is listening'
+              ),
+              (
+                'wevtutil qe System /c:5 /rd:true /f:text',
+                'Extract the last 5 system event logs'
+              ),
+              (
+                'powershell -c "Get-NetIPAddress | Select-Object InterfaceAlias,IPAddress,AddressFamily"',
+                'Display IP addresses for all network interfaces'
               )
         );
       FUNCTION FormatOutput(output: AnsiString): AnsiString;
