@@ -39,31 +39,29 @@ FUNCTION TRunAs.IsUserAdmin: Boolean;
 CONST
   SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority = (Value: (0, 0, 0, 0, 0, 5));
 VAR
-    b                  : BOOL;
+    isAdmin            : BOOL;
     AdministratorsGroup: PSID;
 BEGIN
     {
         This function returns true if you are currently running with admin privelages.
         In Vista AND later, IF you are non-elevated, this function will return false
         (you are not running with administrative privelages).
-        If you *are* running elevated, then IsUserAdmin will return true,
-        as you are running with admin privelages.
     }
-    b := AllocateAndInitializeSid(
+    isAdmin := AllocateAndInitializeSid(
             SECURITY_NT_AUTHORITY,
             2, //2 sub-authorities
             SECURITY_BUILTIN_DOMAIN_RID,    //sub-authority 0
             DOMAIN_ALIAS_RID_ADMINS,        //sub-authority 1
             0, 0, 0, 0, 0, 0,               //sub-authorities 2-7 NOT passed
             AdministratorsGroup);
-    IF (b) THEN
+    IF (isAdmin) THEN
     BEGIN
-        IF NOT CheckTokenMembership(0, AdministratorsGroup, b) THEN
-            b := False;
+        IF NOT CheckTokenMembership(0, AdministratorsGroup, isAdmin) THEN
+            isAdmin := False;
         FreeSid(AdministratorsGroup);
     END;
 
-    Result := b;
+    Result := isAdmin;
 END;
 
 FUNCTION TRunAs.RunAsAdmin(
