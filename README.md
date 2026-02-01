@@ -35,5 +35,25 @@ Reduce Lazarus EXE file size: http://lazplanet.blogspot.com/2013/03/how-to-reduc
 Synapse Lazarus TCP package:  http://www.ararat.cz/synapse/doku.php/download; Install: http://wiki.freepascal.org/Synapse#Installation
 - Download Synapse and extract it to the `\lazarus\components\` directory.
 
+### Compile for Windows on Linux
+```
+### See: https://wiki.freepascal.org/Cross_compiling_for_Windows_under_Linux
+sudo -i 
+export FPCVER="3.2.2"
+cd "/usr/share/fpcsrc/${FPCVER}"
+make clean all OS_TARGET=win64 CPU_TARGET=x86_64
+make clean all OS_TARGET=win32 CPU_TARGET=i386
+make crossinstall OS_TARGET=win64 CPU_TARGET=x86_64 INSTALL_PREFIX=/usr
+make crossinstall OS_TARGET=win32 CPU_TARGET=i386 INSTALL_PREFIX=/usr
+ln -sf "/usr/lib/fpc/${FPCVER}/ppcrossx64" /usr/bin/ppcrossx64
+ln -sf "/usr/lib/fpc/${FPCVER}/ppcross386" /usr/bin/ppcross386
+
+# Check config file for the existence of this search path
+# Add it if not present
+grep 'Fu' /etc/fpc.cfg
+# searchpath for units and other system dependent things
+-Fu/usr/lib/fpc/${fpcversion}/units/${fpctarget}/*
+```
+
 DISCLAIMER:
 This program is for educational use and/or vulnerability enumeration by cyber security professionals only.  All responsability and negative consequences for its use falls entirely on the one executing it.
