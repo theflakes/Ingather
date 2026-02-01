@@ -30,7 +30,6 @@ Info:
   -h, --help     : print this help message
   -l, --list     : print default enum commands and descriptions
 ```
-Reduce Lazarus EXE file size: http://lazplanet.blogspot.com/2013/03/how-to-reduce-exe-file-size-OF-your.html
 
 Synapse Lazarus TCP package:  http://www.ararat.cz/synapse/doku.php/download; Install: http://wiki.freepascal.org/Synapse#Installation
 - Download Synapse and extract it to the `\lazarus\components\` directory.
