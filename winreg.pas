@@ -31,12 +31,98 @@ TYPE
       FUNCTION ReadAnyAsString(HKEY: PtrUInt; regPath: String; key: String): AnsiString;
 
       PROCEDURE EnumSubKeys(HKEY: PtrUInt; key: String; SubKeyNames: TStrings);
+      FUNCTION EnumerateRunKey(Root: PtrUInt; DisplayRoot, Path: String): AnsiString;
   END;
 
 IMPLEMENTATION
 
+FUNCTION TWinReg.GetOSVersion: AnsiString;
+BEGIN
+  // Use PtrUInt to avoid range errors with HKEY constants
+  Result := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
+END;
+
 { ---------------------------------------------------------------------------
-  GENERIC AND SMART HELPERS
+  STARTUP ENUMERATION LOGIC
+  --------------------------------------------------------------------------- }
+
+FUNCTION TWinReg.GetStartupPersistence: AnsiString;
+VAR
+  UserSIDs: TStringList;
+  i, j, k: Integer;
+  TargetKey: String;
+  Roots: ARRAY[0..1] OF PtrUInt;
+  RootNames: ARRAY[0..1] OF String;
+  RunPaths: ARRAY[0..3] OF String;
+BEGIN
+  Result := '[*] Startup Persistence Enumeration:' + sLineBreak;
+  UserSIDs := TStringList.Create;
+
+  // Use PtrUInt for HKEY constants to avoid range errors
+  Roots[0] := PtrUInt(HKEY_LOCAL_MACHINE); RootNames[0] := 'HKLM';
+  Roots[1] := PtrUInt(HKEY_USERS);         RootNames[1] := 'HKU';
+
+  RunPaths[0] := '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
+  RunPaths[1] := '\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
+  RunPaths[2] := '\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run';
+  RunPaths[3] := '\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\RunOnce';
+
+  TRY
+    FOR i := 0 TO 1 DO
+    BEGIN
+      IF i = 0 THEN
+      BEGIN
+        FOR k := 0 TO High(RunPaths) DO
+          Result := Result + EnumerateRunKey(Roots[i], RootNames[i], RunPaths[k]);
+      END
+      ELSE
+      BEGIN
+        EnumSubKeys(Roots[i], '', UserSIDs);
+        FOR j := 0 TO UserSIDs.Count - 1 DO
+        BEGIN
+          IF Pos('_Classes', UserSIDs[j]) > 0 THEN Continue;
+          FOR k := 0 TO High(RunPaths) DO
+          BEGIN
+            TargetKey := UserSIDs[j] + RunPaths[k];
+            Result := Result + EnumerateRunKey(Roots[i], RootNames[i] + '\' + UserSIDs[j], TargetKey);
+          END;
+        END;
+      END;
+    END;
+  FINALLY
+    UserSIDs.Free;
+  END;
+END;
+
+FUNCTION TWinReg.EnumerateRunKey(Root: PtrUInt; DisplayRoot, Path: String): AnsiString;
+VAR
+  Reg: TRegistry;
+  Names: TStringList;
+  m: Integer;
+  ValData: String;
+BEGIN
+  Result := '';
+  Names := TStringList.Create;
+  Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
+  TRY
+    Reg.RootKey := Root;
+    IF Reg.OpenKeyReadOnly(Path) THEN
+    BEGIN
+      Reg.GetValueNames(Names);
+      FOR m := 0 TO Names.Count - 1 DO
+      BEGIN
+        ValData := ReadAnyAsString(Root, Path, Names[m]);
+        Result := Result + Format('[**] [%s] %s :: %s', [DisplayRoot, Names[m], ValData]) + sLineBreak;
+      END;
+    END;
+  FINALLY
+    Names.Free;
+    Reg.Free;
+  END;
+END;
+
+{ ---------------------------------------------------------------------------
+  GENERIC AND SMART HELPERS (Previously completed)
   --------------------------------------------------------------------------- }
 
 generic FUNCTION TWinReg.ReadValue<T>(HKEY: PtrUInt; regPath: String; key: String; DefaultVal: T): T;
@@ -52,12 +138,9 @@ BEGIN
     BEGIN
       DType := Reg.GetDataType(key);
       CASE DType OF
-        rdString, rdExpandString:
-          PAnsiString(@Result)^ := Reg.ReadString(key);
-        rdInteger:
-          PLongInt(@Result)^ := Reg.ReadInteger(key);
-        rdBinary:
-          Reg.ReadBinaryData(key, Result, SizeOf(T));
+        rdString, rdExpandString: PAnsiString(@Result)^ := Reg.ReadString(key);
+        rdInteger: PLongInt(@Result)^ := Reg.ReadInteger(key);
+        rdBinary:  Reg.ReadBinaryData(key, Result, SizeOf(T));
       END;
     END;
   FINALLY
@@ -78,14 +161,10 @@ BEGIN
     BEGIN
       DType := Reg.GetDataType(key);
       CASE DType OF
-        rdString, rdExpandString:
-          Result := Reg.ReadString(key);
-        rdInteger:
-          Result := IntToStr(Reg.ReadInteger(key));
-        rdBinary:
-          Result := '[Binary Data]';
-        ELSE
-          Result := '[Type ID ' + IntToStr(Ord(DType)) + ' Data Found]';
+        rdString, rdExpandString: Result := Reg.ReadString(key);
+        rdInteger: Result := IntToStr(Reg.ReadInteger(key));
+        rdBinary:  Result := '[Binary Data]';
+        ELSE Result := '[Type ID ' + IntToStr(Ord(DType)) + ']';
       END;
     END;
   FINALLY
@@ -93,44 +172,15 @@ BEGIN
   END;
 END;
 
-{ ---------------------------------------------------------------------------
-  PUBLIC METHODS
-  --------------------------------------------------------------------------- }
-
-FUNCTION TWinReg.GetOSVersion: AnsiString;
+PROCEDURE TWinReg.EnumSubKeys(HKEY: PtrUInt; key: String; SubKeyNames: TStrings);
+VAR Reg: TRegistry;
 BEGIN
-  // Use PtrUInt to avoid range errors with HKEY constants
-  Result := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
-END;
-
-FUNCTION TWinReg.GetStartupPersistence: AnsiString;
-VAR
-  Reg: TRegistry;
-  ValueNames: TStringList;
-  Name, Path: String;
-BEGIN
-  Result := '[*] Startup Persistence (HKLM Run):' + sLineBreak;
-  ValueNames := TStringList.Create;
+  SubKeyNames.Clear;
   Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
   TRY
-    Reg.RootKey := PtrUInt(HKEY_LOCAL_MACHINE);
-    IF Reg.OpenKeyReadOnly('\SOFTWARE\Microsoft\Windows\CurrentVersion\Run') THEN
-    BEGIN
-      Reg.GetValueNames(ValueNames);
-      IF ValueNames.Count = 0 THEN
-        Result := Result + '[**] No entries found.' + sLineBreak
-      ELSE
-        FOR Name IN ValueNames DO
-        BEGIN
-          // Use our smart reader to handle the data type automatically
-          Path := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE),
-                                  '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run',
-                                  Name);
-          Result := Result + Format('[**] %s :: %s', [Name, Path]) + sLineBreak;
-        END;
-    END;
+    Reg.RootKey := HKEY;
+    IF Reg.OpenKeyReadOnly(key) THEN Reg.GetKeyNames(SubKeyNames);
   FINALLY
-    ValueNames.Free;
     Reg.Free;
   END;
 END;
@@ -244,19 +294,6 @@ BEGIN
       END;
   FINALLY
     communities.Free;
-  END;
-END;
-
-PROCEDURE TWinReg.EnumSubKeys(HKEY: PtrUInt; key: String; SubKeyNames: TStrings);
-VAR Reg: TRegistry;
-BEGIN
-  SubKeyNames.Clear;
-  Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  TRY
-    Reg.RootKey := HKEY;
-    IF Reg.OpenKeyReadOnly(key) THEN Reg.GetKeyNames(SubKeyNames);
-  FINALLY
-    Reg.Free;
   END;
 END;
 
