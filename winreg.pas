@@ -1,9 +1,4 @@
 UNIT WinReg;
- {
- AUTHOR:  Brian Kellogg
-
- MIT licensed
-}
 
 {$mode objfpc}{$H+}
 
@@ -11,6 +6,7 @@ INTERFACE
 
 USES
   Classes, SysUtils, registry, regexpr;
+
 TYPE
   TWinReg = CLASS
     PUBLIC
@@ -24,349 +20,211 @@ TYPE
       FUNCTION GetVNCPasswords: AnsiString;
       FUNCTION GetPasswordlessNetLogon: AnsiString;
     PRIVATE
-      // Win versions with default cleartext passwords
       CONST DFLT_CLEARTEXT_PW     = '(?-s)^Windows.+(XP|Vista|7|2008|8|2012)';
-      // Win versions that will be matched in the above regex that do not store cleartext passwords
       CONST NON_DFLT_CLEARTEXT_PW = '(?-s)^Windows.+(8.1|2012 R2)';
-      FUNCTION ReadKeyLIint(HKEY: LongWord; regPath: String; key: String): LongInt;
-      FUNCTION ReadKeyAnsi(HKEY: LongWord; regPath: String; key: String): AnsiString;
-      FUNCTION ReadKeyBool(HKEY: LongWord; regPath: String; key: String): Boolean;
-      FUNCTION ReadKeyDouble(HKEY: LongWord; regPath: String; key: String): Double;
-      FUNCTION ReadKeyDTime(HKEY: LongWord; regPath: String; key: String): TDateTime;
-      FUNCTION ReadKeyDate(HKEY: LongWord; regPath: String; key: String): TDate;
-      FUNCTION ReadKeyTime(HKEY: LongWord; regPath: String; key: String): TTime;
-      FUNCTION ReadKeyBin(HKEY: LongWord; regPath: String; key: String; bufSize: integer): LongInt;
-      PROCEDURE EnumSubKeys(HKEY: LongWord; key: String; SubKeyNames: TStrings);
+
+      // Generic method: The 'generic' keyword is required here in objfpc mode
+      generic FUNCTION ReadValue<T>(HKEY: PtrUInt; regPath: String; key: String; DefaultVal: T): T;
+
+      // Smart string reader: Determines type at runtime
+      FUNCTION ReadAnyAsString(HKEY: PtrUInt; regPath: String; key: String): AnsiString;
+
+      PROCEDURE EnumSubKeys(HKEY: PtrUInt; key: String; SubKeyNames: TStrings);
   END;
 
 IMPLEMENTATION
+
+{ ---------------------------------------------------------------------------
+  GENERIC AND SMART HELPERS
+  --------------------------------------------------------------------------- }
+
+generic FUNCTION TWinReg.ReadValue<T>(HKEY: PtrUInt; regPath: String; key: String; DefaultVal: T): T;
+VAR
+  Reg: TRegistry;
+  DType: TRegDataType;
+BEGIN
+  Result := DefaultVal;
+  Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
+  TRY
+    Reg.RootKey := HKEY;
+    IF Reg.OpenKeyReadOnly(regPath) AND Reg.ValueExists(key) THEN
+    BEGIN
+      DType := Reg.GetDataType(key);
+      CASE DType OF
+        rdString, rdExpandString:
+          PAnsiString(@Result)^ := Reg.ReadString(key);
+        rdInteger:
+          PLongInt(@Result)^ := Reg.ReadInteger(key);
+        rdBinary:
+          Reg.ReadBinaryData(key, Result, SizeOf(T));
+      END;
+    END;
+  FINALLY
+    Reg.Free;
+  END;
+END;
+
+FUNCTION TWinReg.ReadAnyAsString(HKEY: PtrUInt; regPath: String; key: String): AnsiString;
+VAR
+  Reg: TRegistry;
+  DType: TRegDataType;
+BEGIN
+  Result := '';
+  Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
+  TRY
+    Reg.RootKey := HKEY;
+    IF Reg.OpenKeyReadOnly(regPath) AND Reg.ValueExists(key) THEN
+    BEGIN
+      DType := Reg.GetDataType(key);
+      CASE DType OF
+        rdString, rdExpandString:
+          Result := Reg.ReadString(key);
+        rdInteger:
+          Result := IntToStr(Reg.ReadInteger(key));
+        rdBinary:
+          Result := '[Binary Data]';
+        ELSE
+          Result := '[Type ID ' + IntToStr(Ord(DType)) + ' Data Found]';
+      END;
+    END;
+  FINALLY
+    Reg.Free;
+  END;
+END;
+
+{ ---------------------------------------------------------------------------
+  PUBLIC METHODS
+  --------------------------------------------------------------------------- }
+
 FUNCTION TWinReg.GetOSVersion: AnsiString;
-VAR
-  winVer: AnsiString;
 BEGIN
-  winVer:= ReadKeyAnsi(
-              HKEY_LOCAL_MACHINE,
-              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion',
-              'ProductName'
-            );
-  result:= winVer;
+  // Use PtrUInt to avoid range errors with HKEY constants
+  Result := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName');
 END;
 
-// search registry for VNC passwords
 FUNCTION TWinReg.GetVNCPasswords: AnsiString;
-VAR
-  value: AnsiString = '';
-  output: AnsiString = '';
+VAR val: AnsiString;
 BEGIN
-  output:= concat(output, '[*] VNC Registry Passwords:' + sLineBreak);
-  value:= ReadKeyAnsi(
-            HKEY_LOCAL_MACHINE,
-            '\SOFTWARE\RealVNC\vncserver',
-            'Password'
-          );
-  output:= concat(output, '[**] RealVNC :: ' + value + sLineBreak);
-  value:= ReadKeyAnsi(
-            HKEY_CURRENT_USER,
-            '\Software\TightVNC\Server',
-            'Password'
-          );
-  output:= concat(output, '[**] TightVNC :: ' + value + sLineBreak);
-  value:= ReadKeyAnsi(
-            HKEY_CURRENT_USER,
-            '\Software\TightVNC\Server',
-            'PasswordViewOnly'
-          );
-  output:= concat(output, '[**] TightVNC view-only :: '+ value + sLineBreak);
-  result:= output;
+  Result := '[*] VNC Registry Passwords:' + sLineBreak;
+  val := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\RealVNC\vncserver', 'Password');
+  Result := Result + '[**] RealVNC :: ' + val + sLineBreak;
+  val := ReadAnyAsString(PtrUInt(HKEY_CURRENT_USER), '\Software\TightVNC\Server', 'Password');
+  Result := Result + '[**] TightVNC :: ' + val + sLineBreak;
+  val := ReadAnyAsString(PtrUInt(HKEY_CURRENT_USER), '\Software\TightVNC\Server', 'PasswordViewOnly');
+  Result := Result + '[**] TightVNC view-only :: '+ val + sLineBreak;
 END;
 
-// is auto logon enabled, if so, get the information
 FUNCTION TWinReg.GetAutoLogon: AnsiString;
-VAR
-  value: AnsiString = '';
-  output: AnsiString = '';
+VAR status: AnsiString;
 BEGIN
-  value:= ReadKeyAnsi(
-            HKEY_LOCAL_MACHINE,
-            '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-            'AutoAdminLogon'
-          );
-  IF value = '1' THEN BEGIN
-    output:= concat(output, '[!] Autologon enabled' + sLineBreak);
-    value:= ReadKeyAnsi(
-              HKEY_LOCAL_MACHINE,
-              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-              'DefaultUserName'
-            );
-    output:= concat(output, '[**] Username: '+value + sLineBreak);
-    value:= ReadKeyAnsi(
-              HKEY_LOCAL_MACHINE,
-              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-              'DefaultPassword'
-            );
-    output:= concat(output, '[**] Password: '+value + sLineBreak);
-    value:= ReadKeyAnsi(
-              HKEY_LOCAL_MACHINE,
-              '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon',
-              'DefaultDomainName'
-            );
-    output:= concat(output, '[**] Domain: '+value + sLineBreak);
+  status := ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'AutoAdminLogon');
+  IF status = '1' THEN BEGIN
+    Result := '[!] Autologon enabled' + sLineBreak;
+    Result := Result + '[**] Username: ' + ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultUserName') + sLineBreak;
+    Result := Result + '[**] Password: ' + ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultPassword') + sLineBreak;
+    Result := Result + '[**] Domain: '   + ReadAnyAsString(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon', 'DefaultDomainName') + sLineBreak;
   END ELSE
-    output:= concat(output, '[*] Autologon NOT enabled.' + sLineBreak);
-  result:= output;
+    Result := '[*] Autologon NOT enabled.' + sLineBreak;
 END;
 
 FUNCTION TWinReg.GetUACStatus: AnsiString;
-VAR
-  value: LongInt;
+VAR val: LongInt;
 BEGIN
-  result:= '';
-  value:= ReadKeyLIint(
-            HKEY_LOCAL_MACHINE,
-            '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
-            'EnableLUA'
-          );
-  IF value = 1 THEN
-    result:= '[*] UAC is enabled'
-  ELSE IF value = 0 THEN
-    result:= '[!] UAC is disabled';
+  val := specialize ReadValue<LongInt>(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', 'EnableLUA', -1);
+  IF val = 1 THEN Result := '[*] UAC is enabled'
+  ELSE IF val = 0 THEN Result := '[!] UAC is disabled'
+  ELSE Result := '[?] UAC status unknown';
 END;
 
 FUNCTION TWinReg.GetPasswordlessNetLogon: AnsiString;
-VAR
-  value: LongInt;
 BEGIN
-  value:= ReadKeyLIint(
-            HKEY_LOCAL_MACHINE,
-            '\SYSTEM\CurrentControlSet\Control\Lsa',
-            'LimitBlankPasswordUse'
-          );
-  IF value = 0 THEN
-    result:= '[!] Passwordless network logon enabled'
+  IF (specialize ReadValue<LongInt>(PtrUInt(HKEY_LOCAL_MACHINE), '\SYSTEM\CurrentControlSet\Control\Lsa', 'LimitBlankPasswordUse', 1) = 0) THEN
+    Result := '[!] Passwordless network logon enabled'
   ELSE
-    result:= '[*] Passwordless network logon disabled';
+    Result := '[*] Passwordless network logon disabled';
 END;
 
 FUNCTION TWinReg.GetRDPStatus: AnsiString;
-VAR
-  value: LongInt;
+VAR val: LongInt;
 BEGIN
-  result:= '';
-  value:= ReadKeyLIint(
-            HKEY_LOCAL_MACHINE,
-            '\SYSTEM\CurrentControlSet\Control\Terminal Server',
-            'fDenyTSConnections'
-          );
-  IF value = 0 THEN
-    result:= '[!] RDP is enabled'
-  ELSE IF value = 1 THEN
-    result:= '[*] RDP is disabled';
+  val := specialize ReadValue<LongInt>(PtrUInt(HKEY_LOCAL_MACHINE), '\SYSTEM\CurrentControlSet\Control\Terminal Server', 'fDenyTSConnections', -1);
+  IF val = 0 THEN Result := '[!] RDP is enabled'
+  ELSE IF val = 1 THEN Result := '[*] RDP is disabled'
+  ELSE Result := '[?] RDP status unknown';
 END;
 
 FUNCTION TWinReg.GetWDigestCleartextPWStatus: AnsiString;
 VAR
-  value: LongInt;
-  findVulnOS: TRegExpr;
-  findNonVulnOS :TRegExpr;
+  val: LongInt;
+  findVulnOS, findNonVulnOS: TRegExpr;
 BEGIN
-  findVulnOS:= TRegExpr.Create;
-  findNonVulnOS:= TRegExpr.Create;
-  findVulnOS.Expression:= DFLT_CLEARTEXT_PW;
-  findNonVulnOS.Expression:= NON_DFLT_CLEARTEXT_PW;
-  value:= ReadKeyLIint(
-            HKEY_LOCAL_MACHINE,
-            '\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest',
-            'UseLogonCredential'
-          );
-  IF value = 0 THEN
-    result:= '[*] WDigest cleartext passwords disabled.'
-  ELSE IF value = 1 THEN
-    result:= '[!] WDigest cleartext passwords enabled'
-  ELSE IF findVulnOS.Exec(GetOSVersion) AND NOT findNonVulnOS.Exec(GetOSVersion) THEN
-    result:= '[!] WDigest cleartext passwords enabled'
-  ELSE
-    result:= '[*] WDigest cleartext passwords disabled.';
+  val := specialize ReadValue<LongInt>(PtrUInt(HKEY_LOCAL_MACHINE), '\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest', 'UseLogonCredential', -1);
+  IF val = 1 THEN Exit('[!] WDigest cleartext passwords enabled');
+  IF val = 0 THEN Exit('[*] WDigest cleartext passwords disabled.');
+
+  findVulnOS := TRegExpr.Create(DFLT_CLEARTEXT_PW);
+  findNonVulnOS := TRegExpr.Create(NON_DFLT_CLEARTEXT_PW);
+  TRY
+    IF findVulnOS.Exec(GetOSVersion) AND NOT findNonVulnOS.Exec(GetOSVersion) THEN
+      Result := '[!] WDigest cleartext passwords enabled'
+    ELSE
+      Result := '[*] WDigest cleartext passwords disabled.';
+  FINALLY
+    findVulnOS.Free;
+    findNonVulnOS.Free;
+  END;
 END;
 
 FUNCTION TWinReg.GetMSIAlwaysInstallElevatedStatus: AnsiString;
-VAR
-  HKLMvalue: LongInt;
-  HKLUvalue: LongInt;
+VAR hklm, hkcu: LongInt;
 BEGIN
-  HKLMvalue:= ReadKeyLIint(
-                HKEY_LOCAL_MACHINE,
-                '\SOFTWARE\Policies\Microsoft\Windows\Installer',
-                'AlwaysInstallElevated'
-              );
-  HKLUvalue:= ReadKeyLIint(
-                HKEY_CURRENT_USER,
-                '\SOFTWARE\Policies\Microsoft\Windows\Installer',
-                'AlwaysInstallElevated'
-              );
-  IF (HKLMvalue = 1) AND (HKLUvalue = 1) THEN
-    result:= '[!] MSI installs always elevated vulnerability found.'
+  hklm := specialize ReadValue<LongInt>(PtrUInt(HKEY_LOCAL_MACHINE), '\SOFTWARE\Policies\Microsoft\Windows\Installer', 'AlwaysInstallElevated', 0);
+  hkcu := specialize ReadValue<LongInt>(PtrUInt(HKEY_CURRENT_USER), '\SOFTWARE\Policies\Microsoft\Windows\Installer', 'AlwaysInstallElevated', 0);
+  IF (hklm = 1) AND (hkcu = 1) THEN
+    Result := '[!] MSI installs always elevated vulnerability found.'
   ELSE
-    result:= '[*] Not vulnerable to "always elevated MSI install" vulnerability.';
+    Result := '[*] Not vulnerable to "always elevated MSI install" vulnerability.';
 END;
 
 FUNCTION TWinReg.GetSNMP: AnsiString;
 VAR
-  communities  : TStringList;
-  name         : String;
-  value        : Double;
-  output       : AnsiString = '';
+  communities: TStringList;
+  name: String;
+  val: LongInt;
 BEGIN
-  communities:= TStringList.Create;
-  EnumSubKeys(
-    HKEY_LOCAL_MACHINE,
-    '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities',
-    communities
-  ); // read all sub keys
-  output:= concat(output, '[*] SNMP Communities:' + sLineBreak);
-  IF communities.Count = 0 THEN
-    output:= concat(output, '[**] No SNMP communities set.' + sLineBreak)
-  ELSE
-    FOR name IN communities DO BEGIN
-      output:= concat(output, '[**] '+name + sLineBreak);
-      value:= ReadKeyDouble(
-                HKEY_LOCAL_MACHINE,
-                '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities',
-                name
-              ); // get subkey's value
-      CASE FloatToStr(value) OF // SNMP community allowed access
-        '4': output:= concat(output, '[**] :: read' + sLineBreak);
-        '8': output:= concat(output, '[!!] :: read/write' + sLineBreak);
-        '1': output:= concat(output, '[**] :: no access' + sLineBreak);
-        '-1': output:= concat(output, '[**] :: no registry value defined' + sLineBreak);
-        ELSE output:= concat(output, '[**] :: undefined' + sLineBreak);
+  communities := TStringList.Create;
+  TRY
+    EnumSubKeys(PtrUInt(HKEY_LOCAL_MACHINE), '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', communities);
+    Result := '[*] SNMP Communities:' + sLineBreak;
+    IF communities.Count = 0 THEN
+      Result := Result + '[**] No SNMP communities set.' + sLineBreak
+    ELSE
+      FOR name IN communities DO BEGIN
+        val := specialize ReadValue<LongInt>(PtrUInt(HKEY_LOCAL_MACHINE), '\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities', name, -1);
+        Result := Result + '[**] ' + name + ' :: ';
+        CASE val OF
+          4: Result := Result + 'read' + sLineBreak;
+          8: Result := Result + 'read/write' + sLineBreak;
+          1: Result := Result + 'no access' + sLineBreak;
+          ELSE Result := Result + 'undefined' + sLineBreak;
+        END;
       END;
-    END;
-  result:= output;
+  FINALLY
+    communities.Free;
+  END;
 END;
 
-// read all sub keys IN a registry key
-PROCEDURE TWinReg.EnumSubKeys(HKEY: LongWord; key: String; SubKeyNames: TStrings);
-VAR
-  Registry      : TRegistry;
+PROCEDURE TWinReg.EnumSubKeys(HKEY: PtrUInt; key: String; SubKeyNames: TStrings);
+VAR Reg: TRegistry;
 BEGIN
   SubKeyNames.Clear;
-  Registry := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(key) THEN
-    Registry.GetKeyNames(SubKeyNames);
-  Registry.Free;
-END;
-
-GENERIC FUNCTION ReadKey<T>(HKEY: LongWord; regPath: String; key: String): T;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadInteger(key)
-  ELSE
-    result:= -1;
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyLIint(HKEY: LongWord; regPath: String; key: String): LongInt;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadInteger(key)
-  ELSE
-    result:= -1;
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyAnsi(HKEY: LongWord; regPath: String; key: String): AnsiString;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadString(key)
-  ELSE
-    result:= 'Not Found';
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyBool(HKEY: LongWord; regPath: String; key: String): Boolean;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadBool(key)
-  ELSE
-    result:= false;
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyDouble(HKEY: LongWord; regPath: String; key: String): Double;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadFloat(key)
-  ELSE
-    result:= -1;
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyDTime(HKEY: LongWord; regPath: String; key: String): TDateTime;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadDateTime(key);
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyDate(HKEY: LongWord; regPath: String; key: String): TDate;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadDate(key);
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyTime(HKEY: LongWord; regPath: String; key: String): TTime;
-VAR
-  Registry: TRegistry;
-BEGIN
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadTime(key);
-  Registry.Free;
-END;
-
-FUNCTION TWinReg.ReadKeyBin(HKEY: LongWord; regPath: String; key: String; bufSize: integer): LongInt;
-VAR
-  Registry: TRegistry;
-  Buffer  : ARRAY OF byte;
-BEGIN
-  SetLength(Buffer, bufSize);
-  Registry:= TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
-  Registry.RootKey:= HKEY;
-  IF Registry.OpenKeyReadOnly(regPath) AND Registry.ValueExists(key) THEN
-    result:= Registry.ReadBinaryData(key, Buffer, bufSize);
-  Registry.Free;
+  Reg := TRegistry.Create(KEY_READ OR KEY_WOW64_64KEY);
+  TRY
+    Reg.RootKey := HKEY;
+    IF Reg.OpenKeyReadOnly(key) THEN Reg.GetKeyNames(SubKeyNames);
+  FINALLY
+    Reg.Free;
+  END;
 END;
 
 END.
-
