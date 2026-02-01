@@ -9,7 +9,8 @@
         <Filename Value="ingather.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ingather"/>
-        <CursorPos X="28" Y="95"/>
+        <TopLine Value="121"/>
+        <CursorPos X="44" Y="129"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -17,8 +18,10 @@
         <Filename Value="findvulns.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FindVulns"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="31" Y="31"/>
+        <TopLine Value="190"/>
+        <CursorPos X="71" Y="210"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit1>
@@ -71,10 +74,9 @@
         <Filename Value="winreg.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="270"/>
-        <CursorPos X="5" Y="301"/>
+        <TopLine Value="222"/>
+        <CursorPos X="94" Y="282"/>
         <UsageCount Value="330"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -103,7 +105,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="119"/>
         <CursorPos X="22" Y="21"/>
-        <UsageCount Value="86"/>
+        <UsageCount Value="87"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
@@ -198,124 +200,124 @@
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="datadefs.pas"/>
-        <Caret Line="95" Column="22" TopLine="95"/>
+        <Filename Value="winreg.pas"/>
+        <Caret Line="113" TopLine="113"/>
       </Position1>
       <Position2>
         <Filename Value="winreg.pas"/>
-        <Caret Line="113" TopLine="113"/>
+        <Caret Line="38" Column="16" TopLine="38"/>
       </Position2>
       <Position3>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="38" Column="16" TopLine="38"/>
+        <Filename Value="runas.pas"/>
+        <Caret Line="18" Column="88" TopLine="10"/>
       </Position3>
       <Position4>
         <Filename Value="runas.pas"/>
-        <Caret Line="18" Column="88" TopLine="10"/>
+        <Caret Line="62" Column="20" TopLine="44"/>
       </Position4>
       <Position5>
         <Filename Value="runas.pas"/>
-        <Caret Line="62" Column="20" TopLine="44"/>
+        <Caret Line="42" Column="12" TopLine="35"/>
       </Position5>
       <Position6>
         <Filename Value="runas.pas"/>
-        <Caret Line="42" Column="12" TopLine="35"/>
+        <Caret Line="61" Column="68" TopLine="45"/>
       </Position6>
       <Position7>
-        <Filename Value="runas.pas"/>
-        <Caret Line="61" Column="68" TopLine="45"/>
+        <Filename Value="winreg.pas"/>
+        <Caret Line="260" Column="25" TopLine="249"/>
       </Position7>
       <Position8>
         <Filename Value="winreg.pas"/>
-        <Caret Line="260" Column="25" TopLine="249"/>
+        <Caret Line="261" Column="100" TopLine="246"/>
       </Position8>
       <Position9>
         <Filename Value="winreg.pas"/>
-        <Caret Line="261" Column="100" TopLine="246"/>
+        <Caret Line="355" Column="64" TopLine="339"/>
       </Position9>
       <Position10>
         <Filename Value="winreg.pas"/>
-        <Caret Line="355" Column="64" TopLine="339"/>
+        <Caret Line="353" Column="117" TopLine="237"/>
       </Position10>
       <Position11>
         <Filename Value="winreg.pas"/>
-        <Caret Line="353" Column="117" TopLine="237"/>
+        <Caret Line="29" Column="47" TopLine="14"/>
       </Position11>
       <Position12>
         <Filename Value="winreg.pas"/>
-        <Caret Line="29" Column="47" TopLine="14"/>
+        <Caret Line="229" Column="5" TopLine="70"/>
       </Position12>
       <Position13>
         <Filename Value="winreg.pas"/>
-        <Caret Line="229" Column="5" TopLine="70"/>
+        <Caret Line="33" Column="34" TopLine="14"/>
       </Position13>
       <Position14>
         <Filename Value="winreg.pas"/>
-        <Caret Line="33" Column="34" TopLine="14"/>
+        <Caret Line="233" Column="5" TopLine="200"/>
       </Position14>
       <Position15>
         <Filename Value="winreg.pas"/>
-        <Caret Line="233" Column="5" TopLine="200"/>
+        <Caret Line="34" Column="57" TopLine="12"/>
       </Position15>
       <Position16>
         <Filename Value="winreg.pas"/>
-        <Caret Line="34" Column="57" TopLine="12"/>
+        <Caret Line="235" Column="5" TopLine="202"/>
       </Position16>
       <Position17>
         <Filename Value="winreg.pas"/>
-        <Caret Line="235" Column="5" TopLine="202"/>
+        <Caret Line="28" Column="71" TopLine="11"/>
       </Position17>
       <Position18>
         <Filename Value="winreg.pas"/>
-        <Caret Line="28" Column="71" TopLine="11"/>
+        <Caret Line="231" Column="5" TopLine="198"/>
       </Position18>
       <Position19>
         <Filename Value="winreg.pas"/>
-        <Caret Line="231" Column="5" TopLine="198"/>
+        <Caret Line="79" Column="54" TopLine="62"/>
       </Position19>
       <Position20>
         <Filename Value="winreg.pas"/>
-        <Caret Line="79" Column="54" TopLine="62"/>
+        <Caret Line="55" Column="57" TopLine="38"/>
       </Position20>
       <Position21>
         <Filename Value="winreg.pas"/>
-        <Caret Line="55" Column="57" TopLine="38"/>
+        <Caret Line="271" Column="5" TopLine="66"/>
       </Position21>
       <Position22>
         <Filename Value="winreg.pas"/>
-        <Caret Line="271" Column="5" TopLine="66"/>
+        <Caret Line="61" Column="69" TopLine="45"/>
       </Position22>
       <Position23>
         <Filename Value="winreg.pas"/>
-        <Caret Line="61" Column="69" TopLine="45"/>
+        <Caret Line="126" Column="76" TopLine="118"/>
       </Position23>
       <Position24>
-        <Filename Value="winreg.pas"/>
-        <Caret Line="126" Column="76" TopLine="118"/>
-      </Position24>
-      <Position25>
         <Filename Value="datadefs.pas"/>
         <Caret Line="197" Column="64" TopLine="145"/>
+      </Position24>
+      <Position25>
+        <Filename Value="winreg.pas"/>
+        <Caret Line="186" Column="5" TopLine="153"/>
       </Position25>
       <Position26>
         <Filename Value="winreg.pas"/>
-        <Caret Line="186" Column="5" TopLine="153"/>
+        <Caret Line="23" Column="16" TopLine="6"/>
       </Position26>
       <Position27>
         <Filename Value="winreg.pas"/>
-        <Caret Line="23" Column="16" TopLine="6"/>
+        <Caret Line="22" Column="50" TopLine="15"/>
       </Position27>
       <Position28>
         <Filename Value="winreg.pas"/>
-        <Caret Line="22" Column="50" TopLine="15"/>
+        <Caret Line="248" Column="5" TopLine="215"/>
       </Position28>
       <Position29>
         <Filename Value="winreg.pas"/>
-        <Caret Line="248" Column="5" TopLine="215"/>
+        <Caret Line="37" Column="13" TopLine="32"/>
       </Position29>
       <Position30>
         <Filename Value="winreg.pas"/>
-        <Caret Line="37" Column="13" TopLine="32"/>
+        <Caret Line="134" Column="76" TopLine="118"/>
       </Position30>
     </JumpHistory>
     <RunParams>
