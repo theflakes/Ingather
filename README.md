@@ -37,7 +37,7 @@ Synapse Lazarus TCP package:  http://www.ararat.cz/synapse/doku.php/download; In
 
 ### Compile for Windows on Linux
 ```
-### See: https://wiki.freepascal.org/Cross_compiling_for_Windows_under_Linux
+# See: https://wiki.freepascal.org/Cross_compiling_for_Windows_under_Linux
 sudo -i 
 export FPCVER="3.2.2"
 cd "/usr/share/fpcsrc/${FPCVER}"
