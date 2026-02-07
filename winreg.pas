@@ -122,7 +122,7 @@ BEGIN
 END;
 
 { ---------------------------------------------------------------------------
-  GENERIC AND SMART HELPERS (Previously completed)
+  GENERIC AND SMART HELPERS
   --------------------------------------------------------------------------- }
 
 generic FUNCTION TWinReg.ReadValue<T>(HKEY: PtrUInt; regPath: String; key: String; DefaultVal: T): T;

@@ -18,7 +18,6 @@
         <Filename Value="findvulns.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FindVulns"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="190"/>
         <CursorPos X="71" Y="210"/>
@@ -74,9 +73,10 @@
         <Filename Value="winreg.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WinReg"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="222"/>
-        <CursorPos X="94" Y="282"/>
+        <TopLine Value="267"/>
+        <CursorPos X="28" Y="125"/>
         <UsageCount Value="330"/>
         <Loaded Value="True"/>
       </Unit7>
